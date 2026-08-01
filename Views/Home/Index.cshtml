@@ -1,0 +1,236 @@
+@model ShareMeal.Web.Models.HomeStatsViewModel
+@{
+    ViewData["Title"] = "ShareMeal - Universal Food Redistribution";
+}
+
+<style>
+    .hero-title-main {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(3.5rem, 9vw, 7rem);
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .text-lime-brand { color: #bef264; }
+    
+    .bg-charity-theme {
+        background: radial-gradient(circle at bottom left, #0a2e24 0%, #020611 100%);
+        background-attachment: fixed;
+    }
+    
+    .carousel-slide {
+        display: none;
+        animation: fadeIn 1.2s ease-in-out forwards;
+    }
+    .carousel-slide.active { display: block; }
+    
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-bg-div {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+        background-size: cover;
+        background-position: center;
+    }
+    .hero-bg-div.active { opacity: 0.4; }
+
+    .btn-hero-donate {
+        background-color: #4ead7c;
+        border-radius: 1.25rem;
+        transition: all 0.3s ease;
+    }
+    .btn-hero-donate:hover { background-color: #3e9668; transform: scale(1.02); }
+    
+    .btn-hero-find {
+        background-color: #1a2333;
+        border-radius: 1.25rem;
+        transition: all 0.3s ease;
+    }
+    .btn-hero-find:hover { background-color: #242f45; transform: scale(1.02); }
+
+    .dev-card-premium {
+        background-color: #0d1421;
+        border-radius: 3.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .feature-card {
+        background: rgba(30, 41, 59, 0.3);
+        backdrop-filter: blur(20px);
+        transition: all 0.3s ease;
+    }
+    .feature-card:hover { transform: translateX(10px); background: rgba(30, 41, 59, 0.5); }
+</style>
+
+<div class="bg-charity-theme">
+    <!-- SECTION 1: HERO -->
+    <div class="relative min-h-[90vh] flex items-center overflow-hidden pt-20">
+        <!-- Background Image Slides -->
+        <div id="hero-bg-container" class="absolute inset-0 z-0 bg-black">
+            <div class="hero-bg-div active" style="background-image: url('/food_serving.png');"></div>
+            <div class="hero-bg-div" style="background-image: url('/charity_hero.png');"></div>
+            <div class="hero-bg-div" style="background-image: url('/charity_joy.png');"></div>
+            <div class="hero-bg-div" style="background-image: url('/restaurant_bg.png');"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#020611] via-[#020611]/60 to-transparent"></div>
+        </div>
+
+        <div class="max-w-[1400px] mx-auto px-8 w-full relative z-30 py-20 text-center lg:text-left">
+            <div class="max-w-4xl">
+                <!-- Impact Badge -->
+                <div class="inline-flex items-center gap-3 bg-[#f39c12]/20 border border-[#f39c12]/30 px-5 py-2 rounded-full mb-8 self-start">
+                    <div class="w-2 h-2 bg-[#f39c12] rounded-full animate-pulse"></div>
+                    <span class="text-[#f39c12] text-[10px] font-black uppercase tracking-[0.2em] outfit">REAL-TIME IMPACT: @ViewBag.TotalDonations MEALS SAVED</span>
+                </div>
+
+                <!-- 4-Slide Animated Content -->
+                <div id="hero-text-carousel">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active">
+                        <h1 class="hero-title-main text-white mb-10">
+                            Zero Waste,<br>
+                            <span class="text-lime-brand">Zero Hunger.</span>
+                        </h1>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <h1 class="hero-title-main text-white mb-10">
+                            Connect. <span class="text-emerald-500">Claim.</span><br>
+                            Feed the Needy.
+                        </h1>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <h1 class="hero-title-main text-white mb-10">
+                            Scale Your <br>
+                            <span class="text-blue-500">Humanitarian</span> Impact.
+                        </h1>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                        <h1 class="hero-title-main text-white mb-10">
+                            The Smart <br>
+                            <span class="text-rose-500">Redistribution</span> Hub.
+                        </h1>
+                    </div>
+                </div>
+                
+                <p class="text-slate-300 text-xl font-medium max-w-2xl leading-relaxed mb-16 mx-auto lg:mx-0">
+                    The central bridge connecting restaurants with surplus food to charitable organizations. Together, we turn waste into nourishment.
+                </p>
+
+                <div class="flex flex-wrap gap-6 mb-16 justify-center lg:justify-start">
+                    @if (User.IsInRole("Restaurant") || User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Donations" asp-action="Create" class="btn-hero-donate text-white font-bold py-6 px-12 text-xl">🥗 Donate Food →</a>
+                    }
+                    <a asp-controller="Donations" asp-action="Index" class="btn-hero-find text-white font-bold py-6 px-12 text-xl">🍽️ Find Food</a>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex gap-4 justify-center lg:justify-start">
+                    <button onclick="changeHeroSlide('prev')" class="w-14 h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-emerald-500 transition-all flex items-center justify-center text-xl">←</button>
+                    <button onclick="changeHeroSlide('next')" class="w-14 h-14 rounded-full bg-white/5 border border-white/10 text-white hover:bg-emerald-500 transition-all flex items-center justify-center text-xl">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MISSION -->
+    <div class="py-32 px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-500 px-6 py-2 rounded-full text-[10px] font-black tracking-widest uppercase mb-10 border border-rose-500/20">OUR MISSION</div>
+            <h2 class="text-5xl md:text-7xl font-black outfit text-white leading-tight mb-10"><span class="text-rose-500">Millions</span> Go Hungry.<br>You Can Change That.</h2>
+            <p class="text-slate-400 text-xl font-medium leading-relaxed max-w-3xl mx-auto">While restaurants waste tons of food daily, people nearby go to sleep hungry. ShareMeal bridges this gap — directly, quickly, and with zero waste.</p>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="py-32 px-8">
+        <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div class="relative rounded-[4rem] overflow-hidden shadow-2xl"><img src="/food_serving.png" class="w-full h-full object-cover" /><div class="absolute bottom-12 left-12"><p class="text-white text-3xl font-black outfit leading-tight">Every Meal<br>Counts.</p></div></div>
+            <div class="space-y-12">
+                <h2 class="text-4xl md:text-6xl font-black text-white outfit leading-tight mb-16">Everything You Need <br>to Save Meals</h2>
+                <div class="space-y-6">
+                    <div class="feature-card p-8 rounded-[2.5rem] flex items-center gap-8 text-white"><div class="text-3xl">📍</div><div><h4 class="text-xl font-black mb-2">Nearby Donations</h4><p class="text-slate-400 text-sm">Find surplus food listings from restaurants right in your neighborhood.</p></div></div>
+                    <div class="feature-card p-8 rounded-[2.5rem] flex items-center gap-8 text-white"><div class="text-3xl">🔔</div><div><h4 class="text-xl font-black mb-2">Instant Alerts</h4><p class="text-slate-400 text-sm">NGOs get notified immediately when fresh food becomes available.</p></div></div>
+                    <div class="feature-card p-8 rounded-[2.5rem] flex items-center gap-8 text-white"><div class="text-3xl">🛡️</div><div><h4 class="text-xl font-black mb-2">Verified Partners</h4><p class="text-slate-400 text-sm">Every organization is manually verified to ensure food safety.</p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4: YouTube RESTORED -->
+    <div class="py-32 px-8">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-black text-white outfit mb-10">Reduce Food Waste & Help Communities</h2>
+            <div class="aspect-video max-w-[800px] mx-auto rounded-[2rem] overflow-hidden border-8 border-white/5 shadow-2xl">
+                <iframe class="w-full h-full" 
+                        src="https://www.youtube.com/embed/ishA6kry8nc" 
+                        title="Food Waste Awareness" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 5: DEVELOPER (Moved to Bottom) -->
+    <div class="py-32 px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="dev-card-premium p-12 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
+                <div class="absolute top-8 right-8 px-4 py-1.5 bg-[#0a2e24] text-[#10b981] text-[9px] font-black uppercase tracking-widest rounded-lg border border-[#10b981]/20">Verified Publisher</div>
+                <div class="flex-shrink-0"><img src="~/dev_pic.png" class="w-48 h-48 rounded-full border-2 border-[#f39c12] p-1.5 object-cover" /></div>
+                <div class="text-center md:text-left space-y-4 flex-grow">
+                    <h2 class="text-4xl font-black text-white outfit">Made by Khulfan</h2>
+                    <p class="text-[#f39c12] font-black text-xs uppercase tracking-[0.4em]">Full Stack Architect & Visionary</p>
+                    <p class="text-slate-400 text-sm font-medium leading-relaxed max-w-xl">Passionate about using technology to solve real-world problems. Specializing in iOS, Android, and high-performance Web platforms for university and commercial projects.</p>
+                    <div class="pt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+                        <a href="https://wa.me/923037377365" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-2xl text-xs uppercase tracking-widest transition-all">WhatsApp Me</a>
+                        <div class="flex gap-4 items-center ml-4">
+                            <a href="#" class="text-slate-500 hover:text-white transition-colors">Instagram</a>
+                            <a href="#" class="text-slate-500 hover:text-white transition-colors">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const bgDivs = document.querySelectorAll('.hero-bg-div');
+        
+        function updateDisplay(index) {
+            slides.forEach((s, idx) => {
+                if(idx === index) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+            bgDivs.forEach((bg, idx) => {
+                if(idx === index) bg.classList.add('active');
+                else bg.classList.remove('active');
+            });
+        }
+        
+        window.changeHeroSlide = function(direction) {
+            if(direction === 'next') {
+                currentSlide = (currentSlide + 1) % slides.length;
+            } else {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            }
+            updateDisplay(currentSlide);
+        };
+        
+        setInterval(() => changeHeroSlide('next'), 6000);
+    });
+</script>

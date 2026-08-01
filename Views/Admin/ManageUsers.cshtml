@@ -1,0 +1,92 @@
+@model IEnumerable<ShareMeal.Web.Models.Organization>
+
+@{
+    ViewData["Title"] = "Manage Users & Organizations";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="mb-10">
+        <h1 class="text-3xl font-black text-white">Manage Organizations</h1>
+        <p class="text-slate-400 mt-2">Approve charities and restaurants for the platform.</p>
+    </div>
+
+    <div class="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700/50 overflow-hidden shadow-xl">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-widest font-bold">
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Type</th>
+                    <th class="px-6 py-4">Contact</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/50">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-700/20 transition-colors">
+                        <td class="px-6 py-4 font-bold text-white">@item.Name</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase
+                                @(item.Type == ShareMeal.Web.Models.OrganizationType.Restaurant ? "bg-amber-400/10 text-amber-400" : 
+                                  "bg-blue-400/10 text-blue-400")">
+                                @item.Type
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-300 text-sm">@item.ContactEmail</td>
+                        <td class="px-6 py-4">
+                            @if (item.IsSuspended)
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase bg-rose-400/10 text-rose-400 border border-rose-400/20">
+                                    Suspended
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase 
+                                    @(item.Status == ShareMeal.Web.Models.OrganizationStatus.Verified ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" : 
+                                      item.Status == ShareMeal.Web.Models.OrganizationStatus.Pending ? "bg-amber-400/10 text-amber-400 border border-amber-400/20" : 
+                                      "bg-slate-400/10 text-slate-400 border border-slate-400/20")">
+                                    @item.Status
+                                </span>
+                            }
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end space-x-2">
+                                @if (item.Status == ShareMeal.Web.Models.OrganizationStatus.Pending)
+                                {
+                                    <form asp-action="VerifyOrganization" asp-route-id="@item.Id" method="post" class="inline">
+                                        <button type="submit" class="text-emerald-400 hover:text-emerald-300 font-bold text-xs bg-emerald-400/10 px-3 py-1.5 rounded-lg border border-emerald-400/20 transition-all hover:bg-emerald-500 hover:text-white">Verify</button>
+                                    </form>
+                                }
+                                
+                                @if (!item.IsSuspended)
+                                {
+                                    <form asp-action="SuspendOrganization" asp-route-id="@item.Id" method="post" class="inline">
+                                        <button type="submit" class="text-rose-400 hover:text-rose-300 font-bold text-xs bg-rose-400/10 px-3 py-1.5 rounded-lg border border-rose-400/20 transition-all hover:bg-rose-500 hover:text-white">Suspend</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="VerifyOrganization" asp-route-id="@item.Id" method="post" class="inline">
+                                        <button type="submit" class="text-emerald-400 hover:text-emerald-300 font-bold text-xs bg-emerald-400/10 px-3 py-1.5 rounded-lg border border-emerald-400/20 transition-all hover:bg-emerald-500 hover:text-white">Restore</button>
+                                    </form>
+                                }
+                            </div>
+                            <!-- View Details Button -->
+                            <div class="mt-2 text-right">
+                                <a asp-action="OrganizationDetails" asp-route-id="@item.Id" class="text-blue-400 hover:text-blue-300 font-semibold text-xs underline decoration-blue-500/30 underline-offset-4">View Profile Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-16">
+                <p class="text-slate-400 italic">No organizations present.</p>
+            </div>
+        }
+    </div>
+</div>

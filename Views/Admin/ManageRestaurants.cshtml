@@ -1,0 +1,120 @@
+@model IEnumerable<ShareMeal.Web.Models.Organization>
+
+@{
+    ViewData["Title"] = "Manage Restaurants";
+}
+
+<div class="px-4 py-8 max-w-7xl mx-auto">
+    
+    <!-- Sub-page Header -->
+    <div class="bg-gradient-to-r from-slate-900 to-blue-900/40 border-l-4 border-l-blue-500 rounded-r-3xl p-8 mb-10 shadow-lg relative overflow-hidden">
+        <div class="absolute right-0 top-0 opacity-10">
+            <svg class="h-48 w-48 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+        </div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="bg-blue-500/20 p-2 rounded-lg">
+                        <svg class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    </div>
+                    <span class="text-blue-400 font-black uppercase tracking-widest text-xs">Directory Management</span>
+                </div>
+                <h1 class="text-4xl font-black text-white">Partner Restaurants</h1>
+                <p class="text-slate-400 mt-1">Review, approve, and manage registered food donors across the network.</p>
+            </div>
+            <a asp-action="Dashboard" class="mt-6 md:mt-0 px-6 py-3 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-700 transition-all border border-slate-600 shadow-md flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                Return to Command Center
+            </a>
+        </div>
+    </div>
+
+    <!-- Data Terminal -->
+    <div class="bg-slate-900 border border-slate-700/60 rounded-[2rem] overflow-hidden shadow-2xl">
+        <div class="bg-slate-800/80 px-8 py-5 border-b border-slate-700/60 flex justify-between items-center">
+            <h3 class="text-white font-bold">Registered Entities (@Model.Count())</h3>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+                <thead>
+                    <tr class="bg-slate-900 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black border-b border-slate-800">
+                        <th class="px-8 py-5">Restaurant Info</th>
+                        <th class="px-8 py-5">Contact Details</th>
+                        <th class="px-8 py-5">Verification Status</th>
+                        <th class="px-8 py-5 text-right">System Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/50">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-slate-800/20 transition-colors group">
+                            <td class="px-8 py-5">
+                                <div class="font-black text-white text-lg group-hover:text-blue-400 transition-colors">@item.Name</div>
+                                <div class="text-slate-500 text-xs mt-1">ID: #@item.Id</div>
+                            </td>
+                            <td class="px-8 py-5">
+                                <div class="text-slate-300 font-medium">@item.ContactEmail</div>
+                                <div class="text-slate-500 text-sm mt-0.5">@item.Phone</div>
+                            </td>
+                            <td class="px-8 py-5">
+                                @if (item.IsSuspended)
+                                {
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-black uppercase bg-rose-500/10 text-rose-500 border border-rose-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Suspended
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-black uppercase 
+                                        @(item.Status == ShareMeal.Web.Models.OrganizationStatus.Verified ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : 
+                                          item.Status == ShareMeal.Web.Models.OrganizationStatus.Pending ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" : 
+                                          "bg-slate-500/10 text-slate-400 border border-slate-500/20")">
+                                        <span class="w-1.5 h-1.5 rounded-full 
+                                            @(item.Status == ShareMeal.Web.Models.OrganizationStatus.Verified ? "bg-emerald-400" : 
+                                              item.Status == ShareMeal.Web.Models.OrganizationStatus.Pending ? "bg-amber-400" : "bg-slate-400")"></span>
+                                        @item.Status
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-8 py-5 text-right">
+                                <div class="flex items-center justify-end space-x-3 mb-2">
+                                    @if (item.Status == ShareMeal.Web.Models.OrganizationStatus.Pending || item.IsSuspended)
+                                    {
+                                        <form asp-action="VerifyOrganization" asp-route-id="@item.Id" method="post" class="inline">
+                                            <button type="submit" class="text-emerald-400 hover:text-white font-bold text-[10px] uppercase tracking-wider bg-emerald-400/10 px-4 py-2 rounded-md border border-emerald-400/20 transition-all hover:bg-emerald-600 shadow-sm">Authorize</button>
+                                        </form>
+                                    }
+                                    
+                                    @if (!item.IsSuspended)
+                                    {
+                                        <form asp-action="SuspendOrganization" asp-route-id="@item.Id" method="post" class="inline">
+                                            <button type="submit" class="text-amber-400 hover:text-white font-bold text-[10px] uppercase tracking-wider bg-amber-400/10 px-4 py-2 rounded-md border border-amber-400/20 transition-all hover:bg-amber-600 shadow-sm">Suspend</button>
+                                        </form>
+                                    }
+
+                                    <form asp-action="DeleteOrganization" asp-route-id="@item.Id" method="post" class="inline" onsubmit="return confirm('WARNING: Are you sure you want to completely eradicate this entity?');">
+                                        <button type="submit" class="text-rose-400 hover:text-white font-bold text-[10px] uppercase tracking-wider bg-rose-400/10 px-4 py-2 rounded-md border border-rose-400/20 transition-all hover:bg-rose-600 shadow-sm">Terminate</button>
+                                    </form>
+                                </div>
+                                <a asp-action="OrganizationDetails" asp-route-id="@item.Id" class="text-blue-400 hover:text-blue-300 font-bold text-[11px] uppercase tracking-wider flex items-center justify-end gap-1 group-hover:underline decoration-blue-500/30">
+                                    Inspect Profile <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (!Model.Any())
+            {
+                <div class="text-center py-20">
+                    <div class="inline-flex bg-slate-800 p-4 rounded-full mb-4">
+                        <svg class="w-10 h-10 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">No Restaurants Found</h3>
+                    <p class="text-slate-400">The database is currently clear of restaurant entities.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

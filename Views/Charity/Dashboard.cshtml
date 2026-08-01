@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "Charity Dashboard";
+}
+
+<style>
+    .charity-card {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        transition: all 0.3s ease;
+    }
+    .charity-card:hover {
+        border-color: #10b981;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+    }
+</style>
+
+<div class="relative min-h-screen bg-slate-950 pt-32 pb-20 px-6">
+    <!-- Background Texture -->
+    <div class="absolute inset-0 z-0 opacity-20">
+        <img src="~/charity_bg.png" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-slate-950"></div>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto relative z-10">
+        <!-- Hero Header -->
+        <div class="mb-16">
+            <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full mb-6 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                🌍 NGO / Charity Panel
+            </span>
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div>
+                    <h1 class="text-5xl md:text-7xl font-black text-white outfit leading-none tracking-tight">Making a <br><span class="text-emerald-500">Difference.</span></h1>
+                    <p class="text-slate-400 text-lg mt-6 max-w-xl font-medium leading-relaxed">
+                        Find, claim, and coordinate surplus food pickups directly with our restaurant partners.
+                    </p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a asp-controller="Donations" asp-action="Index" class="btn-emerald text-white font-black py-4 px-8 rounded-2xl shadow-xl flex items-center gap-3">
+                        <span>Browse Marketplace</span>
+                        <span class="text-white/50">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div class="charity-card p-10 rounded-[2.5rem]">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="bg-emerald-500/20 p-3 rounded-2xl">
+                        <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Total Claimed</p>
+                </div>
+                <p class="text-6xl font-black text-white outfit">@ViewBag.TotalClaimed</p>
+            </div>
+            
+            <div class="charity-card p-10 rounded-[2.5rem]">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="bg-orange-500/20 p-3 rounded-2xl">
+                        <svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Pending Pickups</p>
+                </div>
+                <p class="text-6xl font-black text-white outfit">@ViewBag.PendingPickups</p>
+            </div>
+
+            <div class="charity-card p-10 rounded-[2.5rem]">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="bg-blue-500/20 p-3 rounded-2xl">
+                        <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Power Score</p>
+                </div>
+                <p class="text-6xl font-black text-white outfit">98%</p>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <h2 class="text-2xl font-black text-white outfit mb-8 uppercase tracking-widest">Operations Hub</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <a asp-action="MyRequests" class="charity-card p-8 rounded-3xl group">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">📋</div>
+                <h3 class="text-lg font-black text-white mb-1">My Requests</h3>
+                <p class="text-xs text-slate-500 font-medium tracking-tight">Active food claims</p>
+            </a>
+            <a asp-action="PickupDetails" class="charity-card p-8 rounded-3xl group">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">📍</div>
+                <h3 class="text-lg font-black text-white mb-1">Logistics</h3>
+                <p class="text-xs text-slate-500 font-medium tracking-tight">Routes & Schedules</p>
+            </a>
+            <a asp-action="History" class="charity-card p-8 rounded-3xl group opacity-60">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🕒</div>
+                <h3 class="text-lg font-black text-white mb-1">History</h3>
+                <p class="text-xs text-slate-500 font-medium tracking-tight">Past collections</p>
+            </a>
+            <a asp-action="Profile" class="charity-card p-8 rounded-3xl group">
+                <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">⚙️</div>
+                <h3 class="text-lg font-black text-white mb-1">Master Settings</h3>
+                <p class="text-xs text-slate-500 font-medium tracking-tight">Account & Security</p>
+            </a>
+        </div>
+    </div>
+</div>

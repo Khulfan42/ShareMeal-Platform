@@ -1,0 +1,68 @@
+@model IEnumerable<ShareMeal.Web.Models.Donation>
+
+@{
+    ViewData["Title"] = "Platform Monitoring";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="mb-10 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-black text-white">Food Flow Monitoring</h1>
+            <p class="text-slate-400 mt-2">End-to-end tracking of all food items across the platform.</p>
+        </div>
+        <a asp-action="ExportCsv" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] inline-flex items-center">
+            📥 Export Report
+        </a>
+    </div>
+
+    <div class="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700/50 overflow-hidden shadow-xl">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-widest font-bold">
+                    <th class="px-6 py-4">ID</th>
+                    <th class="px-6 py-4">Food Item</th>
+                    <th class="px-6 py-4">Donor (Restaurant)</th>
+                    <th class="px-6 py-4">Recipient (Charity)</th>
+                    <th class="px-6 py-4">Current Status</th>
+                    <th class="px-6 py-4">Timeline</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/50">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-700/20 transition-colors">
+                        <td class="px-6 py-4 text-xs font-mono text-slate-500">#@item.Id.ToString("D4")</td>
+                        <td class="px-6 py-4 font-bold text-white">@item.FoodItem <br><span class="text-xs text-slate-400 font-normal">Qty: @item.Quantity</span></td>
+                        <td class="px-6 py-4 text-emerald-300 font-semibold text-sm">@(item.Donor?.Name ?? "N/A")</td>
+                        <td class="px-6 py-4 text-blue-300 font-semibold text-sm">@(item.Recipient?.Name ?? "Pending Claim")</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase
+                                @(item.Status == ShareMeal.Web.Models.DonationStatus.Available ? "bg-slate-700 text-slate-300" : 
+                                  item.Status == ShareMeal.Web.Models.DonationStatus.Claimed ? "bg-amber-400/10 text-amber-400 border border-amber-400/20" : 
+                                  "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20")">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-xs text-slate-400">Listed: @item.CreatedAt.ToString("MM/dd HH:mm")</p>
+                            <p class="text-xs text-rose-400 mt-1 font-semibold">Expires: @item.ExpiryDate.ToString("MM/dd HH:mm")</p>
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a asp-controller="Donations" asp-action="Details" asp-route-id="@item.Id" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold text-xs bg-blue-400/10 px-3 py-1.5 rounded-lg border border-blue-400/20 transition-all hover:bg-blue-500 hover:text-white">View Details</a>
+
+                            <form asp-action="RemoveDonation" asp-route-id="@item.Id" method="post" class="inline" onsubmit="return confirm('Are you sure you want to remove this donation?');">
+                                <button type="submit" class="text-rose-400 hover:text-rose-300 font-bold text-xs bg-rose-400/10 px-3 py-1.5 rounded-lg border border-rose-400/20 transition-all hover:bg-rose-500 hover:text-white">Remove Donation</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-16">
+                <p class="text-slate-400 italic">No food data generated across the network yet.</p>
+            </div>
+        }
+    </div>
+</div>

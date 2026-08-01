@@ -1,0 +1,50 @@
+@model IEnumerable<ShareMeal.Web.Models.Donation>
+
+@{
+    ViewData["Title"] = "Pickup Details";
+}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="mb-10">
+        <h1 class="text-3xl font-black text-white">Pickup Instructions</h1>
+        <p class="text-slate-400 mt-2">Details on where and when to collect the requested food.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @foreach (var item in Model)
+        {
+            <div class="bg-slate-800/80 backdrop-blur-md rounded-3xl border border-slate-700/50 p-8 shadow-xl">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">@item.FoodItem</h3>
+                        <p class="text-slate-400">Provider: <span class="text-emerald-400 font-bold">@item.Donor?.Name</span></p>
+                        <p class="text-slate-400 text-sm">Email: @item.Donor?.ContactEmail</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-700 mb-6">
+                    <p class="text-xs text-slate-500 uppercase font-black tracking-widest mb-2">Pickup Time Required Before</p>
+                    <p class="text-xl font-black text-rose-400 mb-4">@item.ExpiryDate.ToString("MMM dd, yyyy - hh:mm tt")</p>
+                    
+                    <p class="text-xs text-slate-500 uppercase font-bold tracking-widest mb-1">Donor Instructions</p>
+                    <p class="text-slate-300">@(string.IsNullOrEmpty(item.PickupInstructions) ? "No specific instructions provided. Please collect during standard hours." : item.PickupInstructions)</p>
+                </div>
+
+                <div class="border-t border-slate-700 pt-6 mt-auto">
+                    <form asp-controller="Donations" asp-action="MarkAsCollected" asp-route-id="@item.Id" method="post">
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02]">
+                            Confirm Food Collected
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-16 bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-700">
+            <p class="text-slate-400 text-lg">No collections pending.</p>
+        </div>
+    }
+</div>

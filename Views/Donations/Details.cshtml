@@ -1,0 +1,82 @@
+@model ShareMeal.Web.Models.Donation
+
+@{
+    ViewData["Title"] = "Donation Details";
+}
+
+<div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="flex items-center space-x-2 text-slate-500 mb-8">
+        <a asp-action="Index" class="hover:text-emerald-400">Marketplace</a>
+        <span>/</span>
+        <span class="text-slate-300">@Model.FoodItem</span>
+    </div>
+
+    <div class="bg-slate-800/50 backdrop-blur-xl rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl">
+        <div class="p-8 md:p-12">
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <span class="px-4 py-1.5 text-sm font-bold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-4 inline-block">
+                        @Model.Category
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-black text-white tracking-tight">@Model.FoodItem</h1>
+                </div>
+                <div class="text-right">
+                    <p class="text-slate-500 text-sm uppercase tracking-widest font-bold">Status</p>
+                    <span class="text-xl font-bold @(Model.Status == ShareMeal.Web.Models.DonationStatus.Available ? "text-emerald-400" : "text-amber-400")">
+                        @Model.Status
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-slate-500 font-bold uppercase tracking-widest text-xs mb-3">Quantity Available</h3>
+                        <p class="text-2xl text-slate-100 font-medium font-mono">@Model.Quantity</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-slate-500 font-bold uppercase tracking-widest text-xs mb-3">Expiry Details</h3>
+                        <div class="flex items-center text-xl text-rose-400 italic">
+                            <svg class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Expires: @Model.ExpiryDate.ToString("MMMM dd, HH:mm")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/50 rounded-2xl p-8 border border-slate-700/30">
+                    <h3 class="text-emerald-400 font-bold mb-4">Pickup Logistics</h3>
+                    <p class="text-slate-300 leading-relaxed italic mb-6">
+                        "@(string.IsNullOrEmpty(Model.PickupInstructions) ? "No special instructions provided." : Model.PickupInstructions)"
+                    </p>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="h-12 w-12 rounded-xl bg-slate-800 flex items-center justify-center text-emerald-400 font-bold border border-slate-700">
+                            @Model.Donor?.Name[0]
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-xs font-bold uppercase">Provider</p>
+                            <p class="text-white font-bold">@Model.Donor?.Name</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 flex flex-col md:flex-row gap-4 pt-8 border-t border-slate-700/50">
+                @if (Model.Status == ShareMeal.Web.Models.DonationStatus.Available)
+                {
+                    <a asp-action="RequestFood" asp-route-id="@Model.Id" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-5 rounded-2xl shadow-xl shadow-emerald-900/30 transition-all transform hover:scale-[1.02] active:scale-95 text-lg text-center inline-flex items-center justify-center">
+                        <svg class="w-6 h-6 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Request Food
+                    </a>
+                }
+                <a asp-action="Index" class="px-8 py-5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-2xl text-center transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

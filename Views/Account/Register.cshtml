@@ -1,0 +1,50 @@
+@model ShareMeal.Web.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="min-h-[90vh] bg-[#0f172a] flex items-center justify-center px-4 py-12">
+    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#10b981] to-[#06b6d4] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+    </div>
+
+    <div class="w-full max-w-lg bg-slate-900/40 backdrop-blur-xl p-10 rounded-[40px] border border-slate-700/50 shadow-2xl relative z-10 transition-all duration-500 hover:shadow-emerald-500/10">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black text-white mb-3 tracking-tighter">Join ShareMeal</h1>
+            <p class="text-slate-400 font-medium tracking-tight">Be part of the <span class="text-emerald-400 font-bold">Zero Waste</span> movement</p>
+        </div>
+
+        <form asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-rose-400 text-sm italic bg-rose-400/10 p-3 rounded-xl border border-rose-400/20 mb-6" role="alert"></div>
+
+            <div class="space-y-2">
+                <label asp-for="Email" class="block text-slate-400 text-xs font-bold uppercase tracking-widest pl-2"></label>
+                <input asp-for="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-6 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all" placeholder="organization@example.com" />
+                <span asp-validation-for="Email" class="text-rose-400 text-xs italic pl-2"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label asp-for="Password" class="block text-slate-400 text-xs font-bold uppercase tracking-widest pl-2"></label>
+                    <input asp-for="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-6 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-rose-400 text-xs italic pl-2"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="ConfirmPassword" class="block text-slate-400 text-xs font-bold uppercase tracking-widest pl-2"></label>
+                    <input asp-for="ConfirmPassword" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-6 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-all" placeholder="••••••••" />
+                    <span asp-validation-for="ConfirmPassword" class="text-rose-400 text-xs italic pl-2"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-5 rounded-2xl shadow-xl shadow-emerald-900/30 transition-all transform hover:scale-[1.02] active:scale-95 text-lg">
+                Create Organization Account
+            </button>
+
+            <p class="text-center text-slate-400 text-sm mt-8">
+                Already have an account? 
+                <a asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="text-emerald-400 hover:text-emerald-300 font-bold ml-1 transition-all tracking-tight">Sign In Now</a>
+            </p>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<div class="flex items-center gap-4">
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="flex items-center gap-3">
+        <span class="text-white font-black text-[10px]">@User.Identity?.Name</span>
+        <form class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+            <button type="submit" class="text-[10px] font-black text-rose-500 hover:text-rose-400 uppercase transition-all">Logout</button>
+        </form>
+    </div>
+}
+else
+{
+    <a class="text-slate-400 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors" asp-controller="Account" asp-action="Login">Login</a>
+    <a class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20" asp-controller="Account" asp-action="Register">Join Now</a>
+}
+</div>

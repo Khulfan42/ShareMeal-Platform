@@ -1,0 +1,91 @@
+@model IEnumerable<ShareMeal.Web.Models.Donation>
+@{
+    ViewData["Title"] = "Food Tracking";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+        <div>
+            <h1 class="text-3xl font-black text-white">Food Tracking</h1>
+            <p class="text-slate-400 mt-1">Live status of all your food donations.</p>
+        </div>
+        <a asp-action="Dashboard" class="text-slate-400 hover:text-white text-sm font-semibold transition-colors">← Back to Dashboard</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="bg-slate-800/50 rounded-3xl border border-slate-700 p-20 text-center">
+            <p class="text-slate-400 text-xl mb-4">No donations yet.</p>
+            <a asp-controller="Donations" asp-action="Create" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-8 rounded-xl">Add Your First Donation</a>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-4">
+            @foreach (var d in Model)
+            {
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 hover:border-blue-500/30 transition-colors shadow-lg">
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-6">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-700 text-slate-300">@d.Category</span>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full
+                                    @(d.Status == ShareMeal.Web.Models.DonationStatus.Available ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
+                                      d.Status == ShareMeal.Web.Models.DonationStatus.Claimed ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
+                                      "bg-blue-500/20 text-blue-400 border border-blue-500/30")">
+                                    @d.Status
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">@d.FoodItem</h3>
+                            <p class="text-slate-400 text-sm mt-1">Qty: <span class="text-slate-200 font-medium">@d.Quantity</span>
+                            @if (d.Recipient != null)
+                            {
+                                <span> &nbsp;|&nbsp; Claimed by: <span class="text-amber-400 font-medium">@d.Recipient.Name</span></span>
+                            }
+                            </p>
+                        </div>
+
+                        <!-- Status Timeline -->
+                        <div class="w-full lg:w-auto bg-slate-900/60 border border-slate-700 rounded-xl px-6 py-4 min-w-[260px]">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">TIMELINE</p>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-slate-500">Listed</p>
+                                        <p class="text-xs font-semibold text-slate-300">@d.CreatedAt.ToLocalTime().ToString("MM/dd HH:mm")</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 @(d.Status != ShareMeal.Web.Models.DonationStatus.Available ? "bg-amber-500" : "bg-slate-700 border-2 border-slate-600")">
+                                        @if (d.Status != ShareMeal.Web.Models.DonationStatus.Available)
+                                        {
+                                            <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        }
+                                    </div>
+                                    <p class="text-xs @(d.Status != ShareMeal.Web.Models.DonationStatus.Available ? "text-amber-400" : "text-slate-600")">Claimed by NGO</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 @(d.Status == ShareMeal.Web.Models.DonationStatus.Collected ? "bg-blue-500" : "bg-slate-700 border-2 border-slate-600")">
+                                        @if (d.Status == ShareMeal.Web.Models.DonationStatus.Collected)
+                                        {
+                                            <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        }
+                                    </div>
+                                    <p class="text-xs @(d.Status == ShareMeal.Web.Models.DonationStatus.Collected ? "text-blue-400" : "text-slate-600")">Collected ✓</p>
+                                </div>
+                                <div class="pt-2 border-t border-slate-700/60">
+                                    <p class="text-xs @(d.ExpiryDate < DateTime.UtcNow ? "text-rose-400 font-bold" : "text-slate-500")">
+                                        Expires: @d.ExpiryDate.ToLocalTime().ToString("MM/dd HH:mm")
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

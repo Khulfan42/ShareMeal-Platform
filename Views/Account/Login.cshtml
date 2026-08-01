@@ -1,0 +1,74 @@
+@model ShareMeal.Web.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="min-h-[90vh] bg-[#0f172a] flex items-center justify-center px-4 py-12">
+    <!-- Background Blur -->
+    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#10b981] to-[#06b6d4] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+    </div>
+
+    <div class="w-full max-w-md bg-slate-900/40 backdrop-blur-xl p-10 rounded-[40px] border border-slate-700/50 shadow-2xl relative z-10 transition-all duration-500 hover:shadow-emerald-500/10">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black text-white mb-3 tracking-tighter">Welcome Back</h1>
+            <p class="text-slate-400 font-medium tracking-tight">Log in to your <span class="text-emerald-400">ShareMeal</span> account</p>
+        </div>
+
+        <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-rose-400 text-sm italic bg-rose-400/10 p-3 rounded-xl border border-rose-400/20 mb-6" role="alert"></div>
+
+            <div class="space-y-2">
+                <label asp-for="Email" class="block text-slate-400 text-xs font-bold uppercase tracking-widest pl-2"></label>
+                <input asp-for="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-6 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="name@example.com" />
+                <span asp-validation-for="Email" class="text-rose-400 text-xs italic pl-2"></span>
+            </div>
+
+            <div class="space-y-2 relative">
+                <label asp-for="Password" class="block text-slate-400 text-xs font-bold uppercase tracking-widest pl-2"></label>
+                <div class="relative">
+                    <input asp-for="Password" id="passwordInput" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-6 py-4 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="••••••••" />
+                    <button type="button" onclick="togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 hover:bg-slate-700/50 rounded-xl transition-colors">
+                        <svg id="eyeIcon" class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <span asp-validation-for="Password" class="text-rose-400 text-xs italic pl-2"></span>
+            </div>
+
+            <div class="flex items-center justify-between px-2">
+                <label class="flex items-center text-slate-400 text-sm cursor-pointer group">
+                    <input class="form-checkbox h-4 w-4 text-emerald-600 bg-slate-800 border-slate-700 rounded transition duration-150 ease-in-out mr-3" asp-for="RememberMe" />
+                    <span class="group-hover:text-slate-300 transition-colors">Remember me?</span>
+                </label>
+                <a href="#" class="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition-colors">Forgot?</a>
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-5 rounded-2xl shadow-xl shadow-emerald-900/30 transition-all transform hover:scale-[1.02] active:scale-95 text-lg">
+                Log in Now
+            </button>
+
+            <p class="text-center text-slate-400 text-sm mt-8">
+                Don't have an account? 
+                <a asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="text-emerald-400 hover:text-emerald-300 font-bold ml-1 transition-all">Create One Free</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<script>
+    function togglePassword() {
+        var input = document.getElementById("passwordInput");
+        var icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 1.225 0 2.39.215 3.475.606m4.256 4.256c.553.791.996 1.666 1.311 2.6c-1.274 4.057-5.064 7-9.542 7-1.012 0-1.986-.15-2.902-.428M15 15l1.5 1.5M10.125 10.125L8.5 8.5" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l22 22" />';
+        } else {
+            input.type = "password";
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+        }
+    }
+</script>

@@ -1,0 +1,26 @@
+# Visual Studio / .NET build outputs
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE settings
+.vs/
+.vscode/
+.idea/
+
+# Database files (uncomment if you don't want to track sqlite db file)
+# ShareMeal.db

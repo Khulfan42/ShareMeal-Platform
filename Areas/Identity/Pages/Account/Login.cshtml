@@ -1,0 +1,103 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    ViewData["BackgroundImage"] = "/auth_bg.png";
+}
+
+<div class="relative min-h-[90vh] flex items-center justify-center px-6 py-12 overflow-hidden">
+    <!-- Overlay for better contrast -->
+    <div class="absolute inset-x-0 bottom-0 top-0 z-0 bg-white/20 backdrop-blur-sm pointer-events-none"></div>
+
+    <div class="w-full max-w-md bg-white p-12 rounded-[3.5rem] shadow-2xl border border-slate-100 relative z-10">
+        <div class="text-center mb-10">
+            @{
+                var returnUrlLower = Model.ReturnUrl?.ToLower() ?? "";
+                var welcomeTitle = "Welcome Back";
+                var welcomeLabel = "your ShareMeal";
+                var accentColor = "text-emerald-600";
+                
+                if (returnUrlLower.Contains("restaurant"))
+                {
+                    welcomeTitle = "Partner Login";
+                    welcomeLabel = "Restaurant Dashboard";
+                    accentColor = "text-emerald-600";
+                }
+                else if (returnUrlLower.Contains("charity"))
+                {
+                    welcomeTitle = "NGO Access";
+                    welcomeLabel = "Charity Dashboard";
+                    accentColor = "text-amber-600";
+                }
+            }
+            
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-slate-50 rounded-2xl mb-6 shadow-inner">
+                <span class="text-3xl">🔐</span>
+            </div>
+            
+            <h1 class="text-4xl font-black text-slate-900 mb-2 outfit">@welcomeTitle</h1>
+            <p class="text-slate-500 font-medium">Access <span class="@accentColor font-black">@welcomeLabel</span></p>
+        </div>
+
+        <form id="account" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-rose-600 text-xs font-bold bg-rose-50 p-4 rounded-2xl border border-rose-100 mb-6" role="alert"></div>
+
+            <div class="group">
+                <label asp-for="Input.Email" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-2"></label>
+                <input asp-for="Input.Email" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium" autocomplete="username" aria-required="true" placeholder="Enter your email" />
+                <span asp-validation-for="Input.Email" class="text-rose-500 text-[10px] font-bold pl-4 mt-1"></span>
+            </div>
+
+            <div class="group relative">
+                <label asp-for="Input.Password" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-2"></label>
+                <div class="relative">
+                    <input asp-for="Input.Password" id="passwordInput" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
+                    <button type="button" onclick="togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 hover:bg-slate-200 rounded-xl transition-colors">
+                        <svg id="eyeIcon" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <span asp-validation-for="Input.Password" class="text-rose-500 text-[10px] font-bold pl-4 mt-1"></span>
+            </div>
+
+            <div class="flex items-center justify-between px-2">
+                <label asp-for="Input.RememberMe" class="flex items-center text-slate-500 text-sm cursor-pointer select-none">
+                    <input class="form-checkbox h-4 w-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3" asp-for="Input.RememberMe" />
+                    <span class="font-medium">Stay logged in</span>
+                </label>
+                <a id="forgot-password" asp-page="./ForgotPassword" class="text-emerald-600 hover:text-emerald-700 text-sm font-black transition-all">Forgot?</a>
+            </div>
+
+            <button id="login-submit" type="submit" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-black py-5 rounded-2xl shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 text-lg">
+                Authenticate →
+            </button>
+
+            <div class="pt-4 text-center">
+                <p class="text-slate-400 text-sm font-medium">
+                    New to the movement? 
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-emerald-600 hover:text-emerald-700 font-black ml-1 border-b-2 border-emerald-100 hover:border-emerald-600 transition-all">Create Account</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePassword() {
+            var input = document.getElementById("passwordInput");
+            var icon = document.getElementById("eyeIcon");
+            if (input.type === "password") {
+                input.type = "text";
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 1.225 0 2.39.215 3.475.606m4.256 4.256c.553.791.996 1.666 1.311 2.6c-1.274 4.057-5.064 7-9.542 7-1.012 0-1.986-.15-2.902-.428M15 15l1.5 1.5M10.125 10.125L8.5 8.5" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l22 22" />';
+            } else {
+                input.type = "password";
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+            }
+        }
+    </script>
+}

@@ -1,0 +1,105 @@
+@model IEnumerable<ShareMeal.Web.Models.Donation>
+
+@{
+    ViewData["Title"] = "Available Donations";
+    ViewData["BackgroundImage"] = "/food_serving.png";
+}
+
+<style>
+    .marketplace-card {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    .marketplace-card:hover {
+        border-color: #10b981;
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1);
+    }
+</style>
+
+<div class="max-w-[1400px] mx-auto px-6 py-32 space-y-16 relative z-10">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+        <div class="text-center md:text-left">
+            <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full mb-6 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                🛒 Live Marketplace
+            </span>
+            <h1 class="text-5xl md:text-7xl font-black text-white outfit tracking-tighter leading-none mb-4">Available <br><span class="text-emerald-500">Food Donations.</span></h1>
+            <p class="text-slate-400 text-lg font-medium max-w-xl">Connecting available food items with those who needs it.</p>
+        </div>
+    </div>
+
+    <!-- Listings Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach (var item in Model)
+        {
+            <div class="marketplace-card rounded-[3rem] overflow-hidden group flex flex-col">
+                <!-- Status Badge Overlay -->
+                <div class="p-10 flex-grow">
+                    <div class="flex justify-between items-start mb-8">
+                        <span class="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            @item.Category
+                        </span>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Added @item.CreatedAt.ToString("MMM dd")</span>
+                    </div>
+                    
+                    <h3 class="text-3xl font-black text-white mb-3 outfit group-hover:text-emerald-400 transition-colors">
+                        <a asp-action="Details" asp-route-id="@item.Id">@item.FoodItem</a>
+                    </h3>
+                    
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="bg-white/5 p-2 rounded-lg">
+                            <span class="text-slate-400 font-black text-[10px] uppercase tracking-widest">Qty:</span>
+                            <span class="text-white font-black text-xs ml-1">@item.Quantity</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center text-[10px] font-black text-slate-400 mb-10 bg-white/5 p-4 rounded-2xl border border-white/5 uppercase tracking-widest">
+                        <svg class="h-4 w-4 mr-3 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Expires: <span class="ml-2 text-white">@item.ExpiryDate.ToString("MMM dd, HH:mm")</span>
+                    </div>
+
+                    <div class="border-t border-white/5 pt-8 mt-auto">
+                        <div class="flex items-center justify-between gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-2xl border border-white/10 group-hover:bg-emerald-500/20 transition-colors">🏪</div>
+                                <div class="text-[10px]">
+                                    <p class="text-slate-500 font-black uppercase tracking-widest mb-1">Donor</p>
+                                    <p class="text-white font-black truncate max-w-[120px]">@item.Donor?.Name</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col gap-2">
+                                @if (item.Status == ShareMeal.Web.Models.DonationStatus.Available)
+                                {
+                                    <a asp-action="RequestFood" asp-route-id="@item.Id" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 text-center">
+                                        Claim Now
+                                    </a>
+                                }
+                                <a asp-action="Details" asp-route-id="@item.Id" class="bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all text-center border border-white/5">
+                                    View Detail
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-40 bg-slate-900/40 rounded-[4rem] border-2 border-dashed border-white/5 backdrop-blur-3xl">
+            <div class="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-10 overflow-hidden relative">
+                <div class="absolute inset-0 bg-emerald-500/10 animate-pulse"></div>
+                <span class="text-6xl relative z-10">📦</span>
+            </div>
+            <h3 class="text-3xl font-black text-white outfit mb-3">No Active Listings</h3>
+            <p class="text-slate-500 font-medium text-lg uppercase tracking-widest text-[10px]">The marketplace is currently resting.</p>
+        </div>
+    }
+</div>

@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Platform Reports";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="mb-10">
+        <h1 class="text-3xl font-black text-white">Generate Reports</h1>
+        <p class="text-slate-400 mt-2">Export platform data and view live tracking dashboards.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-slate-800/80 rounded-3xl border border-slate-700/50 p-8 shadow-xl">
+            <h3 class="text-xl font-bold text-white mb-4">Donation Impact CSV</h3>
+            <p class="text-slate-400 mb-6">Download a live CSV of all food donations with status, donor, recipient, and timeline data.</p>
+            <div class="flex flex-col xl:flex-row gap-3">
+                <a asp-action="ExportCsv" class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 whitespace-nowrap text-sm">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m4 2v-4m4 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Generate Report
+                </a>
+                <a asp-action="ExportCsv" class="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 whitespace-nowrap text-sm">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download Report
+                </a>
+            </div>
+        </div>
+        <div class="bg-slate-800/80 rounded-3xl border border-slate-700/50 p-8 shadow-xl">
+            <h3 class="text-xl font-bold text-white mb-4">Live Food Tracking</h3>
+            <p class="text-slate-400 mb-6">View real-time tracking of all food items — Listed → Claimed → Collected timeline.</p>
+            <a asp-action="FoodTracking" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl w-full transition-all transform hover:scale-105">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                Open Tracking Dashboard
+            </a>
+        </div>
+        <div class="bg-slate-800/80 rounded-3xl border border-slate-700/50 p-8 shadow-xl">
+            <h3 class="text-xl font-bold text-white mb-4">User Activity</h3>
+            <p class="text-slate-400 mb-6">View all registered organizations, restaurants, and charities in one place.</p>
+            <a asp-action="ManageUsers" class="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-6 rounded-xl w-full transition-all transform hover:scale-105">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                View All Users
+            </a>
+        </div>
+    </div>
+</div>

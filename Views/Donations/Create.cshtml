@@ -1,0 +1,68 @@
+@model ShareMeal.Web.Models.Donation
+
+@{
+    ViewData["Title"] = "List Surplus Food";
+    ViewData["BackgroundImage"] = "/restaurant_donation_bg.png";
+}
+
+<div class="max-w-3xl mx-auto px-4 py-16">
+    <div class="bg-white rounded-[3rem] border border-slate-100 p-12 shadow-2xl relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+        
+        <div class="relative z-10">
+            <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+                🍱 New Listing
+            </div>
+            <h1 class="text-4xl font-black text-slate-900 outfit mb-2">Share Surplus Food</h1>
+            <p class="text-slate-500 font-medium mb-10 leading-relaxed">Your professional contribution helps reduce waste and sustain our local community.</p>
+
+            <form asp-action="Create" class="space-y-8">
+                <div asp-validation-summary="ModelOnly" class="text-rose-600 text-xs font-bold bg-rose-50 p-4 rounded-2xl border border-rose-100 mb-8" role="alert"></div>
+
+                <div class="group">
+                    <label asp-for="FoodItem" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-3">Food Item Description</label>
+                    <input asp-for="FoodItem" placeholder="e.g. 20 Fresh Club Sandwiches" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium transition-all" />
+                    <span asp-validation-for="FoodItem" class="text-rose-500 text-[10px] font-bold pl-4 mt-1"></span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="group">
+                        <label asp-for="Category" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-3">Category</label>
+                        <div class="relative">
+                            <select asp-for="Category" asp-items="Html.GetEnumSelectList<ShareMeal.Web.Models.FoodCategory>()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 focus:outline-none focus:border-emerald-500 font-bold transition-all appearance-none cursor-pointer"></select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label asp-for="Quantity" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-3">Total Quantity</label>
+                        <input asp-for="Quantity" placeholder="e.g. 15 Boxes" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium transition-all" />
+                        <span asp-validation-for="Quantity" class="text-rose-500 text-[10px] font-bold pl-4 mt-1"></span>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label asp-for="ExpiryDate" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-3">Best Before / Expiry Time</label>
+                    <input asp-for="ExpiryDate" type="datetime-local" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 focus:outline-none focus:border-emerald-500 font-black transition-all" />
+                    <span asp-validation-for="ExpiryDate" class="text-rose-500 text-[10px] font-bold pl-4 mt-1"></span>
+                </div>
+
+                <div class="group">
+                    <label asp-for="PickupInstructions" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest pl-4 mb-3">Logistics / Pickup Note</label>
+                    <textarea asp-for="PickupInstructions" rows="3" placeholder="Specify pickup location or specific time instructions..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium transition-all"></textarea>
+                </div>
+
+                <div class="pt-6 flex flex-col sm:flex-row gap-4">
+                    <button type="submit" class="flex-1 bg-slate-900 hover:bg-emerald-600 text-white font-black py-5 rounded-[1.5rem] shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 text-lg">
+                        Submit Listing →
+                    </button>
+                    <a asp-action="Index" class="px-8 py-5 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black rounded-[1.5rem] text-center transition-all">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

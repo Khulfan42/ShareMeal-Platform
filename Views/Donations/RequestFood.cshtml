@@ -1,0 +1,49 @@
+@model ShareMeal.Web.Models.Donation
+
+@{
+    ViewData["Title"] = "Confirm Food Request";
+}
+
+<div class="max-w-3xl mx-auto px-4 py-16">
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-black text-white mb-4">Request Surplus Food</h1>
+        <p class="text-slate-400">Please confirm your request for the following item. Modifying this request later may incur a negative strike on your account.</p>
+    </div>
+
+    <div class="bg-slate-800/80 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50 mb-8">
+            <h3 class="text-slate-500 font-bold uppercase tracking-widest text-xs mb-1">Item Details</h3>
+            <p class="text-2xl text-white font-bold mb-4">@Model.FoodItem</p>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold">QUANTITY</p>
+                    <p class="text-emerald-400 font-bold">@Model.Quantity</p>
+                </div>
+                <div>
+                    <p class="text-slate-500 text-xs font-semibold">EXPIRY</p>
+                    <p class="text-rose-400 font-bold">@Model.ExpiryDate.ToString("MMM dd, HH:mm")</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-slate-700/50">
+                <p class="text-slate-500 text-xs font-semibold mb-1">PICKUP INSTRUCTIONS</p>
+                <p class="text-slate-300 italic text-sm">"@(string.IsNullOrEmpty(Model.PickupInstructions) ? "None specified." : Model.PickupInstructions)"</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-6">
+            <form asp-action="Claim" asp-route-id="@Model.Id" method="post" class="w-full sm:flex-1">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-xl shadow-xl shadow-emerald-900/30 transition-all transform hover:scale-[1.02] active:scale-95 text-lg flex justify-center items-center gap-3">
+                    Submit Request
+                </button>
+            </form>
+            
+            <a href="javascript:history.back()" class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl text-center transition-all">
+                Cancel
+            </a>
+        </div>
+    </div>
+</div>

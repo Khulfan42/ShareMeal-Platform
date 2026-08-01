@@ -1,0 +1,61 @@
+@model IEnumerable<ShareMeal.Web.Models.Donation>
+
+@{
+    ViewData["Title"] = "My Requests";
+}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="mb-10">
+        <h1 class="text-3xl font-black text-white">My Requests</h1>
+        <p class="text-slate-400 mt-2">Food you have requested to collect.</p>
+    </div>
+
+    <div class="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700/50 overflow-hidden">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-widest font-bold">
+                    <th class="px-6 py-4">Food Item</th>
+                    <th class="px-6 py-4">Donor Restaurant</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/50">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-700/20 transition-colors">
+                        <td class="px-6 py-4 font-bold text-white">@item.FoodItem <br><span class="text-xs text-slate-400 font-normal">Qty: @item.Quantity</span></td>
+                        <td class="px-6 py-4 text-slate-300">@item.Donor?.Name</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase
+                                @(item.Status == ShareMeal.Web.Models.DonationStatus.Claimed ? "bg-amber-400/10 text-amber-400 border border-amber-400/20" : 
+                                  "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20")">
+                                @item.Status
+                            </span>
+                        </td>
+                            <div class="flex items-center space-x-3 justify-end">
+                                <a asp-action="PickupDetails" class="text-blue-400 hover:text-blue-300 font-semibold text-sm">Pickup Info</a>
+                                
+                                @if(item.Status == ShareMeal.Web.Models.DonationStatus.Claimed)
+                                {
+                                    <form asp-controller="Donations" asp-action="CancelPickup" asp-route-id="@item.Id" method="post" class="inline">
+                                        <button type="submit" class="text-rose-400 hover:text-rose-300 font-semibold text-sm border border-rose-400/20 bg-rose-400/10 px-3 py-1 rounded-lg">Cancel Request</button>
+                                    </form>
+
+                                    <form asp-controller="Donations" asp-action="MarkAsCollected" asp-route-id="@item.Id" method="post" class="inline">
+                                        <button type="submit" class="text-emerald-400 hover:text-emerald-300 font-semibold text-sm border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 rounded-lg">Confirm Pickup</button>
+                                    </form>
+                                }
+                            </div>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="text-center py-16">
+                <p class="text-slate-400 italic">No requested donations yet.</p>
+            </div>
+        }
+    </div>
+</div>
