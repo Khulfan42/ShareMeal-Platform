@@ -74,6 +74,23 @@ namespace ShareMeal.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLogin(string provider, string? returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var demoEmail = provider.ToLower() == "google" ? "mkhulfan9@gmail.com" : "khulfanchoudhary@gmail.com";
+            var user = await _userManager.FindByEmailAsync(demoEmail);
+            if (user != null)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) 
+                    ? Redirect(returnUrl) 
+                    : RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
