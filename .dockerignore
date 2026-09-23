@@ -1,0 +1,13 @@
+# .dockerignore — files to exclude from Docker build context
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+.git/
+*.user
+*.suo
+appsettings.Development.json
+ShareMeal.db-shm
+ShareMeal.db-wal
+.DS_Store
