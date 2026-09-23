@@ -6,7 +6,7 @@ using ShareMeal.Web.Models;
 
 namespace ShareMeal.Web.Controllers;
 
-[Microsoft.AspNetCore.Authorization.Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Restaurant,Admin")]
 public class RestaurantController : Controller
 {
     private readonly ApplicationDbContext _context;

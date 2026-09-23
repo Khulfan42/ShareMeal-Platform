@@ -14,7 +14,14 @@
 }
 else
 {
-    <a class="text-slate-400 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors" asp-controller="Account" asp-action="Login">Login</a>
-    <a class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20" asp-controller="Account" asp-action="Register">Join Now</a>
+    <a class="nav-login-btn" asp-controller="Account" asp-action="Login">
+        <span>Login</span>
+    </a>
+    <a class="nav-join-btn group" asp-controller="Account" asp-action="Register">
+        <span>Join Now</span>
+        <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+    </a>
 }
 </div>

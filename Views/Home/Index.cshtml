@@ -14,9 +14,33 @@
     }
     .text-lime-brand { color: #bef264; }
     
+    /* Dynamic Global Food Circulation Background System */
+    .bg-food-circulation-container {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .bg-food-slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 2s ease-in-out, transform 8s ease-out;
+        transform: scale(1.05);
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.62) contrast(1.12) saturate(1.25);
+    }
+    .bg-food-slide.active {
+        opacity: 0.52;
+        transform: scale(1);
+    }
+    
     .bg-charity-theme {
-        background: radial-gradient(circle at bottom left, #0a2e24 0%, #020611 100%);
-        background-attachment: fixed;
+        position: relative;
+        z-index: 10;
+        background: transparent;
     }
     
     .carousel-slide {
@@ -54,20 +78,60 @@
     }
     .btn-hero-find:hover { background-color: #242f45; transform: scale(1.02); }
 
-    .dev-card-premium {
-        background-color: #0d1421;
-        border-radius: 3.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.03);
-        box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
-    }
-
     .feature-card {
         background: rgba(30, 41, 59, 0.3);
         backdrop-filter: blur(20px);
         transition: all 0.3s ease;
     }
     .feature-card:hover { transform: translateX(10px); background: rgba(30, 41, 59, 0.5); }
+
+    /* Infinite Marquee Food Circulation Showcase */
+    @@keyframes marquee-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .food-marquee-container {
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .food-marquee-track {
+        display: flex;
+        gap: 1.5rem;
+        flex-shrink: 0;
+        animation: marquee-scroll 35s linear infinite;
+        will-change: transform;
+    }
+    .food-marquee-container:hover .food-marquee-track {
+        animation-play-state: paused;
+    }
+    .food-card-glass {
+        background: rgba(13, 20, 33, 0.72);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .food-card-glass:hover {
+        border-color: rgba(16, 185, 129, 0.5);
+        box-shadow: 0 16px 36px -10px rgba(16, 185, 129, 0.25);
+        transform: translateY(-5px);
+    }
 </style>
+
+<!-- GLOBAL FOOD CIRCULATION BACKGROUND (Continuous Smooth Fade) -->
+<div class="bg-food-circulation-container" aria-hidden="true">
+    <div class="bg-food-slide active" style="background-image: url('/carousel_1.png');"></div>
+    <div class="bg-food-slide" style="background-image: url('/food_serving.png');"></div>
+    <div class="bg-food-slide" style="background-image: url('/carousel_2.png');"></div>
+    <div class="bg-food-slide" style="background-image: url('/charity_hero_premium.png');"></div>
+    <div class="bg-food-slide" style="background-image: url('/carousel_3.png');"></div>
+    <div class="bg-food-slide" style="background-image: url('/restaurant_bg.png');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#020611]/55 via-[#020611]/70 to-[#020611]/85 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.2),transparent_70%)] pointer-events-none"></div>
+</div>
 
 <div class="bg-charity-theme">
     <!-- SECTION 1: HERO -->
@@ -142,12 +206,136 @@
         </div>
     </div>
 
-    <!-- MISSION -->
-    <div class="py-32 px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-500 px-6 py-2 rounded-full text-[10px] font-black tracking-widest uppercase mb-10 border border-rose-500/20">OUR MISSION</div>
-            <h2 class="text-5xl md:text-7xl font-black outfit text-white leading-tight mb-10"><span class="text-rose-500">Millions</span> Go Hungry.<br>You Can Change That.</h2>
-            <p class="text-slate-400 text-xl font-medium leading-relaxed max-w-3xl mx-auto">While restaurants waste tons of food daily, people nearby go to sleep hungry. ShareMeal bridges this gap — directly, quickly, and with zero waste.</p>
+    <!-- SECTION 2: OUR MISSION & NATIONWIDE IMPACT -->
+    <div class="py-24 px-6 md:px-8 relative overflow-hidden">
+        <!-- Ambient Glowing Backdrop -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <!-- Section Header -->
+            <div class="text-center max-w-4xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 px-6 py-2 rounded-full text-[10px] font-black tracking-widest uppercase mb-8 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                    <span>OUR HUMANITARIAN MISSION</span>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black outfit text-white leading-[1.05] mb-8">
+                    <span class="text-rose-500">Millions</span> Go Hungry.<br>
+                    Together, We Deliver Hope.
+                </h2>
+                <p class="text-slate-300 text-lg md:text-xl font-medium leading-relaxed max-w-3xl mx-auto mb-10">
+                    While banquets, restaurants, and catering services produce tons of untouched surplus food daily, impoverished families in our neighborhoods go to sleep hungry. ShareMeal bridges this gap with zero waste, maximum speed, and complete dignity.
+                </p>
+
+                <!-- Floating Food Category Badges -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="px-4 py-2 rounded-full bg-slate-900/80 border border-white/10 text-slate-200 text-xs font-bold flex items-center gap-2 shadow-sm">
+                        <span>🍛</span> Hot Biryani & Buffet Trays
+                    </span>
+                    <span class="px-4 py-2 rounded-full bg-slate-900/80 border border-white/10 text-slate-200 text-xs font-bold flex items-center gap-2 shadow-sm">
+                        <span>🥖</span> Fresh Bakery & Breads
+                    </span>
+                    <span class="px-4 py-2 rounded-full bg-slate-900/80 border border-white/10 text-slate-200 text-xs font-bold flex items-center gap-2 shadow-sm">
+                        <span>🥗</span> Farm Fresh Produce & Fruits
+                    </span>
+                    <span class="px-4 py-2 rounded-full bg-slate-900/80 border border-white/10 text-slate-200 text-xs font-bold flex items-center gap-2 shadow-sm">
+                        <span>🥛</span> Milk & Dairy Essentials
+                    </span>
+                    <span class="px-4 py-2 rounded-full bg-slate-900/80 border border-white/10 text-slate-200 text-xs font-bold flex items-center gap-2 shadow-sm">
+                        <span>📦</span> Family Ration Care Packs
+                    </span>
+                </div>
+            </div>
+
+            <!-- 4-Card Mission Impact Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <!-- Card 1 -->
+                <div class="food-card-glass p-7 rounded-[2.5rem] border border-white/10 relative overflow-hidden group hover:border-emerald-500/50 transition-all shadow-xl">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">
+                        🍲
+                    </div>
+                    <span class="text-emerald-400 text-[10px] font-black uppercase tracking-widest block mb-2">Hospitality Food Recovery</span>
+                    <h4 class="text-white font-extrabold text-xl outfit mb-3">Hotel & Banquet Surplus</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Untouched trays from weddings, corporate banquets, and buffets packaged in safe thermal carriers within 30 minutes.</p>
+                    <div class="mt-4 pt-4 border-t border-white/5 text-[11px] font-mono text-emerald-300 flex items-center justify-between">
+                        <span>Saved: 15,000+ kg</span>
+                        <span>⚡ Rapid Route</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="food-card-glass p-7 rounded-[2.5rem] border border-white/10 relative overflow-hidden group hover:border-amber-500/50 transition-all shadow-xl">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">
+                        🤲
+                    </div>
+                    <span class="text-amber-400 text-[10px] font-black uppercase tracking-widest block mb-2">Community Kitchens</span>
+                    <h4 class="text-white font-extrabold text-xl outfit mb-3">Daily Dastarkhwan Relief</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Dispatched directly to free food dastarkhwans and roadside shelters feeding daily-wage workers and children.</p>
+                    <div class="mt-4 pt-4 border-t border-white/5 text-[11px] font-mono text-amber-300 flex items-center justify-between">
+                        <span>Served: 12,000+ meals</span>
+                        <span>💚 100% Free</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="food-card-glass p-7 rounded-[2.5rem] border border-white/10 relative overflow-hidden group hover:border-blue-500/50 transition-all shadow-xl">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">
+                        🏢
+                    </div>
+                    <span class="text-blue-400 text-[10px] font-black uppercase tracking-widest block mb-2">Verified Charities</span>
+                    <h4 class="text-white font-extrabold text-xl outfit mb-3">38+ Registered NGOs</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Saylani, Edhi, Al-Khidmat, and Chhipa receive instant notifications with live donor GPS locations for quick pickup.</p>
+                    <div class="mt-4 pt-4 border-t border-white/5 text-[11px] font-mono text-blue-300 flex items-center justify-between">
+                        <span>11 Cities Active</span>
+                        <span>📍 Nationwide</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="food-card-glass p-7 rounded-[2.5rem] border border-white/10 relative overflow-hidden group hover:border-purple-500/50 transition-all shadow-xl">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">
+                        🛡️
+                    </div>
+                    <span class="text-purple-400 text-[10px] font-black uppercase tracking-widest block mb-2">Quality & Dignity</span>
+                    <h4 class="text-white font-extrabold text-xl outfit mb-3">Food Safety Certified</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Rigorous hygiene checklist, safe temperature handling, and verified volunteer handovers maintain dignity.</p>
+                    <div class="mt-4 pt-4 border-t border-white/5 text-[11px] font-mono text-purple-300 flex items-center justify-between">
+                        <span>Zero Waste Target</span>
+                        <span>✅ 100% Inspected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redistribution Step Banner (How It Flows) -->
+            <div class="bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-slate-900/90 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-xl flex flex-col lg:flex-row items-center justify-between gap-6 shadow-2xl">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl">🔄</span>
+                    <div>
+                        <h4 class="text-white font-black text-lg outfit">The 4-Step Zero-Waste Cycle</h4>
+                        <p class="text-slate-400 text-xs">How a surplus dish turns into a hot meal on someone's plate in under 45 minutes</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-300">
+                    <span class="bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 flex items-center gap-2 text-emerald-400">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-[10px] font-black">1</span>
+                        Post Surplus
+                    </span>
+                    <span class="text-slate-600">➔</span>
+                    <span class="bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 flex items-center gap-2 text-blue-400">
+                        <span class="w-5 h-5 rounded-full bg-blue-500/20 text-blue-300 flex items-center justify-center text-[10px] font-black">2</span>
+                        Charity Claims
+                    </span>
+                    <span class="text-slate-600">➔</span>
+                    <span class="bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 flex items-center gap-2 text-amber-400">
+                        <span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-[10px] font-black">3</span>
+                        Fast Pickup
+                    </span>
+                    <span class="text-slate-600">➔</span>
+                    <span class="bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 flex items-center gap-2 text-rose-400">
+                        <span class="w-5 h-5 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-[10px] font-black">4</span>
+                        Dignified Meal
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -166,11 +354,19 @@
         </div>
     </div>
 
-    <!-- SECTION 4: YouTube RESTORED -->
-    <div class="py-32 px-8">
-        <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-4xl md:text-6xl font-black text-white outfit mb-10">Reduce Food Waste & Help Communities</h2>
-            <div class="aspect-video max-w-[800px] mx-auto rounded-[2rem] overflow-hidden border-8 border-white/5 shadow-2xl">
+    <!-- SECTION 4: FOOD WASTE AWARENESS & IMPACT VIDEO -->
+    <div class="py-24 px-6 md:px-8 relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-6 py-2 rounded-full text-[10px] font-black tracking-widest uppercase mb-6 shadow-sm">
+                <span>🎬</span>
+                <span>EDUCATIONAL & SOCIAL IMPACT</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black text-white outfit mb-6">Reduce Food Waste & Feed Communities</h2>
+            <p class="text-slate-300 text-base md:text-lg font-medium max-w-2xl mx-auto mb-12">
+                Discover the reality of food loss and how technology connects surplus donors to starving communities within minutes.
+            </p>
+            <div class="aspect-video max-w-[850px] mx-auto rounded-[2.5rem] overflow-hidden border-8 border-white/10 shadow-2xl relative group hover:border-emerald-500/30 transition-all">
                 <iframe class="w-full h-full" 
                         src="https://www.youtube.com/embed/ishA6kry8nc" 
                         title="Food Waste Awareness" 
@@ -179,27 +375,390 @@
                         allowfullscreen>
                 </iframe>
             </div>
+
+            <!-- 3 Key Takeaway Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+                <div class="food-card-glass p-6 rounded-3xl border border-white/10 text-left">
+                    <span class="text-2xl mb-2 block">🌾</span>
+                    <h4 class="text-white font-bold text-base outfit mb-1">36M Tons Wasted</h4>
+                    <p class="text-slate-400 text-xs">Massive food loss occurs annually across hotels, banquets, and supply chains in Pakistan.</p>
+                </div>
+                <div class="food-card-glass p-6 rounded-3xl border border-white/10 text-left">
+                    <span class="text-2xl mb-2 block">👶</span>
+                    <h4 class="text-white font-bold text-base outfit mb-1">40% Child Malnutrition</h4>
+                    <p class="text-slate-400 text-xs">Millions face food insecurity while usable untouched meals are dumped into city landfills.</p>
+                </div>
+                <div class="food-card-glass p-6 rounded-3xl border border-white/10 text-left">
+                    <span class="text-2xl mb-2 block">💡</span>
+                    <h4 class="text-white font-bold text-base outfit mb-1">The ShareMeal Solution</h4>
+                    <p class="text-slate-400 text-xs">Direct GPS matching transfers hot meals from commercial kitchens to needy hands in 45 mins.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- SECTION 5: DEVELOPER (Moved to Bottom) -->
-    <div class="py-32 px-8">
-        <div class="max-w-4xl mx-auto">
-            <div class="dev-card-premium p-12 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
-                <div class="absolute top-8 right-8 px-4 py-1.5 bg-[#0a2e24] text-[#10b981] text-[9px] font-black uppercase tracking-widest rounded-lg border border-[#10b981]/20">Verified Publisher</div>
-                <div class="flex-shrink-0"><img src="~/dev_pic.png" class="w-48 h-48 rounded-full border-2 border-[#f39c12] p-1.5 object-cover" /></div>
-                <div class="text-center md:text-left space-y-4 flex-grow">
-                    <h2 class="text-4xl font-black text-white outfit">Made by Khulfan</h2>
-                    <p class="text-[#f39c12] font-black text-xs uppercase tracking-[0.4em]">Full Stack Architect & Visionary</p>
-                    <p class="text-slate-400 text-sm font-medium leading-relaxed max-w-xl">Passionate about using technology to solve real-world problems. Specializing in iOS, Android, and high-performance Web platforms for university and commercial projects.</p>
-                    <div class="pt-6 flex flex-wrap gap-4 justify-center md:justify-start">
-                        <a href="https://wa.me/923037377365" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-2xl text-xs uppercase tracking-widest transition-all">WhatsApp Me</a>
-                        <div class="flex gap-4 items-center ml-4">
-                            <a href="#" class="text-slate-500 hover:text-white transition-colors">Instagram</a>
-                            <a href="#" class="text-slate-500 hover:text-white transition-colors">GitHub</a>
+    <!-- SECTION 5: LIVE FOOD CIRCULATION & COMMUNITY IMPACT SHOWCASE -->
+    <div class="py-28 px-4 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto text-center mb-14 px-4">
+            <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase mb-6 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>🔄 24/7 LIVE FOOD CIRCULATION NETWORK</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-black text-white outfit leading-tight mb-6">
+                Surplus Meals <span class="text-emerald-400">In Continuous Motion</span>
+            </h2>
+            <p class="text-slate-300 text-base md:text-lg max-w-3xl mx-auto font-medium leading-relaxed">
+                Watch how hotels, bakeries, and banquet halls connect instantly with registered charity dastarkhwans across Pakistan — transforming surplus into life-saving nourishment.
+            </p>
+        </div>
+
+        <!-- Infinite Food Circulation Marquee -->
+        <div class="food-marquee-container py-4 mb-16">
+            <div class="food-marquee-track">
+                <!-- Card 1 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_1.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Hot Banquet Meals" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Multan Active Drop</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 240 Servings
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Buffet & Rice Trays</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Royal Palace Hotel, claimed & distributed by Saylani Welfare Multan.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Food-Safe Inspected</span>
+                            <span class="text-slate-400 font-mono">35 mins ago</span>
                         </div>
                     </div>
                 </div>
+
+                <!-- Card 2 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/food_serving.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Dastarkhwan Meals" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Lahore Community Feed</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 190 Servings
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Hot Meal Dastarkhwan</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Monal Rooftop Gulberg, routed to Edhi Foundation Free Kitchen.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Delivered Hot</span>
+                            <span class="text-slate-400 font-mono">50 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_2.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Bakery Surplus" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Karachi Express Drop</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 130 Packs
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Bakery & Bread Baskets</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Pearl Continental Bakery, delivered to Saylani Welfare Saddar.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Sealed & Packed</span>
+                            <span class="text-slate-400 font-mono">1 hr ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/charity_hero_premium.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Ration Packages" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Islamabad Family Relief</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 85 Family Boxes
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Nutritional Ration Packs</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Sponsored by Islamabad Club & Serena, distributed by Al-Khidmat Foundation F-10.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Staple Groceries</span>
+                            <span class="text-slate-400 font-mono">2 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_3.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Fresh Produce" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Faisalabad Market Hub</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 140 Crates
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Fruits & Dairy Crates</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Chenab Club & wholesale market, handed over to Chhipa Dastarkhwan.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Vitamin Rich</span>
+                            <span class="text-slate-400 font-mono">3 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/restaurant_bg.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Restaurant Meal Parcels" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Rawalpindi Quick Feed</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 160 Meals
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Sealed Commercial Kitchen Packs</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from PC Rawalpindi, distributed via Robin Hood Army volunteer squads.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Zero Contact Seal</span>
+                            <span class="text-slate-400 font-mono">4 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DUPLICATE SET FOR SEAMLESS 360 INFINITE LOOP -->
+                <!-- Duplicate Card 1 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_1.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Hot Banquet Meals" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Multan Active Drop</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 240 Servings
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Buffet & Rice Trays</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Royal Palace Hotel, claimed & distributed by Saylani Welfare Multan.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Food-Safe Inspected</span>
+                            <span class="text-slate-400 font-mono">35 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Card 2 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/food_serving.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Dastarkhwan Meals" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Lahore Community Feed</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 190 Servings
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Hot Meal Dastarkhwan</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Monal Rooftop Gulberg, routed to Edhi Foundation Free Kitchen.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Delivered Hot</span>
+                            <span class="text-slate-400 font-mono">50 mins ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Card 3 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_2.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Bakery Surplus" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Karachi Express Drop</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 130 Packs
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Bakery & Bread Baskets</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Pearl Continental Bakery, delivered to Saylani Welfare Saddar.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Sealed & Packed</span>
+                            <span class="text-slate-400 font-mono">1 hr ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Card 4 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/charity_hero_premium.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Ration Packages" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Islamabad Family Relief</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 85 Family Boxes
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Nutritional Ration Packs</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Sponsored by Islamabad Club & Serena, distributed by Al-Khidmat Foundation F-10.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Staple Groceries</span>
+                            <span class="text-slate-400 font-mono">2 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Card 5 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/carousel_3.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Fresh Produce" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Faisalabad Market Hub</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 140 Crates
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Fresh Fruits & Dairy Crates</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from Chenab Club & wholesale market, handed over to Chhipa Dastarkhwan.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Vitamin Rich</span>
+                            <span class="text-slate-400 font-mono">3 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate Card 6 -->
+                <div class="food-card-glass w-[330px] rounded-3xl p-4 flex-shrink-0 flex flex-col justify-between" aria-hidden="true">
+                    <div class="relative h-48 rounded-2xl overflow-hidden mb-4 group">
+                        <img src="/restaurant_bg.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Restaurant Meal Parcels" />
+                        <div class="absolute top-3 left-3 bg-[#0a2e24]/90 backdrop-blur-md text-[#10b981] border border-[#10b981]/30 text-[9px] font-black uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Rawalpindi Quick Feed</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-400/20">
+                            ⚡ 160 Meals
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-base mb-1 outfit">Sealed Commercial Kitchen Packs</h4>
+                        <p class="text-slate-400 text-xs mb-3 leading-relaxed">Rescued from PC Rawalpindi, distributed via Robin Hood Army volunteer squads.</p>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-semibold text-slate-400">
+                            <span class="flex items-center gap-1 text-emerald-400"><span>✅</span> Zero Contact Seal</span>
+                            <span class="text-slate-400 font-mono">4 hrs ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Action & Community Callout Bar -->
+        <div class="max-w-5xl mx-auto backdrop-blur-2xl bg-slate-900/60 border border-white/10 rounded-[2.5rem] p-8 md:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="text-emerald-400 text-xs font-black uppercase tracking-widest">National Food Security Initiative</span>
+                <h3 class="text-2xl md:text-3xl font-black text-white outfit">Have Surplus Food to Donate Today?</h3>
+                <p class="text-slate-400 text-sm max-w-lg">Every meal saved from waste feeds a hungry child or family. Registered charities collect from your doorstep within 45 minutes.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 justify-center md:justify-end">
+                @if (User.IsInRole("Restaurant") || User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Donations" asp-action="Create" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 px-8 rounded-2xl text-xs uppercase tracking-widest shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
+                        🥗 Post Food Donation
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Donations" asp-action="Index" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 px-8 rounded-2xl text-xs uppercase tracking-widest shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95">
+                        🍽️ Explore Available Meals
+                    </a>
+                }
+                <button type="button" onclick="toggleMealBot()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black py-4 px-8 rounded-2xl text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                    <span>🤖</span>
+                    <span>AI Assistant</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Nationwide Verified Partner Network Grid (Filling the bottom space beautifully) -->
+        <div class="max-w-5xl mx-auto mt-16 text-center">
+            <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                <span>🇵🇰 NATIONWIDE RELIEF COALITION</span>
+            </div>
+            <h4 class="text-white font-extrabold text-xl md:text-2xl outfit mb-3">Partnered with Pakistan's Trusted Relief Foundations</h4>
+            <p class="text-slate-400 text-xs md:text-sm max-w-xl mx-auto mb-8">Directly integrating emergency food redistribution across 38+ organizations and community kitchens.</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/40 transition-all text-center">
+                    <span class="text-2xl mb-1 block">🏢</span>
+                    <p class="text-white font-bold text-xs">Saylani Welfare</p>
+                    <span class="text-[9px] text-emerald-400 font-mono">Multan, KHI, LHE</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/40 transition-all text-center">
+                    <span class="text-2xl mb-1 block">🚑</span>
+                    <p class="text-white font-bold text-xs">Edhi Foundation</p>
+                    <span class="text-[9px] text-emerald-400 font-mono">Emergency Network</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/40 transition-all text-center">
+                    <span class="text-2xl mb-1 block">🤝</span>
+                    <p class="text-white font-bold text-xs">Al-Khidmat</p>
+                    <span class="text-[9px] text-emerald-400 font-mono">Disaster Relief</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/40 transition-all text-center">
+                    <span class="text-2xl mb-1 block">🍲</span>
+                    <p class="text-white font-bold text-xs">Chhipa Welfare</p>
+                    <span class="text-[9px] text-emerald-400 font-mono">Daily Dastarkhwan</span>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-emerald-500/40 transition-all text-center">
+                    <span class="text-2xl mb-1 block">💚</span>
+                    <p class="text-white font-bold text-xs">Robin Hood Army</p>
+                    <span class="text-[9px] text-emerald-400 font-mono">Youth Volunteer Wing</span>
+                </div>
+            </div>
+
+            <!-- Active Cities Pills -->
+            <div class="flex flex-wrap justify-center items-center gap-2 text-[10px] font-bold text-slate-400">
+                <span class="text-emerald-400 font-black">● LIVE COVERAGE:</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Multan</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Lahore</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Karachi</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Islamabad</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Rawalpindi</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Faisalabad</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Peshawar</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Quetta</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Gujranwala</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Sialkot</span>
+                <span class="bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">Hyderabad</span>
             </div>
         </div>
     </div>
@@ -232,5 +791,16 @@
         };
         
         setInterval(() => changeHeroSlide('next'), 6000);
+
+        // Continuous Global Background Food Circulation
+        const bgFoodSlides = document.querySelectorAll('.bg-food-slide');
+        if (bgFoodSlides.length > 0) {
+            let bgIndex = 0;
+            setInterval(() => {
+                bgFoodSlides[bgIndex].classList.remove('active');
+                bgIndex = (bgIndex + 1) % bgFoodSlides.length;
+                bgFoodSlides[bgIndex].classList.add('active');
+            }, 5500);
+        }
     });
 </script>

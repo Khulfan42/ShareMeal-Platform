@@ -31,5 +31,8 @@ namespace ShareMeal.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please select your account type")]
+        public string Role { get; set; } = string.Empty;
     }
 }

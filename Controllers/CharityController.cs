@@ -6,7 +6,7 @@ using ShareMeal.Web.Models;
 
 namespace ShareMeal.Web.Controllers;
 
-[Microsoft.AspNetCore.Authorization.Authorize]
+[Microsoft.AspNetCore.Authorization.Authorize(Roles = "Charity,Admin")]
 public class CharityController : Controller
 {
     private readonly ApplicationDbContext _context;

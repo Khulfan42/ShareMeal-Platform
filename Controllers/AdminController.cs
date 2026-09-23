@@ -141,7 +141,7 @@ Your organization account on ShareMeal has been suspended by the administrator.
 
 During this time, you will not be able to access your dashboard, post new food donations, or claim items. 
 
-If you believe this is a mistake, please contact our support team at support@sharemeal.com or via WhatsApp at 03037377365.
+If you believe this is a mistake, please contact our administrative support team at support@sharemeal.org.
 
 Regards,
 The ShareMeal Team";

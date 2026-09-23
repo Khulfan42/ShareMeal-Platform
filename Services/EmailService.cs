@@ -11,8 +11,8 @@ public class EmailService : IEmailService
 
     public Task SendEmailAsync(string email, string subject, string message)
     {
-        // For demonstration/FYP, we log the email to the console.
-        // In a real app, you would use SendGrid or an SMTP client here.
+        // Transactional email logging provider for development and testing.
+        // Dispatches simulated notification logs to standard console output.
         
         Console.WriteLine("\n" + new string('=', 50));
         Console.WriteLine($"📧 EMAIL SENT TO: {email}");

@@ -22,5 +22,9 @@ obj/
 .vscode/
 .idea/
 
-# Database files (uncomment if you don't want to track sqlite db file)
-# ShareMeal.db
+# Database temporary files
+*.db-shm
+*.db-wal
+
+# Local secrets & environment overrides
+appsettings.Development.json
