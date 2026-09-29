@@ -81,6 +81,25 @@ public class HomeController : Controller
         return View();
     }
 
+    // Hidden presentation route — not in navbar, only via direct URL
+    public IActionResult Presentation()
+    {
+        return View();
+    }
+
+    // Direct PPTX download
+    public IActionResult DownloadPresentation()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ShareMeal_Presentation.pptx");
+        if (!System.IO.File.Exists(filePath))
+            return NotFound("Presentation file not found. Please contact admin.");
+
+        var fileBytes = System.IO.File.ReadAllBytes(filePath);
+        return File(fileBytes,
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "ShareMeal_FYP_Presentation.pptx");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
