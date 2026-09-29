@@ -9,8 +9,8 @@ from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
-from pptx.util import Inches, Pt
 from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.oxml import parse_xml
 import copy, io, os, math
 
 # ── Output path ──────────────────────────────────────────────────
@@ -74,10 +74,21 @@ def add_text(slide, text, x, y, w, h,
     run.font.name = font_name
     return tb
 
-def add_slide(title_text=""):
+def add_slide(title_text="", transition="fade"):
     slide = prs.slides.add_slide(BLANK)
     # Full dark background
     add_rect(slide, 0, 0, SLIDE_W, SLIDE_H, fill=DARK_BG)
+    # Add native PowerPoint slide transition (animates when F5 pressed in PPT)
+    try:
+        if transition == "push":
+            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:push dir="l"/></p:transition>')
+        elif transition == "wipe":
+            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:wipe/></p:transition>')
+        else:
+            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:fade/></p:transition>')
+        slide._element.append(trans_xml)
+    except Exception as e:
+        pass
     return slide
 
 def accent_bar(slide, color=EMERALD, w=Inches(1.2), h=Inches(0.06)):
