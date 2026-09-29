@@ -1,33 +1,28 @@
 """
-ShareMeal Platform — Professional FYP Presentation Generator
-University of Southern Punjab, Multan
-Supervisor: Prof. Kinat
-Developers: Muhammad Khulfan & Abdullah Khalid
+ShareMeal Platform — Professional Academic FYP Defense Presentation
+Department of Computer Science • University of Southern Punjab, Multan
+Presented by: Muhammad Khulfan & Abdullah Khalid
+Supervised by: Prof. Kinat
 """
 
 from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
+from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
-from pptx.enum.dml import MSO_THEME_COLOR
 from pptx.oxml import parse_xml
-import copy, io, os, math
+import os
 
-# ── Output path ──────────────────────────────────────────────────
 OUTPUT = os.path.join(os.path.dirname(__file__), "wwwroot", "ShareMeal_Presentation.pptx")
 
-# ── Brand Colors ─────────────────────────────────────────────────
-DARK_BG     = RGBColor(0x02, 0x06, 0x17)      # #020617 deep navy
-CARD_BG     = RGBColor(0x0D, 0x1B, 0x2A)      # #0D1B2A
-EMERALD     = RGBColor(0x10, 0xB9, 0x81)      # #10b981
-EMERALD_DK  = RGBColor(0x05, 0x96, 0x69)      # #059669
-BLUE_ACC    = RGBColor(0x3B, 0x82, 0xF6)      # #3b82f6
-PURPLE_ACC  = RGBColor(0xA8, 0x55, 0xF7)      # #a855f7
-GOLD_ACC    = RGBColor(0xF5, 0x9E, 0x0B)      # #f59e0b
-WHITE       = RGBColor(0xFF, 0xFF, 0xFF)
-GRAY_400    = RGBColor(0x9C, 0xA3, 0xAF)
-GRAY_600    = RGBColor(0x4B, 0x55, 0x63)
-RED_ACC     = RGBColor(0xEF, 0x44, 0x44)
+# ── Clean Executive Palette ───────────────────────────────────────
+DARK_BG     = RGBColor(0x09, 0x0D, 0x16)      # Deep executive slate
+CARD_BG     = RGBColor(0x11, 0x18, 0x27)      # Clean card
+EMERALD     = RGBColor(0x10, 0xB9, 0x81)      # Accent green
+AMBER       = RGBColor(0xF5, 0x9E, 0x0B)      # Supervisor gold
+BLUE        = RGBColor(0x3B, 0x82, 0xF6)      # Technology blue
+WHITE       = RGBColor(0xFF, 0xFF, 0xFF)      # High contrast text
+MUTED       = RGBColor(0x94, 0xA3, 0xB8)      # Secondary text
+BORDER      = RGBColor(0x1E, 0x29, 0x3B)      # Subtle border
 
 SLIDE_W = Inches(13.33)
 SLIDE_H = Inches(7.5)
@@ -36,14 +31,10 @@ prs = Presentation()
 prs.slide_width  = SLIDE_W
 prs.slide_height = SLIDE_H
 
-BLANK = prs.slide_layouts[6]   # completely blank layout
+BLANK = prs.slide_layouts[6]
 
-# ═══════════════════════════════════════════════════════════════════
-# HELPERS
-# ═══════════════════════════════════════════════════════════════════
-
-def add_rect(slide, x, y, w, h, fill=None, line_color=None, line_w=Pt(0), radius=0):
-    shape = slide.shapes.add_shape(1, x, y, w, h)          # MSO_SHAPE_TYPE.RECTANGLE = 1
+def add_rect(slide, x, y, w, h, fill=None, line_color=None, line_w=Pt(0)):
+    shape = slide.shapes.add_shape(1, x, y, w, h)
     shape.line.width = line_w
     if fill:
         shape.fill.solid()
@@ -56,666 +47,341 @@ def add_rect(slide, x, y, w, h, fill=None, line_color=None, line_w=Pt(0), radius
         shape.line.fill.background()
     return shape
 
-def add_text(slide, text, x, y, w, h,
-             font_size=Pt(14), bold=False, italic=False,
-             color=WHITE, align=PP_ALIGN.LEFT,
-             word_wrap=True, font_name="Calibri"):
+def add_text(slide, text, x, y, w, h, font_size=Pt(14), bold=False, color=WHITE, align=PP_ALIGN.LEFT, font_name="Calibri"):
     tb = slide.shapes.add_textbox(x, y, w, h)
     tf = tb.text_frame
-    tf.word_wrap = word_wrap
+    tf.word_wrap = True
     p = tf.paragraphs[0]
     p.alignment = align
     run = p.add_run()
     run.text = text
     run.font.size = font_size
     run.font.bold = bold
-    run.font.italic = italic
     run.font.color.rgb = color
     run.font.name = font_name
     return tb
 
-def add_slide(title_text="", transition="fade"):
+def add_slide(transition="fade"):
     slide = prs.slides.add_slide(BLANK)
-    # Full dark background
     add_rect(slide, 0, 0, SLIDE_W, SLIDE_H, fill=DARK_BG)
-    # Add native PowerPoint slide transition (animates when F5 pressed in PPT)
     try:
-        if transition == "push":
-            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:push dir="l"/></p:transition>')
-        elif transition == "wipe":
-            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:wipe/></p:transition>')
-        else:
-            trans_xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:fade/></p:transition>')
-        slide._element.append(trans_xml)
-    except Exception as e:
+        xml = parse_xml('<p:transition xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" spd="med"><p:fade/></p:transition>')
+        slide._element.append(xml)
+    except:
         pass
     return slide
 
-def accent_bar(slide, color=EMERALD, w=Inches(1.2), h=Inches(0.06)):
-    """Horizontal accent line under section label."""
-    add_rect(slide, Inches(0.55), Inches(1.38), w, h, fill=color)
-
-def section_label(slide, label, color=EMERALD):
-    add_text(slide, label.upper(), Inches(0.55), Inches(1.0), Inches(6), Inches(0.35),
-             font_size=Pt(10), bold=True, color=color, font_name="Calibri")
-    accent_bar(slide, color)
-
-def gradient_header_bar(slide, color1=EMERALD, color2=EMERALD_DK):
-    bar = add_rect(slide, 0, 0, SLIDE_W, Inches(0.08), fill=color1)
-    return bar
-
-def card(slide, x, y, w, h, bg=CARD_BG, border=None):
-    r = add_rect(slide, x, y, w, h, fill=bg, line_color=border, line_w=Pt(1.2))
-    return r
-
-def bullet_point(slide, icon, text, x, y, w, icon_color=EMERALD, text_size=Pt(13)):
-    add_text(slide, icon, x, y, Inches(0.4), Inches(0.35),
-             font_size=text_size, color=icon_color, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(slide, text, x + Inches(0.42), y, w - Inches(0.42), Inches(0.35),
-             font_size=text_size, color=GRAY_400, font_name="Calibri")
-
-def divider(slide, y, color=GRAY_600, alpha_factor=0.3):
-    w_line = Inches(12.2)
-    x_line = Inches(0.55)
-    add_rect(slide, x_line, y, w_line, Inches(0.01), fill=color)
-
+def slide_header(slide, section_tag, title):
+    add_rect(slide, Inches(0.8), Inches(0.55), Inches(0.08), Inches(0.75), fill=EMERALD)
+    add_text(slide, section_tag.upper(), Inches(1.05), Inches(0.5), Inches(8), Inches(0.3),
+             font_size=Pt(10), bold=True, color=EMERALD)
+    add_text(slide, title, Inches(1.05), Inches(0.75), Inches(11), Inches(0.65),
+             font_size=Pt(28), bold=True, color=WHITE)
 
 # ═══════════════════════════════════════════════════════════════════
-# SLIDE 1 — TITLE
+# SLIDE 1: COVER
 # ═══════════════════════════════════════════════════════════════════
 s1 = add_slide()
 
-# Side accent strip
-add_rect(s1, 0, 0, Inches(0.18), SLIDE_H, fill=EMERALD)
+# University banner tag
+add_rect(s1, Inches(0.8), Inches(0.8), Inches(7.5), Inches(0.4), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s1, "🏛️  DEPARTMENT OF COMPUTER SCIENCE  •  USP MULTAN", Inches(0.95), Inches(0.87), Inches(7.2), Inches(0.3),
+         font_size=Pt(10), bold=True, color=EMERALD)
 
-# Large background icon (faded)
-add_text(s1, "🍱", Inches(8.5), Inches(1.2), Inches(4), Inches(4),
-         font_size=Pt(200), color=RGBColor(0x0A, 0x2A, 0x1E), align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
+# Main Title
+add_text(s1, "ShareMeal Platform", Inches(0.8), Inches(1.5), Inches(11.5), Inches(1.2),
+         font_size=Pt(56), bold=True, color=WHITE)
+add_text(s1, "A Web-Based Surplus Food Redistribution & Zero-Hunger Management System",
+         Inches(0.8), Inches(2.7), Inches(11), Inches(0.5),
+         font_size=Pt(18), bold=False, color=EMERALD)
 
-# University tag at top
-add_text(s1, "UNIVERSITY OF SOUTHERN PUNJAB, MULTAN", Inches(0.55), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=EMERALD,
-         font_name="Calibri", align=PP_ALIGN.LEFT)
+# Divider line
+add_rect(s1, Inches(0.8), Inches(3.4), Inches(11.7), Inches(0.02), fill=BORDER)
 
-# Main title
-add_text(s1, "ShareMeal", Inches(0.55), Inches(1.2), Inches(8), Inches(1.5),
-         font_size=Pt(72), bold=True, color=EMERALD, font_name="Calibri", align=PP_ALIGN.LEFT)
-add_text(s1, "Platform", Inches(0.55), Inches(2.5), Inches(8), Inches(1.1),
-         font_size=Pt(64), bold=True, color=WHITE, font_name="Calibri", align=PP_ALIGN.LEFT)
+# Presented By Card
+add_rect(s1, Inches(0.8), Inches(3.8), Inches(5.6), Inches(2.4), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s1, "PRESENTED BY", Inches(1.1), Inches(4.0), Inches(5.0), Inches(0.3),
+         font_size=Pt(10), bold=True, color=EMERALD)
+add_text(s1, "Muhammad Khulfan", Inches(1.1), Inches(4.35), Inches(5.0), Inches(0.4),
+         font_size=Pt(18), bold=True, color=WHITE)
+add_text(s1, "Abdullah Khalid", Inches(1.1), Inches(4.8), Inches(5.0), Inches(0.4),
+         font_size=Pt(18), bold=True, color=WHITE)
+add_text(s1, "BS Computer Science (BSCS) • Final Year Project", Inches(1.1), Inches(5.35), Inches(5.0), Inches(0.4),
+         font_size=Pt(12), color=MUTED)
 
-# Tagline
-add_text(s1, "Connecting Food.  Reducing Waste.  Saving Lives.",
-         Inches(0.55), Inches(3.5), Inches(9), Inches(0.5),
-         font_size=Pt(16), italic=True, color=GRAY_400, font_name="Calibri", align=PP_ALIGN.LEFT)
+# Supervised By Card
+add_rect(s1, Inches(6.9), Inches(3.8), Inches(5.6), Inches(2.4), fill=CARD_BG, line_color=AMBER, line_w=Pt(1))
+add_text(s1, "SUPERVISED BY", Inches(7.2), Inches(4.0), Inches(5.0), Inches(0.3),
+         font_size=Pt(10), bold=True, color=AMBER)
+add_text(s1, "Prof. Kinat", Inches(7.2), Inches(4.35), Inches(5.0), Inches(0.4),
+         font_size=Pt(22), bold=True, color=WHITE)
+add_text(s1, "Department of Computer Science", Inches(7.2), Inches(4.95), Inches(5.0), Inches(0.35),
+         font_size=Pt(13), color=MUTED)
+add_text(s1, "University of Southern Punjab, Multan", Inches(7.2), Inches(5.35), Inches(5.0), Inches(0.35),
+         font_size=Pt(13), color=AMBER)
 
-# Divider
-add_rect(s1, Inches(0.55), Inches(4.15), Inches(5.5), Inches(0.04), fill=EMERALD)
-
-# Info block
-info_y = Inches(4.45)
-gap = Inches(0.38)
-add_text(s1, "Final Year Project (FYP)",
-         Inches(0.55), info_y, Inches(7), Inches(0.36), font_size=Pt(13), bold=True, color=WHITE, font_name="Calibri")
-add_text(s1, "Supervisor:  Prof. Kinat",
-         Inches(0.55), info_y + gap, Inches(7), Inches(0.36), font_size=Pt(13), color=GRAY_400, font_name="Calibri")
-add_text(s1, "Developers:  Muhammad Khulfan   |   Abdullah Khalid",
-         Inches(0.55), info_y + gap*2, Inches(9), Inches(0.36), font_size=Pt(13), color=GRAY_400, font_name="Calibri")
-add_text(s1, "BSCS  —  University of Southern Punjab, Multan  —  2026",
-         Inches(0.55), info_y + gap*3, Inches(9), Inches(0.36), font_size=Pt(12), color=GRAY_600, font_name="Calibri")
-
-# Bottom strip
-add_rect(s1, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=EMERALD)
-
+# Bottom credit
+add_text(s1, "Academic Session 2022–2026 • Final Project Defense", Inches(0.8), Inches(6.6), Inches(11.7), Inches(0.35),
+         font_size=Pt(11), color=MUTED, align=PP_ALIGN.CENTER)
 
 # ═══════════════════════════════════════════════════════════════════
-# SLIDE 2 — TABLE OF CONTENTS
+# SLIDE 2: AGENDA
 # ═══════════════════════════════════════════════════════════════════
 s2 = add_slide()
-add_rect(s2, 0, 0, Inches(0.18), SLIDE_H, fill=BLUE_ACC)
-gradient_header_bar(s2, BLUE_ACC, BLUE_ACC)
+slide_header(s2, "Overview", "Presentation Roadmap & Agenda")
 
-add_text(s2, "TABLE OF CONTENTS", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=BLUE_ACC, font_name="Calibri")
-
-add_text(s2, "Presentation Overview", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(28), bold=True, color=WHITE, font_name="Calibri")
-
-add_rect(s2, Inches(0.55), Inches(1.3), Inches(1.8), Inches(0.05), fill=BLUE_ACC)
-
-toc_items = [
-    ("01", "Problem Statement",       "Food waste crisis in Pakistan",          EMERALD),
-    ("02", "Solution Overview",       "ShareMeal Platform — what it does",       BLUE_ACC),
-    ("03", "System Architecture",     "MVC pattern, flow diagram",               PURPLE_ACC),
-    ("04", "Key Features",            "8 major features explained",              GOLD_ACC),
-    ("05", "Technology Stack",        "ASP.NET Core, SQLite, Gemini AI",         EMERALD),
-    ("06", "Database Design",         "Models, tables, relationships",           BLUE_ACC),
-    ("07", "AI Integration",          "MealBot — Google Gemini 2.0 Flash",       PURPLE_ACC),
-    ("08", "Live Deployment",         "Docker + Railway.app + CI/CD",            GOLD_ACC),
-    ("09", "Team & Supervisor",       "Muhammad Khulfan, Abdullah Khalid, Prof. Kinat", EMERALD),
+agenda = [
+    ("01", "Problem Statement",       "Food wastage & hunger dilemma in Pakistan"),
+    ("02", "Proposed Solution",       "ShareMeal core workflow and vision"),
+    ("03", "System Architecture",     "MVC design pattern, controllers & data flow"),
+    ("04", "Core User Portals",       "Restaurant, Charity, and Admin interactions"),
+    ("05", "Technology Stack",        "ASP.NET Core 8, C#, Tailwind CSS & SQLite"),
+    ("06", "AI Assistant (MealBot)",  "Google Gemini 2.0 Flash + Web Speech Voice"),
+    ("07", "Live Demonstration",      "Interface walk-through & production URL"),
+    ("08", "Project Supervision",     "Supervisor and development team credits"),
 ]
 
-col1 = toc_items[:5]
-col2 = toc_items[5:]
+for i, (num, title, desc) in enumerate(agenda):
+    x = Inches(0.8) + (i % 2) * Inches(6.0)
+    y = Inches(1.8) + (i // 2) * Inches(1.2)
+    add_rect(s2, x, y, Inches(5.7), Inches(1.0), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+    add_rect(s2, x + Inches(0.2), y + Inches(0.2), Inches(0.6), Inches(0.6), fill=DARK_BG, line_color=EMERALD, line_w=Pt(1))
+    add_text(s2, num, x + Inches(0.2), y + Inches(0.28), Inches(0.6), Inches(0.5), font_size=Pt(13), bold=True, color=EMERALD, align=PP_ALIGN.CENTER)
+    add_text(s2, title, x + Inches(1.0), y + Inches(0.18), Inches(4.5), Inches(0.35), font_size=Pt(14), bold=True, color=WHITE)
+    add_text(s2, desc, x + Inches(1.0), y + Inches(0.52), Inches(4.5), Inches(0.35), font_size=Pt(10.5), color=MUTED)
 
-for i, (num, title, sub, clr) in enumerate(col1):
-    y = Inches(1.55) + i * Inches(0.96)
-    card(s2, Inches(0.5), y, Inches(5.8), Inches(0.82), bg=CARD_BG, border=clr)
-    add_text(s2, num, Inches(0.62), y + Inches(0.12), Inches(0.55), Inches(0.55),
-             font_size=Pt(20), bold=True, color=clr, font_name="Calibri")
-    add_text(s2, title, Inches(1.28), y + Inches(0.08), Inches(4.8), Inches(0.35),
-             font_size=Pt(14), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s2, sub, Inches(1.28), y + Inches(0.44), Inches(4.8), Inches(0.3),
-             font_size=Pt(10), color=GRAY_400, font_name="Calibri")
-
-for i, (num, title, sub, clr) in enumerate(col2):
-    y = Inches(1.55) + i * Inches(0.96)
-    card(s2, Inches(6.9), y, Inches(5.8), Inches(0.82), bg=CARD_BG, border=clr)
-    add_text(s2, num, Inches(7.02), y + Inches(0.12), Inches(0.55), Inches(0.55),
-             font_size=Pt(20), bold=True, color=clr, font_name="Calibri")
-    add_text(s2, title, Inches(7.68), y + Inches(0.08), Inches(4.8), Inches(0.35),
-             font_size=Pt(14), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s2, sub, Inches(7.68), y + Inches(0.44), Inches(4.8), Inches(0.3),
-             font_size=Pt(10), color=GRAY_400, font_name="Calibri")
-
-add_rect(s2, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=BLUE_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 3 — PROBLEM STATEMENT
-# ═══════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
+# SLIDE 3: PROBLEM STATEMENT
+# ═══════════════════════════════════════════════════════════
 s3 = add_slide()
-add_rect(s3, 0, 0, Inches(0.18), SLIDE_H, fill=RED_ACC)
-gradient_header_bar(s3, RED_ACC, RED_ACC)
+slide_header(s3, "Section 01", "The Problem in Pakistan: Food Waste vs. Hunger")
 
-add_text(s3, "01  ·  PROBLEM STATEMENT", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=RED_ACC, font_name="Calibri")
-add_text(s3, "Pakistan's Food Crisis", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s3, Inches(0.55), Inches(1.32), Inches(2.5), Inches(0.05), fill=RED_ACC)
-
-# 3 stat cards
-stats = [
-    ("36%",  "Food Wasted",        "Of all food produced in Pakistan is wasted annually", "🗑️", RED_ACC),
-    ("2 Cr+","People Hungry",      "People sleep hungry every night in Pakistan",          "😢", GOLD_ACC),
-    ("70%",  "Restaurants Waste",  "Restaurants throw away leftover food daily",           "🍽️", PURPLE_ACC),
+probs = [
+    ("🗑️", "36% Food Wasted", "Commercial eateries & banquet halls discard 36% of edible food daily due to absence of timely channels."),
+    ("💔", "20M+ Face Hunger", "Over 20 million citizens and shelter home residents suffer from acute hunger and nutritional deficit."),
+    ("🔌", "No Digital Bridge", "Restaurants have surplus food but lack logistics; charities need food but have zero real-time notification."),
 ]
-for i, (num, title, desc, icon, clr) in enumerate(stats):
-    x = Inches(0.55) + i * Inches(4.2)
-    card(s3, x, Inches(1.55), Inches(3.9), Inches(2.8), bg=CARD_BG, border=clr)
-    add_text(s3, icon, x + Inches(0.15), Inches(1.7), Inches(0.9), Inches(0.9),
-             font_size=Pt(38), color=clr, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(s3, num, x + Inches(1.1), Inches(1.72), Inches(2.6), Inches(0.75),
-             font_size=Pt(44), bold=True, color=clr, font_name="Calibri")
-    add_text(s3, title, x + Inches(0.2), Inches(2.52), Inches(3.5), Inches(0.38),
-             font_size=Pt(15), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s3, desc, x + Inches(0.2), Inches(2.92), Inches(3.5), Inches(0.85),
-             font_size=Pt(11), color=GRAY_400, font_name="Calibri", word_wrap=True)
 
-# Root cause
-card(s3, Inches(0.55), Inches(4.55), Inches(12.2), Inches(1.2), bg=CARD_BG, border=EMERALD)
-add_text(s3, "Root Cause:", Inches(0.8), Inches(4.72), Inches(2), Inches(0.4),
-         font_size=Pt(13), bold=True, color=EMERALD, font_name="Calibri")
-add_text(s3,
-         "There is NO platform in Pakistan that connects food-surplus restaurants with food-deficient "
-         "charities in real time. Food gets wasted while millions go hungry — simply due to lack of coordination.",
-         Inches(2.75), Inches(4.68), Inches(9.8), Inches(0.9),
-         font_size=Pt(13), color=GRAY_400, font_name="Calibri", word_wrap=True)
+for i, (icon, title, desc) in enumerate(probs):
+    x = Inches(0.8) + i * Inches(4.0)
+    add_rect(s3, x, Inches(1.8), Inches(3.7), Inches(3.6), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+    add_text(s3, icon, x, Inches(2.2), Inches(3.7), Inches(0.8), font_size=Pt(36), align=PP_ALIGN.CENTER)
+    add_text(s3, title, x + Inches(0.2), Inches(3.1), Inches(3.3), Inches(0.45), font_size=Pt(16), bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+    add_text(s3, desc, x + Inches(0.3), Inches(3.65), Inches(3.1), Inches(1.5), font_size=Pt(11.5), color=MUTED, align=PP_ALIGN.CENTER)
 
-add_rect(s3, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=RED_ACC)
+# Bottom core takeaway
+add_rect(s3, Inches(0.8), Inches(5.8), Inches(11.7), Inches(0.9), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s3, "Core Objective: Build a reliable, fast, zero-cost digital bridge between food donors and registered charities in Pakistan.",
+         Inches(1.0), Inches(6.05), Inches(11.3), Inches(0.4), font_size=Pt(13), bold=True, color=WHITE, align=PP_ALIGN.CENTER)
 
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 4 — SOLUTION OVERVIEW
-# ═══════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
+# SLIDE 4: PROPOSED SOLUTION
+# ═══════════════════════════════════════════════════════════
 s4 = add_slide()
-add_rect(s4, 0, 0, Inches(0.18), SLIDE_H, fill=EMERALD)
-gradient_header_bar(s4, EMERALD, EMERALD_DK)
+slide_header(s4, "Section 02", "Proposed Solution: How ShareMeal Operates")
 
-add_text(s4, "02  ·  SOLUTION OVERVIEW", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=EMERALD, font_name="Calibri")
-add_text(s4, "ShareMeal Platform", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s4, Inches(0.55), Inches(1.32), Inches(2), Inches(0.05), fill=EMERALD)
-
-portals = [
-    ("🍽️", "Restaurant Portal",   "Donate Food",    "Post available food in one click. Manage donations, track status, view history.", EMERALD),
-    ("🤲", "Charity Portal",      "Claim Food",     "Browse the food marketplace, claim donations, coordinate pickup with restaurant.", BLUE_ACC),
-    ("👑", "Admin Panel",         "Manage All",     "Approve/reject organizations, monitor all activity, suspend accounts if needed.", PURPLE_ACC),
-    ("🤖", "MealBot AI",          "AI Assistant",   "Google Gemini powered chatbot — answers in Roman Urdu & English 24/7.", GOLD_ACC),
+steps = [
+    ("1", "Restaurants Post Meals", "Eateries enter food category, number of servings, expiry deadline, and pickup instructions in under 1 minute."),
+    ("2", "Real-Time Marketplace", "Charities instantly view available donations on a live dashboard and claim meals before they spoil."),
+    ("3", "Admin Trust Verification", "System Admin verifies legal documents of restaurants and NGOs to ensure complete hygiene and food safety."),
+    ("4", "MealBot AI Assistance", "Google Gemini AI guides users in natural Roman Urdu and English on donations, claims, and pickup SOPs."),
 ]
 
-for i, (icon, title, sub, desc, clr) in enumerate(portals):
-    x = Inches(0.5) + (i % 2) * Inches(6.35)
-    y = Inches(1.6)  + (i // 2) * Inches(2.4)
-    card(s4, x, y, Inches(5.9), Inches(2.1), bg=CARD_BG, border=clr)
-    add_text(s4, icon, x + Inches(0.18), y + Inches(0.22), Inches(0.9), Inches(0.9),
-             font_size=Pt(36), color=clr, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(s4, title, x + Inches(1.15), y + Inches(0.2), Inches(4.5), Inches(0.42),
-             font_size=Pt(17), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s4, sub, x + Inches(1.15), y + Inches(0.62), Inches(4.5), Inches(0.32),
-             font_size=Pt(11), bold=True, color=clr, font_name="Calibri")
-    add_text(s4, desc, x + Inches(0.2), y + Inches(1.08), Inches(5.5), Inches(0.85),
-             font_size=Pt(11), color=GRAY_400, font_name="Calibri", word_wrap=True)
+for i, (step, title, desc) in enumerate(steps):
+    x = Inches(0.8) + (i % 2) * Inches(6.0)
+    y = Inches(1.8) + (i // 2) * Inches(2.4)
+    add_rect(s4, x, y, Inches(5.7), Inches(2.1), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+    add_rect(s4, x + Inches(0.3), y + Inches(0.25), Inches(0.55), Inches(0.55), fill=DARK_BG, line_color=EMERALD, line_w=Pt(1))
+    add_text(s4, step, x + Inches(0.3), y + Inches(0.32), Inches(0.55), Inches(0.45), font_size=Pt(14), bold=True, color=EMERALD, align=PP_ALIGN.CENTER)
+    add_text(s4, title, x + Inches(1.05), y + Inches(0.25), Inches(4.3), Inches(0.4), font_size=Pt(15), bold=True, color=WHITE)
+    add_text(s4, desc, x + Inches(0.3), y + Inches(0.95), Inches(5.1), Inches(1.0), font_size=Pt(11.5), color=MUTED)
 
-add_rect(s4, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=EMERALD)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 5 — SYSTEM ARCHITECTURE
-# ═══════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
+# SLIDE 5: SYSTEM ARCHITECTURE
+# ═══════════════════════════════════════════════════════════
 s5 = add_slide()
-add_rect(s5, 0, 0, Inches(0.18), SLIDE_H, fill=PURPLE_ACC)
-gradient_header_bar(s5, PURPLE_ACC, PURPLE_ACC)
+slide_header(s5, "Section 03", "System Architecture: 3-Tier MVC Pattern")
 
-add_text(s5, "03  ·  SYSTEM ARCHITECTURE", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=PURPLE_ACC, font_name="Calibri")
-add_text(s5, "MVC Architecture & Flow", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s5, Inches(0.55), Inches(1.32), Inches(2.5), Inches(0.05), fill=PURPLE_ACC)
-
-# Flow boxes
-flow = [
-    ("👤", "User\n(Browser)", EMERALD),
-    ("🎮", "Controller\n(Traffic Police)", BLUE_ACC),
-    ("🗄️", "Database\n(SQLite)", PURPLE_ACC),
-    ("🤖", "Gemini AI\n(Google)", GOLD_ACC),
-    ("📄", "View (UI)\n(Razor + Tailwind)", EMERALD),
+tiers = [
+    ("🖥️", "Presentation Tier", "Razor Views (.cshtml)", "Tailwind CSS responsive UI, JavaScript voice input, dynamic interactive forms."),
+    ("⚙️", "Application Tier", "ASP.NET Core Controllers", "Handles authentication, donation workflows, admin claims, and Gemini AI service."),
+    ("🗄️", "Data Tier", "SQLite & Entity Framework", "Structured relational database storing users, verified organizations, and active donations."),
 ]
-box_w = Inches(2.0)
-box_h = Inches(1.5)
-gap_x = Inches(0.45)
-start_x = Inches(0.5)
-flow_y = Inches(1.65)
 
-for i, (icon, label, clr) in enumerate(flow):
-    bx = start_x + i * (box_w + gap_x)
-    card(s5, bx, flow_y, box_w, box_h, bg=CARD_BG, border=clr)
-    add_text(s5, icon, bx, flow_y + Inches(0.1), box_w, Inches(0.7),
-             font_size=Pt(30), color=clr, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(s5, label, bx, flow_y + Inches(0.78), box_w, Inches(0.65),
-             font_size=Pt(10), bold=True, color=WHITE, align=PP_ALIGN.CENTER, font_name="Calibri", word_wrap=True)
-    # Arrow
-    if i < len(flow) - 1:
-        ax = bx + box_w + Inches(0.05)
-        ay = flow_y + Inches(0.65)
-        add_text(s5, "→", ax, ay, gap_x, Inches(0.4),
-                 font_size=Pt(20), color=GRAY_600, align=PP_ALIGN.CENTER, font_name="Calibri")
+for i, (icon, tier, tech, desc) in enumerate(tiers):
+    x = Inches(0.8) + i * Inches(4.0)
+    add_rect(s5, x, Inches(1.8), Inches(3.7), Inches(3.6), fill=CARD_BG, line_color=BLUE, line_w=Pt(1))
+    add_text(s5, icon, x, Inches(2.1), Inches(3.7), Inches(0.7), font_size=Pt(36), align=PP_ALIGN.CENTER)
+    add_text(s5, tier, x + Inches(0.2), Inches(2.9), Inches(3.3), Inches(0.4), font_size=Pt(16), bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+    add_text(s5, tech, x + Inches(0.2), Inches(3.35), Inches(3.3), Inches(0.35), font_size=Pt(12), bold=True, color=BLUE, align=PP_ALIGN.CENTER)
+    add_text(s5, desc, x + Inches(0.3), Inches(3.8), Inches(3.1), Inches(1.3), font_size=Pt(11), color=MUTED, align=PP_ALIGN.CENTER)
 
-# Pattern cards
-patterns = [
-    ("MVC Pattern",            "Model → View → Controller\nIndustry standard architecture",              EMERALD),
-    ("Dependency Injection",   "Services loosely coupled\nEasy to swap or extend",                       BLUE_ACC),
-    ("Repository Pattern",     "Data access abstracted via DbContext\nClean separation of concerns",      PURPLE_ACC),
-    ("Interface Abstraction",  "IGeminiAiService interface\nAI service can be replaced without breaking", GOLD_ACC),
-]
-for i, (title, desc, clr) in enumerate(patterns):
-    x = Inches(0.5) + i * Inches(3.15)
-    card(s5, x, Inches(3.38), Inches(2.95), Inches(1.9), bg=CARD_BG, border=clr)
-    add_rect(s5, x, Inches(3.38), Inches(0.06), Inches(1.9), fill=clr)
-    add_text(s5, title, x + Inches(0.18), Inches(3.5), Inches(2.7), Inches(0.4),
-             font_size=Pt(12), bold=True, color=clr, font_name="Calibri")
-    add_text(s5, desc,  x + Inches(0.18), Inches(3.95), Inches(2.7), Inches(1.1),
-             font_size=Pt(10), color=GRAY_400, font_name="Calibri", word_wrap=True)
+add_rect(s5, Inches(0.8), Inches(5.8), Inches(11.7), Inches(0.9), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+add_text(s5, "Request Flow: Client Browser ➔ HTTPS Request ➔ Controller Routing ➔ Business Logic ➔ EF Core SQLite ➔ Rendered HTML",
+         Inches(1.0), Inches(6.05), Inches(11.3), Inches(0.4), font_size=Pt(11.5), bold=True, color=MUTED, align=PP_ALIGN.CENTER)
 
-add_rect(s5, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=PURPLE_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 6 — KEY FEATURES
-# ═══════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════
+# SLIDE 6: CORE USER WORKFLOWS
+# ═══════════════════════════════════════════════════════════
 s6 = add_slide()
-add_rect(s6, 0, 0, Inches(0.18), SLIDE_H, fill=GOLD_ACC)
-gradient_header_bar(s6, GOLD_ACC, GOLD_ACC)
+slide_header(s6, "Section 04", "User Roles & Operational Workflows")
 
-add_text(s6, "04  ·  KEY FEATURES", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=GOLD_ACC, font_name="Calibri")
-add_text(s6, "8 Major Features", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s6, Inches(0.55), Inches(1.32), Inches(1.5), Inches(0.05), fill=GOLD_ACC)
-
-features = [
-    ("🔐", "Role-Based Authentication",   "Separate login for Restaurant, Charity & Admin with ASP.NET Identity", EMERALD),
-    ("🛒", "Food Marketplace",            "Real-time listing of available donations. Charities browse & claim",    BLUE_ACC),
-    ("🤖", "AI Chatbot (MealBot)",        "Google Gemini 2.0 Flash — bilingual chatbot (Urdu + English)",          PURPLE_ACC),
-    ("🎙️", "Voice Input",                 "Web Speech API — speak your query, it converts to text",               GOLD_ACC),
-    ("✅", "Admin Verification System",   "Admin approves/rejects organizations — trust & safety layer",           EMERALD),
-    ("📊", "Live Dashboard Stats",        "Real-time count of donations, organizations & meals served",            BLUE_ACC),
-    ("📱", "Fully Responsive UI",         "Works on mobile, tablet, desktop — Tailwind CSS framework",            PURPLE_ACC),
-    ("🌍", "Live Internet Deployment",    "Hosted on Railway.app with HTTPS, Docker, CI/CD auto-deploy",          GOLD_ACC),
-]
-
-cols = 4
-for i, (icon, title, desc, clr) in enumerate(features):
-    row = i // cols
-    col = i % cols
-    x = Inches(0.45) + col * Inches(3.18)
-    y = Inches(1.55) + row * Inches(2.5)
-    card(s6, x, y, Inches(3.0), Inches(2.25), bg=CARD_BG, border=clr)
-    add_text(s6, icon, x, y + Inches(0.12), Inches(3.0), Inches(0.7),
-             font_size=Pt(28), color=clr, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(s6, title, x + Inches(0.15), y + Inches(0.85), Inches(2.7), Inches(0.45),
-             font_size=Pt(12), bold=True, color=WHITE, font_name="Calibri", word_wrap=True)
-    add_text(s6, desc, x + Inches(0.15), y + Inches(1.32), Inches(2.7), Inches(0.8),
-             font_size=Pt(9.5), color=GRAY_400, font_name="Calibri", word_wrap=True)
-
-add_rect(s6, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=GOLD_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 7 — TECHNOLOGY STACK
-# ═══════════════════════════════════════════════════════════════════
-s7 = add_slide()
-add_rect(s7, 0, 0, Inches(0.18), SLIDE_H, fill=EMERALD)
-gradient_header_bar(s7, EMERALD, EMERALD_DK)
-
-add_text(s7, "05  ·  TECHNOLOGY STACK", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=EMERALD, font_name="Calibri")
-add_text(s7, "Technologies Used", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s7, Inches(0.55), Inches(1.32), Inches(2), Inches(0.05), fill=EMERALD)
-
-tech_groups = [
-    ("⚙️", "Backend",    EMERALD,    ["ASP.NET Core 8", "C# Language", "Entity Framework Core", "ASP.NET Identity", "Razor Pages"]),
-    ("🎨", "Frontend",   BLUE_ACC,   ["Razor Views (.cshtml)", "Tailwind CSS v3", "Vanilla JavaScript", "Web Speech API", "Chart.js"]),
-    ("🤖", "AI & APIs",  PURPLE_ACC, ["Google Gemini 2.0 Flash", "REST API (HttpClient)", "System Prompt Engineering", "Dependency Injection"]),
-    ("🚀", "DevOps",     GOLD_ACC,   ["Docker + Dockerfile", "Railway.app Hosting", "GitHub + CI/CD", "HTTPS / SSL", "SQLite Database"]),
-]
-
-for i, (icon, title, clr, items) in enumerate(tech_groups):
-    x = Inches(0.45) + i * Inches(3.18)
-    card(s7, x, Inches(1.55), Inches(3.0), Inches(5.25), bg=CARD_BG, border=clr)
-    # Header strip
-    add_rect(s7, x, Inches(1.55), Inches(3.0), Inches(0.85), fill=clr)
-    add_text(s7, icon + "  " + title, x, Inches(1.68), Inches(3.0), Inches(0.55),
-             font_size=Pt(15), bold=True, color=DARK_BG, align=PP_ALIGN.CENTER, font_name="Calibri")
-    for j, item in enumerate(items):
-        iy = Inches(2.55) + j * Inches(0.52)
-        add_rect(s7, x + Inches(0.2), iy, Inches(0.08), Inches(0.08),
-                 fill=clr)   # bullet dot
-        add_text(s7, item, x + Inches(0.42), iy - Inches(0.06), Inches(2.5), Inches(0.4),
-                 font_size=Pt(11.5), color=GRAY_400, font_name="Calibri")
-
-add_rect(s7, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=EMERALD)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 8 — DATABASE DESIGN
-# ═══════════════════════════════════════════════════════════════════
-s8 = add_slide()
-add_rect(s8, 0, 0, Inches(0.18), SLIDE_H, fill=BLUE_ACC)
-gradient_header_bar(s8, BLUE_ACC, BLUE_ACC)
-
-add_text(s8, "06  ·  DATABASE DESIGN", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=BLUE_ACC, font_name="Calibri")
-add_text(s8, "Models & Relationships", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s8, Inches(0.55), Inches(1.32), Inches(2.2), Inches(0.05), fill=BLUE_ACC)
-
-tables = [
-    ("🏢", "Organization", EMERALD, [
-        ("🔑 PK", "Id",               "int — Auto increment"),
-        ("📝",    "Name",             "string(100) — Required"),
-        ("🏷️",    "Type",             "Enum: Restaurant / Charity / NGO"),
-        ("📧",    "ContactEmail",     "string — Validated email"),
-        ("📞",    "Phone",            "string — Phone number"),
-        ("📍",    "Address",          "string — Location"),
-        ("✅",    "Status",           "Enum: Pending / Verified / Suspended"),
-        ("🔗",    "OwnerId",          "FK → ASP.NET Identity User"),
+roles = [
+    ("🍽️ Restaurant Donor", [
+        "Create dedicated restaurant profile",
+        "Post available meals with expiration time",
+        "Set special pickup notes & contact details",
+        "Mark donations collected upon handover",
     ]),
-    ("🍱", "Donation", BLUE_ACC, [
-        ("🔑 PK", "Id",               "int — Auto increment"),
-        ("🍕",    "FoodItem",         "string(100) — Food name"),
-        ("📦",    "Quantity",         "string — Amount/servings"),
-        ("🗓️",    "ExpiryDate",       "DateTime — When food expires"),
-        ("🏷️",    "Category",         "Enum: Prepared / Bakery / Dairy..."),
-        ("📊",    "Status",           "Enum: Available/Claimed/Collected"),
-        ("🔗 FK", "DonorId",          "FK → Organization (Restaurant)"),
-        ("🔗 FK", "RecipientId",      "FK → Organization (Charity)"),
+    ("🤲 Verified Charity", [
+        "Register charity or orphanage profile",
+        "Browse real-time marketplace of food",
+        "Claim available meals in one click",
+        "Coordinate pickup directly with restaurant",
     ]),
-    ("👤", "ASP.NET Identity", PURPLE_ACC, [
-        ("",      "AspNetUsers",      "Built-in user table"),
-        ("",      "AspNetRoles",      "Restaurant, Charity, Admin roles"),
-        ("",      "AspNetUserRoles",  "User-role mapping"),
-        ("",      "Password Hashing", "BCrypt — secure storage"),
-        ("",      "Cookie Auth",      "Session-based authentication"),
-        ("",      "Claims",           "Role claims for authorization"),
+    ("👑 System Admin", [
+        "Review pending organization submissions",
+        "Approve or reject donor / charity accounts",
+        "Audit food safety compliance",
+        "Monitor live national donation metrics",
     ]),
 ]
 
-for i, (icon, name, clr, fields) in enumerate(tables):
-    x = Inches(0.45) + i * Inches(4.18)
-    card(s8, x, Inches(1.55), Inches(4.0), Inches(5.2), bg=CARD_BG, border=clr)
-    add_rect(s8, x, Inches(1.55), Inches(4.0), Inches(0.75), fill=clr)
-    add_text(s8, icon + "  " + name, x, Inches(1.68), Inches(4.0), Inches(0.5),
-             font_size=Pt(14), bold=True, color=DARK_BG, align=PP_ALIGN.CENTER, font_name="Calibri")
-    for j, (sym, col, desc) in enumerate(fields):
-        fy = Inches(2.42) + j * Inches(0.42)
-        if sym:
-            add_text(s8, sym, x + Inches(0.15), fy, Inches(0.65), Inches(0.35),
-                     font_size=Pt(9), color=clr, font_name="Segoe UI Emoji")
-        add_text(s8, col, x + Inches(0.82), fy, Inches(1.4), Inches(0.35),
-                 font_size=Pt(10), bold=True, color=WHITE, font_name="Calibri")
-        add_text(s8, desc, x + Inches(0.82), fy + Inches(0.18), Inches(3.0), Inches(0.25),
-                 font_size=Pt(8.5), color=GRAY_600, font_name="Calibri")
-
-add_rect(s8, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=BLUE_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 9 — AI INTEGRATION
-# ═══════════════════════════════════════════════════════════════════
-s9 = add_slide()
-add_rect(s9, 0, 0, Inches(0.18), SLIDE_H, fill=PURPLE_ACC)
-gradient_header_bar(s9, PURPLE_ACC, PURPLE_ACC)
-
-add_text(s9, "07  ·  AI INTEGRATION", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=PURPLE_ACC, font_name="Calibri")
-add_text(s9, "MealBot — AI Food Assistant", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s9, Inches(0.55), Inches(1.32), Inches(2.8), Inches(0.05), fill=PURPLE_ACC)
-
-ai_cards = [
-    ("🧠", "AI Model",          "Google Gemini 2.0 Flash\nLatest & fastest model from Google DeepMind",  PURPLE_ACC),
-    ("📝", "System Prompt",     "Custom instructions in GeminiAiService.cs\nContextualized for ShareMeal Pakistan", BLUE_ACC),
-    ("🌐", "Bilingual Support", "Automatically detects Roman Urdu or English\nReplies in the same language", EMERALD),
-    ("🎙️", "Voice Input",       "Web Speech API integration\nSpeak → Text → AI responds",                 GOLD_ACC),
-    ("🔌", "Architecture",      "IGeminiAiService interface\nDependency Injection for loose coupling",     PURPLE_ACC),
-    ("🔐", "Security",          "API key stored as Railway environment variable\nNever exposed in source code", RED_ACC),
-]
-
-for i, (icon, title, desc, clr) in enumerate(ai_cards):
-    x = Inches(0.45) + (i % 3) * Inches(4.2)
-    y = Inches(1.58)  + (i // 3) * Inches(2.35)
-    card(s9, x, y, Inches(4.0), Inches(2.1), bg=CARD_BG, border=clr)
-    add_text(s9, icon, x + Inches(0.18), y + Inches(0.2), Inches(0.8), Inches(0.75),
-             font_size=Pt(32), color=clr, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-    add_text(s9, title, x + Inches(1.1), y + Inches(0.22), Inches(2.8), Inches(0.42),
-             font_size=Pt(14), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s9, desc, x + Inches(0.2), y + Inches(0.88), Inches(3.7), Inches(1.05),
-             font_size=Pt(10.5), color=GRAY_400, font_name="Calibri", word_wrap=True)
-
-add_rect(s9, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=PURPLE_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 10 — LIVE DEPLOYMENT
-# ═══════════════════════════════════════════════════════════════════
-s10 = add_slide()
-add_rect(s10, 0, 0, Inches(0.18), SLIDE_H, fill=GOLD_ACC)
-gradient_header_bar(s10, GOLD_ACC, GOLD_ACC)
-
-add_text(s10, "08  ·  LIVE DEPLOYMENT", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=GOLD_ACC, font_name="Calibri")
-add_text(s10, "Production Deployment", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(32), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s10, Inches(0.55), Inches(1.32), Inches(2.2), Inches(0.05), fill=GOLD_ACC)
-
-deploy_steps = [
-    ("1", "🐳 Dockerized",         "Multi-stage Dockerfile created\nBuild → ASP.NET SDK → Runtime image", EMERALD),
-    ("2", "📤 GitHub Push",         "Code pushed to GitHub repository\ngit add → commit → push", BLUE_ACC),
-    ("3", "🚂 Railway Hosting",     "Railway.app free tier\n\$5/month credit — no card required", PURPLE_ACC),
-    ("4", "🔄 Auto CI/CD",          "GitHub push triggers auto-deploy\nRailway rebuilds Docker image", GOLD_ACC),
-]
-
-for i, (step, title, desc, clr) in enumerate(deploy_steps):
-    x = Inches(0.45) + i * Inches(3.18)
-    card(s10, x, Inches(1.58), Inches(3.0), Inches(2.35), bg=CARD_BG, border=clr)
-    # Step number circle
-    add_rect(s10, x + Inches(0.18), Inches(1.74), Inches(0.45), Inches(0.45), fill=clr)
-    add_text(s10, step, x + Inches(0.18), Inches(1.74), Inches(0.45), Inches(0.45),
-             font_size=Pt(14), bold=True, color=DARK_BG, align=PP_ALIGN.CENTER, font_name="Calibri")
-    add_text(s10, title, x + Inches(0.78), Inches(1.8), Inches(2.1), Inches(0.42),
-             font_size=Pt(13), bold=True, color=WHITE, font_name="Calibri")
-    add_text(s10, desc, x + Inches(0.2), Inches(2.35), Inches(2.72), Inches(1.1),
-             font_size=Pt(10.5), color=GRAY_400, font_name="Calibri", word_wrap=True)
-
-# Key achievements
-achieve = [
-    ("🔐", "HTTPS / SSL",           "Automatic secure certificate on Railway", EMERALD),
-    ("🌍", "Global Access",         "Anyone worldwide can access the website",  BLUE_ACC),
-    ("⚡", "Zero Downtime",         "Railway keeps service always online",      PURPLE_ACC),
-    ("🔑", "Secure API Keys",       "Keys stored as environment variables",     GOLD_ACC),
-]
-card(s10, Inches(0.45), Inches(4.1), Inches(12.2), Inches(2.7), bg=CARD_BG)
-add_text(s10, "Deployment Achievements", Inches(0.65), Inches(4.22),
-         Inches(6), Inches(0.4), font_size=Pt(13), bold=True, color=WHITE, font_name="Calibri")
-
-for i, (icon, title, desc, clr) in enumerate(achieve):
-    x = Inches(0.65) + i * Inches(3.0)
-    add_rect(s10, x, Inches(4.75), Inches(0.06), Inches(1.75), fill=clr)
-    add_text(s10, icon + "  " + title, x + Inches(0.2), Inches(4.8), Inches(2.7), Inches(0.4),
-             font_size=Pt(12), bold=True, color=clr, font_name="Calibri")
-    add_text(s10, desc, x + Inches(0.2), Inches(5.25), Inches(2.7), Inches(0.5),
-             font_size=Pt(10), color=GRAY_400, font_name="Calibri", word_wrap=True)
-
-# URL box
-card(s10, Inches(0.45), Inches(6.1), Inches(12.2), Inches(0.65), bg=RGBColor(0x05, 0x2E, 0x1E), border=EMERALD)
-add_text(s10, "🌐  Live URL:  https://sharemeal-platform-production.up.railway.app",
-         Inches(0.7), Inches(6.22), Inches(12.0), Inches(0.42),
-         font_size=Pt(13), bold=True, color=EMERALD, font_name="Calibri")
-
-add_rect(s10, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=GOLD_ACC)
-
-
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 11 — TEAM & SUPERVISOR
-# ═══════════════════════════════════════════════════════════════════
-s11 = add_slide()
-add_rect(s11, 0, 0, Inches(0.18), SLIDE_H, fill=EMERALD)
-gradient_header_bar(s11, EMERALD, EMERALD_DK)
-
-add_text(s11, "09  ·  TEAM & SUPERVISOR", Inches(0.4), Inches(0.22),
-         Inches(9), Inches(0.35), font_size=Pt(9), bold=True, color=EMERALD, font_name="Calibri")
-add_text(s11, "Meet the People Behind ShareMeal", Inches(0.55), Inches(0.7),
-         Inches(9), Inches(0.6), font_size=Pt(30), bold=True, color=WHITE, font_name="Calibri")
-add_rect(s11, Inches(0.55), Inches(1.32), Inches(3.5), Inches(0.05), fill=EMERALD)
-
-# Supervisor card — full width
-card(s11, Inches(0.5), Inches(1.5), Inches(12.2), Inches(1.5), bg=CARD_BG, border=GOLD_ACC)
-add_rect(s11, Inches(0.5), Inches(1.5), Inches(0.12), Inches(1.5), fill=GOLD_ACC)
-add_text(s11, "👩‍🏫", Inches(0.75), Inches(1.62), Inches(0.85), Inches(0.85),
-         font_size=Pt(36), color=GOLD_ACC, align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
-add_text(s11, "Prof. Kinat", Inches(1.72), Inches(1.62), Inches(5), Inches(0.48),
-         font_size=Pt(20), bold=True, color=WHITE, font_name="Calibri")
-add_text(s11, "Project Supervisor", Inches(1.72), Inches(2.1), Inches(4), Inches(0.35),
-         font_size=Pt(12), bold=True, color=GOLD_ACC, font_name="Calibri")
-add_text(s11, "University of Southern Punjab, Multan  ·  Computer Science Department",
-         Inches(6.5), Inches(1.72), Inches(6), Inches(0.42),
-         font_size=Pt(12), color=GRAY_400, font_name="Calibri")
-add_text(s11, "FYP Supervisor — Guided and supervised the ShareMeal Platform Final Year Project",
-         Inches(6.5), Inches(2.16), Inches(6), Inches(0.5),
-         font_size=Pt(11), color=GRAY_600, font_name="Calibri", word_wrap=True)
-
-# Developer cards
-devs = [
-    ("👨‍💻", "Muhammad Khulfan",  "Lead Developer & iOS Engineer",    EMERALD, [
-        "🎓  BSCS — University of Southern Punjab, Multan",
-        "📍  South Punjab, Pakistan",
-        "💼  iOS Engineer & Full Stack .NET Developer",
-        "🚀  Built ShareMeal from scratch: Architecture, AI, UI, Backend",
-        "🤖  Integrated Google Gemini AI — MealBot chatbot",
-        "🌍  Deployed on Railway.app with Docker & CI/CD",
-    ]),
-    ("💻", "Abdullah Khalid",    "Team Member & Developer",           PURPLE_ACC, [
-        "🎓  BSCS — Computer Science",
-        "🤝  Team Member — ShareMeal FYP Project",
-        "💡  Contributed to development and project collaboration",
-        "📚  University of Southern Punjab",
-    ]),
-]
-
-for i, (icon, name, role, clr, bullets) in enumerate(devs):
-    x = Inches(0.5) + i * Inches(6.4)
-    w = Inches(6.1)
-    card(s11, x, Inches(3.2), w, Inches(3.95), bg=CARD_BG, border=clr)
-    add_rect(s11, x, Inches(3.2), w, Inches(0.85), fill=clr)
-    add_text(s11, icon + "  " + name, x, Inches(3.32), w, Inches(0.5),
-             font_size=Pt(17), bold=True, color=DARK_BG, align=PP_ALIGN.CENTER, font_name="Calibri")
-    add_text(s11, role, x, Inches(3.84), w, Inches(0.3),
-             font_size=Pt(10), bold=True, color=DARK_BG, align=PP_ALIGN.CENTER, font_name="Calibri")
+for i, (title, bullets) in enumerate(roles):
+    x = Inches(0.8) + i * Inches(4.0)
+    add_rect(s6, x, Inches(1.8), Inches(3.7), Inches(4.9), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+    add_text(s6, title, x + Inches(0.3), Inches(2.1), Inches(3.1), Inches(0.5), font_size=Pt(16), bold=True, color=WHITE)
+    add_rect(s6, x + Inches(0.3), Inches(2.65), Inches(1.5), Inches(0.04), fill=EMERALD)
     for j, b in enumerate(bullets):
-        by = Inches(4.18) + j * Inches(0.52)
-        add_text(s11, b, x + Inches(0.25), by, w - Inches(0.35), Inches(0.45),
-                 font_size=Pt(11), color=GRAY_400, font_name="Calibri")
+        by = Inches(2.9) + j * Inches(0.85)
+        add_text(s6, "✓  " + b, x + Inches(0.3), by, Inches(3.1), Inches(0.75), font_size=Pt(11.5), color=MUTED)
 
-add_rect(s11, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=EMERALD)
+# ═══════════════════════════════════════════════════════════
+# SLIDE 7: TECH STACK
+# ═══════════════════════════════════════════════════════════
+s7 = add_slide()
+slide_header(s7, "Section 05", "Technology Stack & Tooling")
 
+techs = [
+    ("C# & ASP.NET Core 8", "Enterprise-grade server framework handling security, dependency injection, and high throughput."),
+    ("Tailwind CSS Framework", "Utility-first modern styling ensuring 100% responsiveness on mobile, tablet, and desktop."),
+    ("SQLite & EF Core", "Lightweight, reliable relational database with automated schema migrations and ACID transactions."),
+    ("Google Gemini 2.0 Flash", "State-of-the-art conversational AI providing instant bilingual responses in Roman Urdu & English."),
+    ("Docker Linux Containers", "Self-contained application image packaging code, database, and dependencies for zero-friction setup."),
+    ("Railway.app Cloud Hosting", "Production cloud deployment with automated GitHub CI/CD, SSL/TLS encryption, and continuous uptime."),
+]
 
-# ═══════════════════════════════════════════════════════════════════
-# SLIDE 12 — THANK YOU
-# ═══════════════════════════════════════════════════════════════════
-s12 = add_slide()
-add_rect(s12, 0, 0, Inches(0.18), SLIDE_H, fill=EMERALD)
+for i, (title, desc) in enumerate(techs):
+    x = Inches(0.8) + (i % 2) * Inches(6.0)
+    y = Inches(1.8) + (i // 2) * Inches(1.6)
+    add_rect(s7, x, y, Inches(5.7), Inches(1.35), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+    add_text(s7, title, x + Inches(0.3), y + Inches(0.18), Inches(5.1), Inches(0.35), font_size=Pt(14), bold=True, color=WHITE)
+    add_text(s7, desc, x + Inches(0.3), y + Inches(0.55), Inches(5.1), Inches(0.7), font_size=Pt(10.5), color=MUTED)
 
-# Big soft background icon
-add_text(s12, "🍱", Inches(3), Inches(0.5), Inches(7), Inches(6.5),
-         font_size=Pt(250), color=RGBColor(0x05, 0x20, 0x12), align=PP_ALIGN.CENTER, font_name="Segoe UI Emoji")
+# ═══════════════════════════════════════════════════════════
+# SLIDE 8: AI ASSISTANT (MEALBOT)
+# ═══════════════════════════════════════════════════════════
+s8 = add_slide()
+slide_header(s8, "Section 06", "MealBot: AI-Powered Relief Assistant")
 
-# Top stripe
-add_rect(s12, 0, 0, SLIDE_W, Inches(0.08), fill=EMERALD)
-add_rect(s12, 0, SLIDE_H - Inches(0.08), SLIDE_W, Inches(0.08), fill=EMERALD)
+add_rect(s8, Inches(0.8), Inches(1.8), Inches(5.7), Inches(4.8), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s8, "Key AI Capabilities", Inches(1.1), Inches(2.1), Inches(5.1), Inches(0.4), font_size=Pt(16), bold=True, color=WHITE)
 
-add_text(s12, "Thank You", Inches(0.5), Inches(0.7), Inches(12.3), Inches(1.6),
-         font_size=Pt(80), bold=True, color=WHITE, align=PP_ALIGN.CENTER, font_name="Calibri")
+ai_caps = [
+    ("Bilingual NLP (Roman Urdu)", "Understands Pakistani user queries written in Roman Urdu as well as standard English."),
+    ("Web Speech API Voice Input", "Microphone feature converts spoken Urdu/English speech into text directly inside the browser."),
+    ("Domain Context Prompting", "Instructed with full knowledge of ShareMeal operations, Pakistani cities, and food safety standards."),
+    ("Zero Infrastructure Cost", "Uses Google Gemini free tier API key injected securely via cloud environment variables."),
+]
 
-add_rect(s12, Inches(2.5), Inches(2.35), Inches(8.3), Inches(0.06), fill=EMERALD)
+for j, (cap_title, cap_desc) in enumerate(ai_caps):
+    cy = Inches(2.65) + j * Inches(0.95)
+    add_text(s8, "• " + cap_title, Inches(1.1), cy, Inches(5.1), Inches(0.3), font_size=Pt(12), bold=True, color=EMERALD)
+    add_text(s8, cap_desc, Inches(1.3), cy + Inches(0.28), Inches(4.9), Inches(0.55), font_size=Pt(10.5), color=MUTED)
 
-add_text(s12,
-         "ShareMeal — Connecting food-surplus restaurants with food-deficient charities.\n"
-         "Reducing food waste. Fighting hunger. Building a better Pakistan. 🇵🇰",
-         Inches(0.8), Inches(2.55), Inches(11.7), Inches(1.0),
-         font_size=Pt(15), italic=True, color=GRAY_400, align=PP_ALIGN.CENTER, font_name="Calibri", word_wrap=True)
+# Right: Chat Mockup
+add_rect(s8, Inches(6.9), Inches(1.8), Inches(5.6), Inches(4.8), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+add_text(s8, "🤖  Live Interaction Sample", Inches(7.2), Inches(2.1), Inches(5.0), Inches(0.4), font_size=Pt(14), bold=True, color=WHITE)
 
-# Info row
-add_text(s12, "🎓  BSCS Final Year Project   |   University of Southern Punjab, Multan   |   2026",
-         Inches(0.8), Inches(3.75), Inches(11.7), Inches(0.42),
-         font_size=Pt(12), color=EMERALD, align=PP_ALIGN.CENTER, font_name="Calibri")
-add_text(s12, "Supervisor: Prof. Kinat   |   Developers: Muhammad Khulfan & Abdullah Khalid",
-         Inches(0.8), Inches(4.18), Inches(11.7), Inches(0.42),
-         font_size=Pt(12), color=GRAY_600, align=PP_ALIGN.CENTER, font_name="Calibri")
+add_rect(s8, Inches(7.2), Inches(2.7), Inches(5.0), Inches(0.9), fill=DARK_BG, line_color=BORDER, line_w=Pt(1))
+add_text(s8, "User: 'Multan mein khana kahan available hai?'", Inches(7.4), Inches(2.95), Inches(4.6), Inches(0.4), font_size=Pt(11), color=MUTED)
 
-# Links
-add_rect(s12, Inches(1.5), Inches(4.85), Inches(4.2), Inches(0.65), fill=CARD_BG)
-add_rect(s12, Inches(1.5), Inches(4.85), Inches(4.2), Inches(0.65), fill=None, line_color=EMERALD, line_w=Pt(1.2))
-add_text(s12, "🌍  Live Website: sharemeal-platform-production.up.railway.app",
-         Inches(1.7), Inches(4.95), Inches(4.0), Inches(0.42),
-         font_size=Pt(10), color=EMERALD, font_name="Calibri")
+add_rect(s8, Inches(7.2), Inches(3.8), Inches(5.0), Inches(1.7), fill=DARK_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s8, "MealBot AI:\n'Asslam o Alikum! ShareMeal Marketplace par login karein — Multan ke verified restaurants ke posted donations available hain. Charity portal se direct claim karein!'",
+         Inches(7.4), Inches(3.95), Inches(4.6), Inches(1.35), font_size=Pt(11), color=EMERALD)
 
-add_rect(s12, Inches(6.35), Inches(4.85), Inches(4.2), Inches(0.65), fill=CARD_BG)
-add_rect(s12, Inches(6.35), Inches(4.85), Inches(4.2), Inches(0.65), fill=None, line_color=BLUE_ACC, line_w=Pt(1.2))
-add_text(s12, "💻  GitHub: github.com/Khulfan42/ShareMeal-Platform",
-         Inches(6.55), Inches(4.95), Inches(4.0), Inches(0.42),
-         font_size=Pt(10), color=BLUE_ACC, font_name="Calibri")
+# ═══════════════════════════════════════════════════════════
+# SLIDE 9: LIVE DEMO & SLIDER
+# ═══════════════════════════════════════════════════════════
+s9 = add_slide()
+slide_header(s9, "Section 07", "Live Demonstration & System Interfaces")
 
-add_text(s12, "Questions & Discussion Welcome  ✨",
-         Inches(0.8), Inches(5.8), Inches(11.7), Inches(0.5),
-         font_size=Pt(18), bold=True, color=WHITE, align=PP_ALIGN.CENTER, font_name="Calibri")
+demos = [
+    ("🏠 Home Page", "Landing page highlighting zero food waste mission, live statistics counter, and responsive navigation."),
+    ("🍽️ Restaurant Panel", "Donation post form with category dropdown, expiry deadline, pickup notes, and active donation history."),
+    ("🤲 Charity Marketplace", "Card-based food catalog displaying available donations with one-click claim buttons."),
+    ("👑 Admin Dashboard", "Centralized control panel for approving/rejecting organizations and auditing platform health."),
+]
 
+for i, (title, desc) in enumerate(demos):
+    x = Inches(0.8) + (i % 2) * Inches(6.0)
+    y = Inches(1.8) + (i // 2) * Inches(1.9)
+    add_rect(s9, x, y, Inches(5.7), Inches(1.6), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+    add_text(s9, title, x + Inches(0.3), y + Inches(0.2), Inches(5.1), Inches(0.35), font_size=Pt(15), bold=True, color=WHITE)
+    add_text(s9, desc, x + Inches(0.3), y + Inches(0.6), Inches(5.1), Inches(0.85), font_size=Pt(11), color=MUTED)
 
-# ═══════════════════════════════════════════════════════════════════
-# SAVE
-# ═══════════════════════════════════════════════════════════════════
-os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
+add_rect(s9, Inches(0.8), Inches(5.9), Inches(11.7), Inches(0.8), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s9, "🌐  Production Cloud URL:  https://sharemeal-platform-production.up.railway.app",
+         Inches(1.0), Inches(6.12), Inches(11.3), Inches(0.4), font_size=Pt(13), bold=True, color=EMERALD, align=PP_ALIGN.CENTER)
+
+# ═══════════════════════════════════════════════════════════
+# SLIDE 10: ACADEMIC SUPERVISION & DEVELOPERS
+# ═══════════════════════════════════════════════════════════
+s10 = add_slide()
+slide_header(s10, "Academic Credits", "Project Supervision & Engineering Team")
+
+# Supervisor Card
+add_rect(s10, Inches(0.8), Inches(1.8), Inches(11.7), Inches(1.6), fill=CARD_BG, line_color=AMBER, line_w=Pt(1))
+add_text(s10, "👩‍🏫", Inches(1.1), Inches(2.1), Inches(0.8), Inches(0.8), font_size=Pt(36), align=PP_ALIGN.CENTER)
+add_text(s10, "ACADEMIC SUPERVISOR", Inches(2.1), Inches(2.05), Inches(5), Inches(0.3), font_size=Pt(10), bold=True, color=AMBER)
+add_text(s10, "Prof. Kinat", Inches(2.1), Inches(2.35), Inches(5), Inches(0.45), font_size=Pt(20), bold=True, color=WHITE)
+add_text(s10, "Department of Computer Science • University of Southern Punjab, Multan", Inches(2.1), Inches(2.85), Inches(8), Inches(0.35), font_size=Pt(12), color=MUTED)
+
+# Developer 1: Muhammad Khulfan
+add_rect(s10, Inches(0.8), Inches(3.7), Inches(5.7), Inches(3.0), fill=CARD_BG, line_color=EMERALD, line_w=Pt(1))
+add_text(s10, "LEAD DEVELOPER & ARCHITECT", Inches(1.1), Inches(3.95), Inches(5.1), Inches(0.3), font_size=Pt(10), bold=True, color=EMERALD)
+add_text(s10, "Muhammad Khulfan", Inches(1.1), Inches(4.25), Inches(5.1), Inches(0.4), font_size=Pt(18), bold=True, color=WHITE)
+add_text(s10, "BS Computer Science (BSCS) • iOS Engineer", Inches(1.1), Inches(4.7), Inches(5.1), Inches(0.35), font_size=Pt(12), bold=True, color=BLUE)
+add_text(s10, "Engineered platform architecture, database schemas, Tailwind frontend, Gemini AI integration, voice recording, and cloud containerization.",
+         Inches(1.1), Inches(5.15), Inches(5.1), Inches(1.2), font_size=Pt(11), color=MUTED)
+
+# Developer 2: Abdullah Khalid
+add_rect(s10, Inches(6.8), Inches(3.7), Inches(5.7), Inches(3.0), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+add_text(s10, "TEAM MEMBER & DEVELOPER", Inches(7.1), Inches(3.95), Inches(5.1), Inches(0.3), font_size=Pt(10), bold=True, color=MUTED)
+add_text(s10, "Abdullah Khalid", Inches(7.1), Inches(4.25), Inches(5.1), Inches(0.4), font_size=Pt(18), bold=True, color=WHITE)
+add_text(s10, "BS Computer Science (BSCS)", Inches(7.1), Inches(4.7), Inches(5.1), Inches(0.35), font_size=Pt(12), bold=True, color=WHITE)
+add_text(s10, "Collaborated on system requirements, feature testing, project documentation, and verification throughout the FYP lifecycle.",
+         Inches(7.1), Inches(5.15), Inches(5.1), Inches(1.2), font_size=Pt(11), color=MUTED)
+
+# ═══════════════════════════════════════════════════════════
+# SLIDE 11: CONCLUSION & THANK YOU
+# ═══════════════════════════════════════════════════════════
+s11 = add_slide()
+
+add_text(s11, "🍱", Inches(0.8), Inches(1.5), Inches(11.7), Inches(0.8), font_size=Pt(48), align=PP_ALIGN.CENTER)
+add_text(s11, "Thank You", Inches(0.8), Inches(2.4), Inches(11.7), Inches(1.1), font_size=Pt(52), bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+add_text(s11, "ShareMeal Platform — Turning Food Waste into Dignified Meals for Pakistan",
+         Inches(0.8), Inches(3.4), Inches(11.7), Inches(0.5), font_size=Pt(16), bold=True, color=EMERALD, align=PP_ALIGN.CENTER)
+
+add_rect(s11, Inches(2.8), Inches(4.2), Inches(7.7), Inches(1.3), fill=CARD_BG, line_color=BORDER, line_w=Pt(1))
+add_text(s11, "Special Gratitude to Supervisor: Prof. Kinat", Inches(3.0), Inches(4.4), Inches(7.3), Inches(0.35),
+         font_size=Pt(13), bold=True, color=AMBER, align=PP_ALIGN.CENTER)
+add_text(s11, "Department of Computer Science • University of Southern Punjab, Multan", Inches(3.0), Inches(4.8), Inches(7.3), Inches(0.35),
+         font_size=Pt(12), color=MUTED, align=PP_ALIGN.CENTER)
+
+add_text(s11, "Questions & External Viva Discussion Welcome  ✨", Inches(0.8), Inches(5.9), Inches(11.7), Inches(0.5),
+         font_size=Pt(18), bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+
+# Save
 prs.save(OUTPUT)
-print(f"✅  Presentation saved to:\n    {OUTPUT}")
-print(f"    Slides: {len(prs.slides)}")
+print(f"✅ Clean Academic Presentation saved to {OUTPUT} (11 slides)")
