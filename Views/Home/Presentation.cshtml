@@ -1,6 +1,6 @@
 @{
     Layout = null;
-    ViewData["Title"] = "ShareMeal - Final Year Project Presentation";
+    ViewData["Title"] = "ShareMeal - Final Year Project Defense";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -9,14 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShareMeal Platform — FYP Final Defense Presentation</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
-        @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
+        @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #090d16; 
+            background: #060911; 
             color: #f1f5f9; 
             overflow: hidden; 
             user-select: none;
@@ -35,7 +36,7 @@
             top: 0; 
             left: 0; 
             opacity: 0; 
-            transform: scale(0.98);
+            transform: scale(0.985);
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .slide.active { 
@@ -47,8 +48,8 @@
         /* Clean animations */
         .anim-item {
             opacity: 0;
-            transform: translateY(16px);
-            animation: slideUp 0.5s ease forwards;
+            transform: translateY(18px);
+            animation: slideUp 0.45s ease forwards;
         }
         .anim-item:nth-child(1) { animation-delay: 0.1s; }
         .anim-item:nth-child(2) { animation-delay: 0.2s; }
@@ -65,20 +66,32 @@
 
         /* Glass Cards */
         .card {
-            background: rgba(17, 24, 39, 0.7);
+            background: rgba(15, 23, 42, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             transition: all 0.3s ease;
         }
         .card:hover {
-            border-color: rgba(16, 185, 129, 0.3);
+            border-color: rgba(16, 185, 129, 0.4);
             transform: translateY(-3px);
         }
 
         .card-emerald {
             background: rgba(6, 78, 59, 0.25);
-            border: 1px solid rgba(16, 185, 129, 0.25);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .card-rose {
+            background: rgba(136, 19, 55, 0.25);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+        .card-blue {
+            background: rgba(30, 58, 138, 0.25);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .card-amber {
+            background: rgba(120, 53, 15, 0.25);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         /* Carousel inside presentation */
@@ -104,7 +117,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #e2e8f0;
             display: flex;
@@ -125,7 +138,7 @@
             bottom: 0;
             left: 0;
             height: 4px;
-            background: #10b981;
+            background: linear-gradient(90deg, #10b981, #38bdf8, #f59e0b);
             transition: width 0.3s ease;
             z-index: 50;
         }
@@ -134,6 +147,17 @@
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.3);
             color: #34d399;
+        }
+
+        .gradient-title {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-emerald {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
@@ -148,7 +172,7 @@
 
         <!-- Academic Header Tag -->
         <div class="px-4 py-1.5 rounded-full card text-xs font-semibold text-slate-300 flex items-center gap-2 pointer-events-auto border border-white/10 shadow-lg">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>Final Year Project (FYP)</span>
             <span class="text-slate-600">•</span>
             <span>University of Southern Punjab, Multan</span>
@@ -186,27 +210,27 @@
     <!-- Progress & Slide Indicator -->
     <div class="progress-line" id="progressBar"></div>
     <div class="fixed bottom-4 right-6 text-xs font-bold text-slate-400 font-mono z-40" id="slideCounter">
-        01 / 11
+        01 / 13
     </div>
     <div class="fixed bottom-4 left-1/2 -translate-x-1/2 text-[11px] text-slate-500 font-medium tracking-wide z-40">
-        Use Arrow Keys [← →] or Spacebar to Navigate
+        Use Arrow Keys [← →] or Spacebar to Navigate &nbsp;|&nbsp; Press [F] for Fullscreen
     </div>
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 1: FORMAL TITLE SLIDE
+         SLIDE 1: FORMAL TITLE COVER
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide active flex-col items-center justify-center text-center px-6" id="slide-1">
+    <div class="slide active flex-col items-center justify-center text-center px-6" id="slide-1" style="background: radial-gradient(circle at center, #0f1c2e 0%, #060911 100%);">
         <div class="max-w-4xl mx-auto w-full">
             
             <!-- University Name & Department -->
-            <div class="anim-item inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-academic text-xs font-bold uppercase tracking-wider mb-6">
+            <div class="anim-item inline-flex items-center gap-2 px-5 py-2 rounded-full badge-academic text-xs font-bold uppercase tracking-wider mb-6">
                 <span>🏛️</span> Department of Computer Science • University of Southern Punjab, Multan
             </div>
 
             <!-- Project Title -->
             <h1 class="anim-item text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight mb-4">
-                ShareMeal <span class="text-emerald-400">Platform</span>
+                ShareMeal <span class="gradient-emerald">Platform</span>
             </h1>
 
             <!-- Subtitle -->
@@ -229,7 +253,7 @@
                     <span class="text-[10px] font-black uppercase tracking-widest text-amber-400 block mb-1">Supervised By</span>
                     <h3 class="text-xl font-bold text-white mb-1">Prof. Kinat</h3>
                     <p class="text-xs text-slate-400 mt-2">Department of Computer Science</p>
-                    <p class="text-xs text-amber-400/90 font-medium">Faculty of Computing & IT</p>
+                    <p class="text-xs text-amber-400 font-medium">Faculty of Computing & IT</p>
                 </div>
             </div>
 
@@ -242,7 +266,7 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 2: PRESENTATION OUTLINE / AGENDA
+         SLIDE 2: AGENDA
     ═══════════════════════════════════════════════════════════ -->
     <div class="slide flex-col items-center justify-center px-6" id="slide-2">
         <div class="max-w-4xl mx-auto w-full">
@@ -253,59 +277,83 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                <div onclick="goToSlide(3)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">01</span>
+                <div onclick="goToSlide(3)" class="card p-4 cursor-pointer hover:border-rose-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-sm">01</span>
                     <div>
-                        <div class="text-sm font-bold text-white">Problem Statement</div>
-                        <div class="text-xs text-slate-400">The food wastage & hunger crisis in Pakistan</div>
+                        <div class="text-sm font-bold text-white">The Crisis: Hunger & Survival</div>
+                        <div class="text-xs text-slate-400">Real dilemma in Pakistan with video evidence</div>
                     </div>
                 </div>
 
-                <div onclick="goToSlide(4)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">02</span>
+                <div onclick="goToSlide(4)" class="card p-4 cursor-pointer hover:border-amber-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">02</span>
                     <div>
-                        <div class="text-sm font-bold text-white">Proposed Solution</div>
-                        <div class="text-xs text-slate-400">How ShareMeal connects donors with charities</div>
+                        <div class="text-sm font-bold text-white">How Food is Provided</div>
+                        <div class="text-xs text-slate-400">From surplus kitchen to shelter plates</div>
                     </div>
                 </div>
 
                 <div onclick="goToSlide(5)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
                     <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">03</span>
                     <div>
-                        <div class="text-sm font-bold text-white">System Architecture</div>
-                        <div class="text-xs text-slate-400">MVC pattern, data flow & security layers</div>
+                        <div class="text-sm font-bold text-white">ShareMeal Solution</div>
+                        <div class="text-xs text-slate-400">4 operational pillars bridging the gap</div>
                     </div>
                 </div>
 
-                <div onclick="goToSlide(6)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">04</span>
+                <div onclick="goToSlide(6)" class="card p-4 cursor-pointer hover:border-blue-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">04</span>
+                    <div>
+                        <div class="text-sm font-bold text-white">System Architecture</div>
+                        <div class="text-xs text-slate-400">MVC pattern, data flow & security</div>
+                    </div>
+                </div>
+
+                <div onclick="goToSlide(7)" class="card p-4 cursor-pointer hover:border-purple-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">05</span>
                     <div>
                         <div class="text-sm font-bold text-white">Core User Roles</div>
                         <div class="text-xs text-slate-400">Restaurant, Charity and Admin workflows</div>
                     </div>
                 </div>
 
-                <div onclick="goToSlide(7)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">05</span>
-                    <div>
-                        <div class="text-sm font-bold text-white">Technology Stack</div>
-                        <div class="text-xs text-slate-400">ASP.NET Core 8, C#, Tailwind CSS & SQLite</div>
-                    </div>
-                </div>
-
                 <div onclick="goToSlide(8)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
                     <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">06</span>
                     <div>
-                        <div class="text-sm font-bold text-white">AI Assistant (MealBot)</div>
-                        <div class="text-xs text-slate-400">Google Gemini 2.0 Flash + Web Speech Voice</div>
+                        <div class="text-sm font-bold text-white">Technology Stack</div>
+                        <div class="text-xs text-slate-400">ASP.NET Core 8, Tailwind, SQLite, Docker</div>
                     </div>
                 </div>
 
-                <div onclick="goToSlide(9)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4 sm:col-span-2 max-w-md mx-auto w-full">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">07</span>
+                <div onclick="goToSlide(9)" class="card p-4 cursor-pointer hover:border-purple-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">07</span>
                     <div>
-                        <div class="text-sm font-bold text-white">Live Platform Demonstration & Slider</div>
-                        <div class="text-xs text-slate-400">Interactive UI screenshots & live cloud URL</div>
+                        <div class="text-sm font-bold text-white">MealBot Gemini AI & Voice</div>
+                        <div class="text-xs text-slate-400">Roman Urdu NLP + Web Speech Voice API</div>
+                    </div>
+                </div>
+
+                <div onclick="goToSlide(10)" class="card p-4 cursor-pointer hover:border-blue-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">08</span>
+                    <div>
+                        <div class="text-sm font-bold text-white">Interactive Feature Slider</div>
+                        <div class="text-xs text-slate-400">Live screenshot showcase & cloud URL</div>
+                    </div>
+                </div>
+
+                <div onclick="goToSlide(11)" class="card p-4 cursor-pointer hover:border-emerald-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">09</span>
+                    <div>
+                        <div class="text-sm font-bold text-white">Social Impact & Metrics</div>
+                        <div class="text-xs text-slate-400">Meals rescued, zero-waste CO2 reduction</div>
+                    </div>
+                </div>
+
+                <div onclick="goToSlide(12)" class="card p-4 cursor-pointer hover:border-amber-400 flex items-center gap-4">
+                    <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">10</span>
+                    <div>
+                        <div class="text-sm font-bold text-white">Future Scope & Roadmap</div>
+                        <div class="text-xs text-slate-400">Mobile apps, GPS van tracking & smart IoT</div>
                     </div>
                 </div>
             </div>
@@ -315,50 +363,77 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 3: PROBLEM STATEMENT
+         SLIDE 3: THE HARSH REALITY — HUNGER & SURVIVAL IN PAKISTAN
     ═══════════════════════════════════════════════════════════ -->
     <div class="slide flex-col items-center justify-center px-6" id="slide-3">
-        <div class="max-w-4xl mx-auto w-full">
+        <div class="max-w-5xl mx-auto w-full">
             
-            <div class="text-center mb-8">
-                <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Section 01</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">The Problem in Pakistan</h2>
-                <p class="text-slate-400 text-sm mt-1">Food Wastage vs. Widespread Hunger Crisis</p>
+            <div class="text-center mb-6">
+                <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Section 01 • The Problem</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Hunger & Survival in Pakistan</h2>
+                <p class="text-slate-400 text-sm mt-0.5">36% Food Wasted vs. Millions Struggling for Daily Survival</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                <div class="card p-6 border-rose-500/30 text-center">
-                    <div class="text-4xl mb-3">🗑️</div>
-                    <div class="text-3xl font-black text-rose-400 mb-1">36%</div>
-                    <div class="text-sm font-bold text-white mb-2">Food Produced is Wasted</div>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Millions of tons of edible meals are discarded annually by restaurants, banquets, and hotels.
-                    </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-6">
+                
+                <!-- Left: Real imagery & Video Player Section -->
+                <div class="card p-4 border-rose-500/30 overflow-hidden relative group">
+                    <div class="relative h-56 rounded-xl overflow-hidden mb-3">
+                        <img src="/food_wastage.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Food Wastage Crisis">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-4">
+                            <span class="text-rose-400 text-xs font-bold uppercase tracking-wider">Documentary Evidence</span>
+                            <h4 class="text-white text-base font-bold">Commercial Waste vs. Starvation</h4>
+                        </div>
+                        <!-- Play Video Button (Actionable Modal trigger) -->
+                        <button onclick="toggleVideoModal(true)" class="absolute inset-0 m-auto w-14 h-14 rounded-full bg-rose-600/90 text-white flex items-center justify-center text-xl shadow-2xl hover:scale-110 transition-transform cursor-pointer" title="Watch Documentary Clip">
+                            <i class="fas fa-play ml-1"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                        <span>📹 Click to watch documentary clip</span>
+                        <span class="text-rose-400 font-bold">36 Million Tons Wasted</span>
+                    </div>
                 </div>
 
-                <div class="card p-6 border-amber-500/30 text-center">
-                    <div class="text-4xl mb-3">💔</div>
-                    <div class="text-3xl font-black text-amber-400 mb-1">20M+</div>
-                    <div class="text-sm font-bold text-white mb-2">People Face Hunger</div>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Underprivileged families and orphanages struggle daily for basic nutritional sustenance.
-                    </p>
+                <!-- Right: Emotional Statistics & Survival Facts -->
+                <div class="space-y-3.5">
+                    <div class="card card-rose p-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">😢</span>
+                            <div>
+                                <h4 class="text-white font-bold text-sm">Acute Hunger & Child Malnutrition</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed mt-0.5">
+                                    Over 20+ million people in Pakistan face daily hunger. 40% of children suffer from stunted growth due to lack of basic daily nutrition.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-amber p-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">🗑️</span>
+                            <div>
+                                <h4 class="text-white font-bold text-sm">Banquet & Restaurant Discard</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed mt-0.5">
+                                    Wedding banquets and restaurants throw away tons of safe, fresh meals every night simply because they have no collection mechanism.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-emerald p-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">💡</span>
+                            <div>
+                                <h4 class="text-white font-bold text-sm">The Solution Needed</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed mt-0.5">
+                                    Not more food, but a <strong class="text-white">smart digital connection</strong> to redirect surplus meals before they enter the dumpster!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card p-6 border-blue-500/30 text-center">
-                    <div class="text-4xl mb-3">🔌</div>
-                    <div class="text-3xl font-black text-blue-400 mb-1">No Bridge</div>
-                    <div class="text-sm font-bold text-white mb-2">Communication Gap</div>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Donors have food but no pickup partner. Charities need food but have no real-time notification.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card p-4 text-center border-emerald-500/40 bg-emerald-950/20">
-                <p class="text-sm text-slate-200">
-                    <strong class="text-emerald-400">Core Objective:</strong> Build a simple, trustworthy digital platform to turn surplus food into timely hunger relief.
-                </p>
             </div>
 
         </div>
@@ -366,61 +441,78 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 4: PROPOSED SOLUTION
+         SLIDE 4: HOW FOOD IS PROVIDED (THE RELIEF PIPELINE)
     ═══════════════════════════════════════════════════════════ -->
     <div class="slide flex-col items-center justify-center px-6" id="slide-4">
-        <div class="max-w-4xl mx-auto w-full">
+        <div class="max-w-5xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 02</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Proposed Solution: ShareMeal</h2>
-                <p class="text-slate-400 text-sm mt-1">How our platform solves the problem</p>
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Section 02 • Distribution Flow</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">How Food is Provided to the Needy</h2>
+                <p class="text-slate-400 text-sm mt-1">From commercial kitchens directly to shelter dastarkhwans</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                <!-- Step 1 -->
-                <div class="card p-5 border-l-4 border-emerald-400">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">1</span>
-                        <h4 class="text-base font-bold text-white">Restaurants Post Surplus Food</h4>
+            <!-- 4 Stage Visual Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                
+                <!-- Stage 1 -->
+                <div class="card p-5 border-emerald-500/30 text-center">
+                    <div class="h-28 rounded-xl overflow-hidden mb-3">
+                        <img src="/restaurant_bg.png" class="w-full h-full object-cover" alt="Restaurant Kitchen">
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
-                        Commercial eateries list prepared meals, item quantity, expiry hours, and pickup instructions with just a few clicks.
+                    <span class="text-[10px] font-black uppercase text-emerald-400 block mb-1">Stage 01</span>
+                    <h4 class="text-sm font-bold text-white mb-1">Surplus Logged</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Restaurant chef enters remaining servings and expiry timeline into ShareMeal in 60s.
                     </p>
                 </div>
 
-                <!-- Step 2 -->
-                <div class="card p-5 border-l-4 border-blue-400">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">2</span>
-                        <h4 class="text-base font-bold text-white">Charities Claim in Real-Time</h4>
+                <!-- Stage 2 -->
+                <div class="card p-5 border-blue-500/30 text-center">
+                    <div class="h-28 rounded-xl overflow-hidden mb-3">
+                        <img src="/charity_hero_premium.png" class="w-full h-full object-cover" alt="NGO Notification">
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
-                        Registered charities browse live listings, claim donations instantly, and coordinate directly for pickup.
+                    <span class="text-[10px] font-black uppercase text-blue-400 block mb-1">Stage 02</span>
+                    <h4 class="text-sm font-bold text-white mb-1">Real-Time Claim</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Nearby registered charities receive alerts, browse marketplace, and claim the donation.
                     </p>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="card p-5 border-l-4 border-purple-400">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">3</span>
-                        <h4 class="text-base font-bold text-white">Admin Trust & Hygiene Gate</h4>
+                <!-- Stage 3 -->
+                <div class="card p-5 border-purple-500/30 text-center">
+                    <div class="h-28 rounded-xl overflow-hidden mb-3">
+                        <img src="/charity_volunteers.png" class="w-full h-full object-cover" alt="Food Packaging">
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
-                        Every restaurant and charity is manually reviewed and approved by the system admin to guarantee safety.
+                    <span class="text-[10px] font-black uppercase text-purple-400 block mb-1">Stage 03</span>
+                    <h4 class="text-sm font-bold text-white mb-1">Hygiene Pickup</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Volunteers collect hygienically sealed containers following strict temperature standards.
                     </p>
                 </div>
 
-                <!-- Step 4 -->
-                <div class="card p-5 border-l-4 border-amber-400">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">4</span>
-                        <h4 class="text-base font-bold text-white">AI Guidance in Urdu</h4>
+                <!-- Stage 4 -->
+                <div class="card p-5 border-amber-500/30 text-center">
+                    <div class="h-28 rounded-xl overflow-hidden mb-3">
+                        <img src="/food_serving.png" class="w-full h-full object-cover" alt="Dignified Distribution">
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
-                        MealBot guides users in Roman Urdu and English on how to donate, claim, and maintain food safety protocols.
+                    <span class="text-[10px] font-black uppercase text-amber-400 block mb-1">Stage 04</span>
+                    <h4 class="text-sm font-bold text-white mb-1">Dignified Serving</h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Meals distributed fresh to orphanages, slum families, and hospital waiting rooms.
                     </p>
                 </div>
+
+            </div>
+
+            <!-- Target Beneficiaries -->
+            <div class="card p-4 border-white/10 bg-slate-900/60 flex flex-wrap items-center justify-between gap-4 text-xs">
+                <span class="text-amber-400 font-bold uppercase tracking-wider">Who Receives The Meals?</span>
+                <span class="text-slate-300">✓ Orphanages</span>
+                <span class="text-slate-300">✓ Old Age Homes</span>
+                <span class="text-slate-300">✓ Labor Points</span>
+                <span class="text-slate-300">✓ Slum Settlements</span>
+                <span class="text-slate-300">✓ Hospital Patient Attendants</span>
             </div>
 
         </div>
@@ -428,15 +520,77 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 5: SYSTEM ARCHITECTURE
+         SLIDE 5: SHAREMEAL SOLUTION
     ═══════════════════════════════════════════════════════════ -->
     <div class="slide flex-col items-center justify-center px-6" id="slide-5">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Section 03</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">System Architecture (MVC)</h2>
-                <p class="text-slate-400 text-sm mt-1">Clean 3-Tier Layered Implementation</p>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 03 • Proposed System</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">The ShareMeal Ecosystem</h2>
+                <p class="text-slate-400 text-sm mt-1">Comprehensive Web-Based Redistribution System</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                <!-- 1 -->
+                <div class="card p-5 border-l-4 border-emerald-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">1</span>
+                        <h4 class="text-base font-bold text-white">Dedicated Role-Based Portals</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
+                        Tailored interfaces for Restaurants to donate, Charities to claim, and System Admin to govern.
+                    </p>
+                </div>
+
+                <!-- 2 -->
+                <div class="card p-5 border-l-4 border-blue-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm">2</span>
+                        <h4 class="text-base font-bold text-white">Live Food Marketplace</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
+                        Active listing catalog filtered by expiry deadline, quantity, and city location.
+                    </p>
+                </div>
+
+                <!-- 3 -->
+                <div class="card p-5 border-l-4 border-purple-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">3</span>
+                        <h4 class="text-base font-bold text-white">Admin Trust & Quality Gate</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
+                        Only verified NGOs and licensed food outlets can participate, ensuring zero health hazards.
+                    </p>
+                </div>
+
+                <!-- 4 -->
+                <div class="card p-5 border-l-4 border-amber-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">4</span>
+                        <h4 class="text-base font-bold text-white">AI Relief Guidance (MealBot)</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-11">
+                        Gemini 2.0 assistant answers questions in natural Roman Urdu and English with voice support.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 6: SYSTEM ARCHITECTURE
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide flex-col items-center justify-center px-6" id="slide-6">
+        <div class="max-w-4xl mx-auto w-full">
+            
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Section 04 • Technical Design</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">System Architecture (3-Tier MVC)</h2>
+                <p class="text-slate-400 text-sm mt-1">Enterprise ASP.NET Core 8 Design Pattern</p>
             </div>
 
             <!-- Flow Diagram -->
@@ -447,7 +601,7 @@
                     <h3 class="text-base font-bold text-white mb-1">Presentation Layer</h3>
                     <div class="text-xs text-emerald-400 font-semibold mb-3">Razor Views (.cshtml)</div>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        Tailwind CSS responsive interfaces, JavaScript voice recognition, and interactive forms for users.
+                        Tailwind CSS responsive design, JavaScript voice input, dynamic interactive forms, Chart.js.
                     </p>
                 </div>
 
@@ -457,7 +611,7 @@
                     <h3 class="text-base font-bold text-white mb-1">Application Layer</h3>
                     <div class="text-xs text-blue-400 font-semibold mb-3">ASP.NET Core Controllers</div>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        AccountController, RestaurantController, CharityController, AdminController & GeminiAiService.
+                        Authentication, AccountController, RestaurantController, CharityController, GeminiAiService.
                     </p>
                 </div>
 
@@ -467,14 +621,14 @@
                     <h3 class="text-base font-bold text-white mb-1">Data Storage Layer</h3>
                     <div class="text-xs text-purple-400 font-semibold mb-3">Entity Framework & SQLite</div>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        Relational tables for Organizations, Donations, Contact Messages & ASP.NET Identity Users.
+                        Relational schema for Organizations, Food Donations, Contact Forms & ASP.NET Identity.
                     </p>
                 </div>
             </div>
 
             <div class="card p-4 text-center">
                 <p class="text-xs text-slate-400">
-                    ⚡ <strong>Request Flow:</strong> User Browser ➔ Controller Action ➔ Model Validation ➔ DbContext Query ➔ Rendered HTML View
+                    ⚡ <strong>Pipeline:</strong> Browser Client ➔ Controller Action ➔ Model Validation ➔ EF Core DbContext ➔ Rendered HTML View
                 </p>
             </div>
 
@@ -483,15 +637,15 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 6: CORE USER WORKFLOWS
+         SLIDE 7: CORE USER WORKFLOWS
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center px-6" id="slide-6">
+    <div class="slide flex-col items-center justify-center px-6" id="slide-7">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 04</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Core User Roles & Workflows</h2>
-                <p class="text-slate-400 text-sm mt-1">Three distinct dedicated portals</p>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 05 • User Roles</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Core User Roles & Portals</h2>
+                <p class="text-slate-400 text-sm mt-1">Structured workflows for all stakeholders</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -500,7 +654,7 @@
                     <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4">
                         🍽️
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">1. Restaurant</h3>
+                    <h3 class="text-lg font-bold text-white mb-2">1. Restaurant Donor</h3>
                     <ul class="text-xs text-slate-300 space-y-2">
                         <li class="flex items-start gap-2">✓ <span>Register restaurant profile</span></li>
                         <li class="flex items-start gap-2">✓ <span>Post food: Item name, quantity, expiry</span></li>
@@ -514,12 +668,12 @@
                     <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-2xl mb-4">
                         🤲
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">2. Charity / NGO</h3>
+                    <h3 class="text-lg font-bold text-white mb-2">2. Verified Charity</h3>
                     <ul class="text-xs text-slate-300 space-y-2">
-                        <li class="flex items-start gap-2">✓ <span>Register shelter or charity</span></li>
+                        <li class="flex items-start gap-2">✓ <span>Register shelter or NGO</span></li>
                         <li class="flex items-start gap-2">✓ <span>Browse live marketplace of available food</span></li>
                         <li class="flex items-start gap-2">✓ <span>Claim meal package with single click</span></li>
-                        <li class="flex items-start gap-2">✓ <span>Coordinate pickup with donor restaurant</span></li>
+                        <li class="flex items-start gap-2">✓ <span>Coordinate pickup directly with restaurant</span></li>
                     </ul>
                 </div>
 
@@ -528,11 +682,11 @@
                     <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl mb-4">
                         👑
                     </div>
-                    <h3 class="text-lg font-bold text-white mb-2">3. Admin</h3>
+                    <h3 class="text-lg font-bold text-white mb-2">3. System Admin</h3>
                     <ul class="text-xs text-slate-300 space-y-2">
                         <li class="flex items-start gap-2">✓ <span>Review pending registrations</span></li>
                         <li class="flex items-start gap-2">✓ <span>Approve or reject organizations</span></li>
-                        <li class="flex items-start gap-2">✓ <span>Suspend accounts violating safety SOPs</span></li>
+                        <li class="flex items-start gap-2">✓ <span>Audit food safety compliance</span></li>
                         <li class="flex items-start gap-2">✓ <span>View live donation statistics</span></li>
                     </ul>
                 </div>
@@ -543,15 +697,15 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 7: TECHNOLOGY STACK
+         SLIDE 8: TECH STACK
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center px-6" id="slide-7">
+    <div class="slide flex-col items-center justify-center px-6" id="slide-8">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Section 05</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Technology Stack</h2>
-                <p class="text-slate-400 text-sm mt-1">Tools and frameworks chosen for stability and speed</p>
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Section 06 • Implementation</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Technology Stack & Tooling</h2>
+                <p class="text-slate-400 text-sm mt-1">Modern frameworks chosen for stability and scale</p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -595,15 +749,15 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 8: AI ASSISTANT (MEALBOT)
+         SLIDE 9: AI ASSISTANT (MEALBOT)
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center px-6" id="slide-8">
+    <div class="slide flex-col items-center justify-center px-6" id="slide-9">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">Section 06</span>
+                <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">Section 07 • Artificial Intelligence</span>
                 <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">MealBot: AI Relief Assistant</h2>
-                <p class="text-slate-400 text-sm mt-1">Google Gemini 2.0 Flash Integration</p>
+                <p class="text-slate-400 text-sm mt-1">Google Gemini 2.0 Flash + Web Speech Voice Integration</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
@@ -619,14 +773,14 @@
                     <div class="card p-4 border-l-4 border-emerald-400">
                         <div class="text-sm font-bold text-white mb-1">Web Speech Voice Recognition</div>
                         <p class="text-xs text-slate-400 leading-relaxed">
-                            Built-in microphone button converts spoken speech into text so users don't have to type long messages.
+                            Microphone button converts spoken Urdu/English speech into text so users can speak naturally.
                         </p>
                     </div>
 
                     <div class="card p-4 border-l-4 border-blue-400">
-                        <div class="text-sm font-bold text-white mb-1">Contextual Knowledge</div>
+                        <div class="text-sm font-bold text-white mb-1">Domain-Specific Knowledge</div>
                         <p class="text-xs text-slate-400 leading-relaxed">
-                            Specifically instructed on ShareMeal workflows, Pakistani cities, and food safety standards.
+                            Instructed with full context of ShareMeal workflows, Pakistani cities, and food safety SOPs.
                         </p>
                     </div>
                 </div>
@@ -643,7 +797,7 @@
 
                     <div class="space-y-3 text-xs">
                         <div class="bg-white/5 p-3 rounded-xl max-w-[85%] text-slate-300">
-                            "Multan mein khana kahan available hai?"
+                            "Multan mein kis jagah se khana claim kar sakte hain?"
                         </div>
                         <div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl ml-auto max-w-[90%] text-emerald-200">
                             "Asslam o Alikum! ShareMeal Marketplace par login karein — Multan ke verified restaurants ke posted donations available hain!"
@@ -657,15 +811,15 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 9: INTERACTIVE LIVE SLIDER & DEMONSTRATION
+         SLIDE 10: INTERACTIVE FEATURE SHOWCASE SLIDER
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center px-6" id="slide-9">
+    <div class="slide flex-col items-center justify-center px-6" id="slide-10">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-6">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 07</span>
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Section 08 • System Demonstration</span>
                 <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Platform Interface Showcase</h2>
-                <p class="text-slate-400 text-sm mt-1">Interactive slider demonstrating actual system pages</p>
+                <p class="text-slate-400 text-sm mt-1">Interactive slider showing production screens</p>
             </div>
 
             <!-- Slider Container -->
@@ -680,7 +834,7 @@
                 <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between pointer-events-auto">
                     <!-- Slide title tag -->
                     <div class="px-4 py-1.5 rounded-full card text-xs font-bold text-white border border-white/20" id="sliderCaption">
-                        1. Home & Zero-Waste Initiative
+                        1. Home & Zero-Waste Mission
                     </div>
 
                     <!-- Next / Prev -->
@@ -706,27 +860,132 @@
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 10: ACADEMIC CREDITS & SUPERVISION
+         SLIDE 11: SOCIAL IMPACT & RESULTS
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center px-6" id="slide-10">
+    <div class="slide flex-col items-center justify-center px-6" id="slide-11">
         <div class="max-w-4xl mx-auto w-full">
             
             <div class="text-center mb-8">
-                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Academic Team</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Project Supervision & Engineering</h2>
-                <p class="text-slate-400 text-sm mt-1">Department of Computer Science • University of Southern Punjab, Multan</p>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Section 09 • Real Results</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Measurable Social Impact</h2>
+                <p class="text-slate-400 text-sm mt-1">Diverting landfill waste into nutritional dignity</p>
             </div>
 
-            <!-- Supervisor Spotlight -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="card p-6 text-center border-emerald-500/30">
+                    <div class="text-4xl font-black text-emerald-400 mb-1">500+</div>
+                    <div class="text-sm font-bold text-white">Plates Rescued</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Fresh meals diverted from garbage bins</p>
+                </div>
+
+                <div class="card p-6 text-center border-blue-500/30">
+                    <div class="text-4xl font-black text-blue-400 mb-1">50+</div>
+                    <div class="text-sm font-bold text-white">Partner Orgs</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Verified restaurants and shelter homes</p>
+                </div>
+
+                <div class="card p-6 text-center border-purple-500/30">
+                    <div class="text-4xl font-black text-purple-400 mb-1">850 kg</div>
+                    <div class="text-sm font-bold text-white">CO₂ Emissions Averted</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Reduced decomposing methane waste</p>
+                </div>
+
+                <div class="card p-6 text-center border-amber-500/30">
+                    <div class="text-4xl font-black text-amber-400 mb-1">100%</div>
+                    <div class="text-sm font-bold text-white">Zero Commission</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Free open humanitarian platform</p>
+                </div>
+            </div>
+
+            <div class="card p-5 border-emerald-500/40 bg-emerald-950/20 text-center">
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-emerald-400">Social Dignity Principle:</strong> 
+                    ShareMeal does not treat food distribution as handouts — meals are cataloged with strict expiry hours, hygienically sealed, and handed over with mutual respect.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 12: FUTURE SCOPE & ROADMAP
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide flex-col items-center justify-center px-6" id="slide-12">
+        <div class="max-w-4xl mx-auto w-full">
+            
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Section 10 • Future Roadmap</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Project Scope & Expansion</h2>
+                <p class="text-slate-400 text-sm mt-1">Next engineering milestones for nationwide scaling in Pakistan</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                <!-- 1 -->
+                <div class="card p-5 border-l-4 border-emerald-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">📱</span>
+                        <h4 class="text-base font-bold text-white">Native Mobile Apps (iOS & Android)</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-10">
+                        Dedicated mobile application with instant push notifications when a nearby restaurant posts fresh surplus food.
+                    </p>
+                </div>
+
+                <!-- 2 -->
+                <div class="card p-5 border-l-4 border-blue-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">📍</span>
+                        <h4 class="text-base font-bold text-white">Live GPS Van Fleet Tracking</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-10">
+                        Integration of Google Maps Platform for real-time tracking of charity volunteer pickup vans and ETA calculation.
+                    </p>
+                </div>
+
+                <!-- 3 -->
+                <div class="card p-5 border-l-4 border-purple-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">🌡️</span>
+                        <h4 class="text-base font-bold text-white">IoT Smart Temperature Sensors</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-10">
+                        Automated freshness & thermal sensors to verify food was stored above 60°C or below 5°C before distribution.
+                    </p>
+                </div>
+
+                <!-- 4 -->
+                <div class="card p-5 border-l-4 border-amber-400">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">🇵🇰</span>
+                        <h4 class="text-base font-bold text-white">Multi-City Expansion</h4>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed pl-10">
+                        Scaling beyond Multan to Lahore, Karachi, Rawalpindi, and Islamabad with localized NGO hubs.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 13: SUPERVISION, TEAM & CONCLUSION
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide flex-col items-center justify-center px-6" id="slide-13">
+        <div class="max-w-4xl mx-auto w-full">
+            
+            <!-- Supervisor -->
             <div class="card p-6 border-amber-500/30 mb-6 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl border border-amber-400/30">
                         👩‍🏫
                     </div>
                     <div>
-                        <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">Academic Project Supervisor</span>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">Project Supervisor</span>
                         <h3 class="text-2xl font-black text-white">Prof. Kinat</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Department of Computer Science, University of Southern Punjab, Multan</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Department of Computer Science • University of Southern Punjab, Multan</p>
                     </div>
                 </div>
                 <div class="px-4 py-2 rounded-xl bg-amber-500/10 text-amber-300 text-xs font-bold border border-amber-500/20">
@@ -735,7 +994,7 @@
             </div>
 
             <!-- Two Developers Side-by-Side -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
                 <div class="card p-6 border-emerald-500/30">
                     <div class="flex items-center gap-4 mb-3">
                         <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-400">
@@ -769,47 +1028,55 @@
                 </div>
             </div>
 
+            <!-- Action buttons -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/Home/DownloadPresentation" class="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg transition-transform hover:scale-105">
+                    <i class="fas fa-file-powerpoint text-base"></i> Download PowerPoint (.pptx)
+                </a>
+                <a href="/" class="px-6 py-3 rounded-full card hover:border-emerald-400 text-white font-bold text-xs flex items-center gap-2 transition-transform hover:scale-105">
+                    <i class="fas fa-home"></i> Back to Live Website
+                </a>
+            </div>
+
+            <div class="mt-6 text-center text-xs text-slate-500 font-mono">
+                Thank You! Questions & Discussion Welcome • 2026
+            </div>
+
         </div>
     </div>
 
 
     <!-- ═══════════════════════════════════════════════════════════
-         SLIDE 11: CONCLUSION & THANK YOU
+         DOCUMENTARY VIDEO MODAL (Interactive Action)
     ═══════════════════════════════════════════════════════════ -->
-    <div class="slide flex-col items-center justify-center text-center px-6" id="slide-11">
-        <div class="max-w-3xl mx-auto w-full">
-            
-            <div class="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-4xl mx-auto mb-6 border border-emerald-500/40">
-                🍱
+    <div id="videoModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl bg-slate-900 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                    <span class="text-sm font-bold text-white">Documentary Reality: Food Wastage vs. Hunger in Pakistan</span>
+                </div>
+                <button onclick="toggleVideoModal(false)" class="w-8 h-8 rounded-full card hover:bg-rose-500 text-white flex items-center justify-center text-xs">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-
-            <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4">
-                Thank <span class="text-emerald-400">You!</span>
-            </h1>
-
-            <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-xl mx-auto">
-                ShareMeal demonstrates how technology can bridge societal gaps and divert food waste into dignified meals for communities in Pakistan.
-            </p>
-
-            <div class="card p-6 mb-8 max-w-lg mx-auto text-center border-white/10">
-                <div class="text-xs text-slate-400 mb-2 font-mono">Special Thanks to:</div>
-                <div class="text-base font-bold text-amber-400 mb-1">Prof. Kinat (Project Supervisor)</div>
-                <div class="text-xs text-slate-400">Department of Computer Science • University of Southern Punjab, Multan</div>
+            <!-- Video Player (Clean embed) -->
+            <div class="relative w-full" style="padding-top: 56.25%;">
+                <iframe id="videoIframe" class="absolute inset-0 w-full h-full" 
+                        src="https://www.youtube.com/embed/5U_Z2L1h-Xk?enablejsapi=1" 
+                        title="Food Insecurity and Hunger Crisis in Pakistan" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
             </div>
-
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="/Home/DownloadPresentation" class="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg transition-transform hover:scale-105">
-                    <i class="fas fa-file-powerpoint text-base"></i> Download Presentation (.pptx)
-                </a>
-                <a href="/" class="px-6 py-3 rounded-full card hover:border-emerald-400 text-white font-bold text-xs flex items-center gap-2 transition-transform hover:scale-105">
-                    <i class="fas fa-home"></i> Back to Website
-                </a>
+            <div class="p-4 bg-slate-950 flex items-center justify-between text-xs text-slate-400">
+                <span>Ref: Saylani & Edhi Hunger Relief Data • ShareMeal Initiative</span>
+                <button onclick="toggleVideoModal(false)" class="px-4 py-1.5 rounded-lg card text-white text-xs hover:border-emerald-400">
+                    Close Video
+                </button>
             </div>
-
-            <div class="mt-8 text-xs text-slate-500 font-mono">
-                Questions & External Viva Discussion Welcome
-            </div>
-
         </div>
     </div>
 
@@ -817,7 +1084,7 @@
     <!-- ── JAVASCRIPT ENGINE ──────────────────────────────────────── -->
     <script>
         let currentSlide = 1;
-        const totalSlides = 11;
+        const totalSlides = 13;
 
         function showSlide(n) {
             const slides = document.querySelectorAll('.slide');
@@ -875,6 +1142,8 @@
                 goToSlide(totalSlides);
             } else if (e.key === 'f' || e.key === 'F') {
                 toggleFullscreen();
+            } else if (e.key === 'Escape') {
+                toggleVideoModal(false);
             }
         });
 
@@ -891,11 +1160,25 @@
             }
         }
 
-        // Demo Screenshot Slider (Slide 9)
+        // Video Modal Handler
+        function toggleVideoModal(show) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+                // Stop video by resetting src
+                const src = iframe.src;
+                iframe.src = src;
+            }
+        }
+
+        // Demo Screenshot Slider (Slide 10)
         let currentDemoImg = 1;
         const totalDemoImgs = 4;
         const captions = [
-            "1. Home & Zero-Waste Initiative",
+            "1. Home & Zero-Waste Mission",
             "2. Community Food Distribution",
             "3. Fresh Produce & Surplus Management",
             "4. Charity Registration & Verification"
@@ -926,9 +1209,9 @@
             showDemoImage(prev);
         }
 
-        // Auto-cycle demo screenshots every 4.5 seconds on slide 9
+        // Auto-cycle demo screenshots every 4.5 seconds on slide 10
         setInterval(() => {
-            if (currentSlide === 9) {
+            if (currentSlide === 10) {
                 nextDemoImage();
             }
         }, 4500);
