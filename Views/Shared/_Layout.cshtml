@@ -841,18 +841,20 @@
             }
         }
 
-        function getOrCreateRecognition() {
+        function createFreshRecognition() {
             if (mealBotRecognition) {
-                mealBotRecognition.lang = currentSpeechLang;
-                return mealBotRecognition;
+                try { mealBotRecognition.abort(); } catch(e) {}
+                mealBotRecognition = null;
             }
 
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) return null;
 
+            var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             var rec = new SpeechRecognition();
             rec.continuous = false;
-            rec.interimResults = true;
+            // On iOS Safari, interimResults must be false to avoid WebKit engine crash/early cutoff
+            rec.interimResults = !isIOS;
             rec.maxAlternatives = 1;
             rec.lang = currentSpeechLang;
 
@@ -884,17 +886,28 @@
                 isMealBotRecording = false;
                 updateRecordingUI(false);
 
+                var label = document.getElementById("mealbot-voice-label");
+                var errorMsg = "";
+
                 if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-                    alert("❌ Microphone permission deny hai!\n\nMobile Browser ke URL bar mein lock 🔒 icon tap karein, 'Permissions' mein Microphone ko 'Allow' karein, aur page refresh karein.");
-                } else if (event.error === 'language-not-supported' && currentSpeechLang === 'ur-PK') {
-                    setSpeechLanguage('en-US');
-                    alert("⚠️ Aapke mobile mein Urdu voice pack nahi mila. English voice mode activate ho gaya hai. Dobara mic dabayein.");
+                    errorMsg = "❌ Safari Mic Blocked!\n\n1. Safari URL bar mein 'AA' ya lock icon tap karein\n2. 'Website Settings' tap karein\n3. Microphone ko 'Allow' karein aur page refresh karein.";
                 } else if (event.error === 'service-not-allowed') {
-                    alert("⚠️ Voice service allow nahi hai. iPhone par Settings > General > Keyboard mein 'Enable Dictation' on karein.");
-                } else if (event.error === 'audio-capture') {
-                    alert("🎤 Microphone access nahi ho saka. Call ya recorder app band karein.");
+                    errorMsg = "⚠️ iPhone Dictation Off!\n\niPhone Settings > General > Keyboard mein ja kar 'Enable Dictation' (ڈکٹیشن) ko ON karein.";
+                } else if (event.error === 'language-not-supported') {
+                    currentSpeechLang = 'en-US';
+                    setSpeechLanguage('en-US');
+                    errorMsg = "⚠️ Aapke iPhone mein Urdu voice pack nahi hai. English mode switch ho gaya hai. Dobara mic dabayein.";
                 } else if (event.error === 'network') {
-                    alert("📡 Internet connection check karein.");
+                    errorMsg = "📡 Network error! Internet connection check karein.";
+                } else if (event.error === 'audio-capture') {
+                    errorMsg = "🎤 Mic busy hai. Kisi call ya app ne mic pakda hua hai.";
+                } else if (event.error === 'no-speech') {
+                    // Silent reset - user didn't speak
+                    return;
+                }
+
+                if (errorMsg) {
+                    alert(errorMsg);
                 }
             };
 
@@ -902,7 +915,7 @@
                 isMealBotRecording = false;
                 updateRecordingUI(false);
 
-                // Auto-send if user spoke something
+                // Auto-send if text is captured
                 var input = document.getElementById("mealbot-input");
                 if (input && input.value.trim().length > 0) {
                     setTimeout(function() {
@@ -915,17 +928,12 @@
             return mealBotRecognition;
         }
 
-        // Direct, 100% synchronous trigger from click/touch - ZERO PROMISES, ZERO SETTIMEOUT
+        // Direct 100% synchronous trigger for click/touch
         function toggleSpeechRecording() {
-            var isWebView = /FBAN|FBAV|Instagram|WhatsApp|Line|TikTok|MicroMessenger/i.test(navigator.userAgent);
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                if (isWebView) {
-                    alert("⚠️ Aap WhatsApp ya social app ke andar website dekh rahe hain jahan mic allow nahi hota.\n\nMeherbani farma kar ooper 3 dots (...) daba kar 'Open in Chrome' ya 'Open in Safari' karein.");
-                } else {
-                    alert("Aapka browser voice recognition support nahi karta. Google Chrome ya Safari use karein.");
-                }
+                alert("⚠️ Safari / Chrome par Speech Recognition enable nahi hai.\n\nAgar iPhone hai to Settings > Safari > Microphone mein 'Allow' karein.");
                 return;
             }
 
@@ -934,7 +942,7 @@
                 return;
             }
 
-            // Close virtual keyboard if open so voice bar is clear
+            // Close keyboard so voice bar is clear
             if (document.activeElement && typeof document.activeElement.blur === 'function') {
                 document.activeElement.blur();
             }
@@ -943,12 +951,10 @@
             if (input) input.value = "";
 
             try {
-                var rec = getOrCreateRecognition();
+                var rec = createFreshRecognition();
                 if (!rec) return;
 
-                rec.lang = currentSpeechLang;
-
-                // Immediate visual response
+                // Immediate visual feedback
                 updateRecordingUI(true);
                 var label = document.getElementById("mealbot-voice-label");
                 if (label) {
@@ -958,14 +964,10 @@
                 rec.start();
             } catch (err) {
                 console.warn("Speech start exception:", err);
-                if (err.name === 'InvalidStateError') {
-                    try { rec.stop(); } catch(e) {}
-                    setTimeout(function() {
-                        try { rec.start(); } catch(e) {}
-                    }, 80);
-                } else {
-                    isMealBotRecording = false;
-                    updateRecordingUI(false);
+                isMealBotRecording = false;
+                updateRecordingUI(false);
+                if (err.name === 'NotAllowedError') {
+                    alert("❌ Safari Microphone Permission Blocked!\nSafari settings mein mic allow karein.");
                 }
             }
         }
