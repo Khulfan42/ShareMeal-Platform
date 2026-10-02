@@ -828,46 +828,51 @@
         var isMealBotRecording = false;
         var activeSpeechBtn = null;
         var currentSpeechLang = 'ur-PK'; // Default: Urdu (ur-PK), can be switched to English (en-US)
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        var micPermissionGranted = false;
+
+        // Pre-check mic permission (important for mobile)
+        function checkMicPermission(callback) {
+            if (micPermissionGranted) { callback(true); return; }
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                callback(false, 'no-mediadevices');
+                return;
+            }
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    // Stop all tracks immediately - we just needed permission
+                    stream.getTracks().forEach(function(t) { t.stop(); });
+                    micPermissionGranted = true;
+                    callback(true);
+                })
+                .catch(function(err) {
+                    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                        callback(false, 'denied');
+                    } else {
+                        callback(false, err.name);
+                    }
+                });
+        }
 
         function setSpeechLanguage(lang) {
             currentSpeechLang = lang;
-            var btnUr = document.getElementById("lang-btn-ur");
-            var btnEn = document.getElementById("lang-btn-en");
-            var voiceLabel = document.getElementById("mealbot-voice-label");
-            var input = document.getElementById("mealbot-input");
+            var btnUr = document.getElementById('lang-btn-ur');
+            var btnEn = document.getElementById('lang-btn-en');
+            var voiceLabel = document.getElementById('mealbot-voice-label');
+            var input = document.getElementById('mealbot-input');
 
             if (lang === 'ur-PK') {
-                if (btnUr) {
-                    btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm";
-                }
-                if (btnEn) {
-                    btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all";
-                }
-                if (voiceLabel) {
-                    voiceLabel.innerText = "🎙️ Listening in Urdu (اردو)... Bolna shuru karein!";
-                }
-                if (input && !input.value) {
-                    input.placeholder = "Urdu mein bolein ya likhein...";
-                }
+                if (btnUr) { btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm"; }
+                if (btnEn) { btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all"; }
+                if (voiceLabel) { voiceLabel.innerText = "🎙️ Listening in Urdu (اردو)... Bolna shuru karein!"; }
+                if (input && !input.value) { input.placeholder = "Urdu mein bolein ya likhein..."; }
             } else {
-                if (btnEn) {
-                    btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm";
-                }
-                if (btnUr) {
-                    btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all";
-                }
-                if (voiceLabel) {
-                    voiceLabel.innerText = "🎙️ Listening in English... Start speaking!";
-                }
-                if (input && !input.value) {
-                    input.placeholder = "Speak or type in English...";
-                }
+                if (btnEn) { btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm"; }
+                if (btnUr) { btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all"; }
+                if (voiceLabel) { voiceLabel.innerText = "🎙️ Listening in English... Start speaking!"; }
+                if (input && !input.value) { input.placeholder = "Speak or type in English..."; }
             }
-
-            // If recognition is active, stop it so next start picks up new language
-            if (mealBotRecognition && isMealBotRecording) {
-                stopSpeechRecording();
-            }
+            if (mealBotRecognition && isMealBotRecording) { stopSpeechRecording(); }
         }
 
         function initMealBotSpeech() {
@@ -875,8 +880,10 @@
             if (!SpeechRecognition) return null;
 
             var recognition = new SpeechRecognition();
+            // Mobile needs continuous=false + interimResults=false for reliability
             recognition.continuous = false;
-            recognition.interimResults = true;
+            recognition.interimResults = !isMobile; // interim only on desktop
+            recognition.maxAlternatives = 1;
             recognition.lang = currentSpeechLang;
 
             recognition.onstart = function() {
@@ -889,19 +896,55 @@
             recognition.onresult = function(event) {
                 var transcript = "";
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
-                    transcript += event.results[i][0].transcript;
+                    if (event.results[i].isFinal || isMobile) {
+                        transcript += event.results[i][0].transcript;
+                    } else {
+                        transcript += event.results[i][0].transcript;
+                    }
                 }
                 var input = document.getElementById("mealbot-input");
-                if (input && transcript) {
-                    input.value = transcript;
+                if (input && transcript.trim()) {
+                    input.value = transcript.trim();
                 }
             };
 
             recognition.onerror = function(event) {
                 console.warn("Speech recognition error:", event.error);
-                stopSpeechRecording();
-                if (event.error === 'not-allowed') {
-                    alert("Microphone permission required! Please allow microphone access in your browser settings to speak.");
+                isMealBotRecording = false;
+                updateRecordingUI(false);
+
+                var msg = "";
+                switch(event.error) {
+                    case 'not-allowed':
+                    case 'permission-denied':
+                        msg = "❌ Microphone permission deny ho gaya!\n\nMobile mein:\n• Browser ke URL bar pe click karein\n• 'Site Settings' ya lock icon tap karein\n• Microphone ko 'Allow' karein\n• Page refresh karein";
+                        break;
+                    case 'no-speech':
+                        msg = "🎙️ Koi awaaz nahi aayi. Mic ke paas bolein aur dobara try karein.";
+                        break;
+                    case 'network':
+                        msg = "📡 Network error. Internet connection check karein aur dobara try karein.";
+                        break;
+                    case 'audio-capture':
+                        msg = "🎤 Microphone accessible nahi. Koi doosra app mic use kar raha ho sakta hai.";
+                        break;
+                    case 'service-not-allowed':
+                        msg = "⚠️ Voice service is page pe allowed nahi. Chrome ya Safari use karein.";
+                        break;
+                    default:
+                        msg = "⚠️ Voice error (" + event.error + "). Dobara try karein.";
+                }
+                if (msg) {
+                    var input = document.getElementById("mealbot-input");
+                    // Show error as placeholder instead of alert (better UX on mobile)
+                    if (input) {
+                        var origPlaceholder = input.placeholder;
+                        input.placeholder = msg.split('\n')[0];
+                        setTimeout(function() { input.placeholder = origPlaceholder; }, 4000);
+                    }
+                    if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                        alert(msg);
+                    }
                 }
             };
 
@@ -909,14 +952,16 @@
                 isMealBotRecording = false;
                 updateRecordingUI(false);
 
-                // DO NOT AUTO-SEND! Keep the text in input so the user can review/edit and send manually
                 var input = document.getElementById("mealbot-input");
                 if (input && input.value.trim().length > 0) {
-                    input.focus();
-                    var doneAlert = document.getElementById("mealbot-voice-done");
-                    if (doneAlert) {
-                        doneAlert.classList.remove("hidden");
+                    if (isMobile) {
+                        // On mobile: focus input so keyboard shows
+                        setTimeout(function() { input.focus(); }, 100);
+                    } else {
+                        input.focus();
                     }
+                    var doneAlert = document.getElementById("mealbot-voice-done");
+                    if (doneAlert) { doneAlert.classList.remove("hidden"); }
                     var sendBtn = document.getElementById("mealbot-send-btn");
                     if (sendBtn) {
                         sendBtn.classList.add("ring-2", "ring-emerald-400", "scale-105");
@@ -933,12 +978,27 @@
         function toggleSpeechRecording() {
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                alert("Voice feature ke liye please Google Chrome, Edge, ya Safari browser use karein.");
+                alert("آواز کی سہولت کے لیے:\n• Android: Google Chrome use karein\n• iPhone/iPad: Safari use karein\n\nVoice feature ke liye Chrome ya Safari browser zaruri hai.");
                 return;
             }
 
             if (isMealBotRecording) {
                 stopSpeechRecording();
+                return;
+            }
+
+            // On mobile, always pre-check mic permission before starting
+            if (isMobile) {
+                checkMicPermission(function(granted, reason) {
+                    if (granted) {
+                        startSpeechRecording();
+                    } else {
+                        var msg = reason === 'denied'
+                            ? "❌ Microphone permission chahiye!\n\nSteps:\n1. Browser URL bar mein lock/settings icon tap karein\n2. Microphone ko 'Allow' set karein\n3. Page refresh karein\n4. Dobara mic button dabayein"
+                            : "❌ Microphone access nahi mila. Browser settings mein microphone allow karein.";
+                        alert(msg);
+                    }
+                });
             } else {
                 startSpeechRecording();
             }
@@ -948,29 +1008,41 @@
             try {
                 if (mealBotRecognition) {
                     try { mealBotRecognition.abort(); } catch(e) {}
+                    mealBotRecognition = null;
                 }
-                mealBotRecognition = initMealBotSpeech();
-                if (mealBotRecognition) {
+                // Small delay needed on mobile before re-starting
+                setTimeout(function() {
+                    mealBotRecognition = initMealBotSpeech();
+                    if (!mealBotRecognition) {
+                        alert("Voice feature is browser mein available nahi. Chrome ya Safari use karein.");
+                        return;
+                    }
                     mealBotRecognition.lang = currentSpeechLang;
                     var input = document.getElementById("mealbot-input");
                     if (input) input.value = "";
-                    mealBotRecognition.start();
-                }
+                    try {
+                        mealBotRecognition.start();
+                    } catch(startErr) {
+                        console.error("Recognition start error:", startErr);
+                        isMealBotRecording = false;
+                        updateRecordingUI(false);
+                    }
+                }, isMobile ? 200 : 0);
             } catch (e) {
                 console.error("Error starting speech recognition:", e);
-                stopSpeechRecording();
+                isMealBotRecording = false;
+                updateRecordingUI(false);
             }
         }
 
         function stopSpeechRecording() {
-            if (mealBotRecognition && isMealBotRecording) {
-                try {
-                    mealBotRecognition.stop();
-                } catch(e) {}
+            if (mealBotRecognition) {
+                try { mealBotRecognition.stop(); } catch(e) {}
             }
             isMealBotRecording = false;
             updateRecordingUI(false);
         }
+
 
         function updateRecordingUI(recording) {
             var normalIcon = document.getElementById("mic-icon-normal");
