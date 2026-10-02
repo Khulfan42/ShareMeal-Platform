@@ -991,9 +991,10 @@
             if (mealBotRecognition) { try { mealBotRecognition.stop(); } catch(e) {} }
             isMealBotRecording = false;
             updateRecordingUI(false);
-
+        }
 
         function updateRecordingUI(recording) {
+
             var normalIcon = document.getElementById("mic-icon-normal");
             var recIcon = document.getElementById("mic-icon-recording");
             var voiceBar = document.getElementById("mealbot-voice-bar");
