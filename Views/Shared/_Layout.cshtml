@@ -600,72 +600,58 @@
             </div>
 
             <!-- Voice Recording Wave Bar (Visible while speaking) -->
-            <div id="mealbot-voice-bar" class="hidden px-4 py-2 bg-rose-950/90 border-t border-rose-500/50 flex items-center justify-between text-xs text-rose-200 animate-pulse">
-                <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></span>
-                    <span id="mealbot-voice-label" class="font-bold text-[11px]">🎙️ Listening in Urdu (اردو)... Bolna shuru karein!</span>
+            <div id="mealbot-voice-bar" class="hidden px-4 py-2 bg-rose-950/90 border-t border-rose-500/50 flex items-center justify-between text-xs text-rose-200">
+                <div class="flex items-center gap-2 flex-1 min-w-0">
+                    <span class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping flex-shrink-0"></span>
+                    <span id="mealbot-voice-label" class="font-bold text-[11px] truncate">🎙️ سن رہا ہوں... بولیں!</span>
                 </div>
-                <button type="button" onclick="stopSpeechRecording()" class="text-[10px] bg-rose-600 hover:bg-rose-500 text-white px-2 py-0.5 rounded-lg font-bold">
-                    Done ✓
+                <button type="button" onclick="stopAndSend()" class="text-[10px] bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1 rounded-lg font-bold flex-shrink-0 ml-2">
+                    ✓ Send
                 </button>
             </div>
 
-            <!-- Voice Success Notification (Shown when voice is captured) -->
-            <div id="mealbot-voice-done" class="hidden px-4 py-1.5 bg-emerald-950/80 border-t border-emerald-500/40 flex items-center justify-between text-[10px] text-emerald-300">
-                <span class="flex items-center gap-1.5">
-                    <span>✨</span> Text likh diya gaya hai! Check karein aur Send dabayein.
-                </span>
-                <button type="button" onclick="document.getElementById('mealbot-voice-done').classList.add('hidden')" class="text-slate-400 hover:text-white font-bold px-1">&times;</button>
-            </div>
 
             <!-- Input Box & Footer -->
             <div class="p-3 bg-slate-950 border-t border-slate-800/90 flex flex-col gap-2">
-                <!-- Voice Language Switcher & Hint -->
-                <div class="flex items-center justify-between px-1 text-[10px]">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-slate-400 font-semibold text-[9.5px]">🎙️ Voice Language:</span>
-                        <div class="inline-flex rounded-xl bg-slate-900 border border-slate-700/80 p-0.5 shadow-sm">
-                            <button type="button" id="lang-btn-ur" onclick="setSpeechLanguage('ur-PK')" class="px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm" title="Urdu mein bolne ke liye">
-                                🇵🇰 اردو
-                            </button>
-                            <button type="button" id="lang-btn-en" onclick="setSpeechLanguage('en-US')" class="px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all" title="Speak in English">
-                                🇬🇧 English
-                            </button>
-                        </div>
+                <!-- Voice Language Switcher -->
+                <div class="flex items-center justify-between px-1">
+                    <div class="inline-flex rounded-xl bg-slate-900 border border-slate-700/80 p-0.5 shadow-sm">
+                        <button type="button" id="lang-btn-ur" onclick="setSpeechLanguage('ur-PK')" class="px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm" title="Urdu mein bolne ke liye">
+                            🇵🇰 اردو
+                        </button>
+                        <button type="button" id="lang-btn-en" onclick="setSpeechLanguage('en-US')" class="px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all" title="Speak in English">
+                            🇬🇧 English
+                        </button>
                     </div>
-                    <span class="text-slate-500 text-[9px]">Review & Send ✍️</span>
+                    <span class="text-slate-600 text-[9px]">⚡ Gemini AI</span>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <div class="relative flex-1">
-                        <input type="text" id="mealbot-input" 
-                               placeholder="Urdu ya English mein bolein ya type karein..." 
+                        <input type="text" id="mealbot-input"
+                               placeholder="Urdu ya English mein bolein ya type karein..."
                                class="w-full bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs rounded-2xl pl-4 pr-10 py-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-inner"
                                onkeydown="if(event.key === 'Enter') sendMealBotMessage();" />
                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">✨</span>
                     </div>
 
                     <!-- WhatsApp-Style Voice Note Mic Button -->
-                    <button type="button" id="mealbot-mic-btn" onclick="toggleSpeechRecording()" title="Speak Voice Note (Bol kar baat karein)" 
+                    <button type="button" id="mealbot-mic-btn" onclick="toggleSpeechRecording()" title="Bol kar baat karein"
                             class="bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-emerald-400 p-3 rounded-2xl border border-slate-700/80 hover:border-emerald-500/40 shadow-md transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center flex-shrink-0">
                         <svg id="mic-icon-normal" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                         </svg>
-                        <span id="mic-icon-recording" class="hidden text-xs font-black text-rose-400 animate-pulse">🔴 REC</span>
+                        <span id="mic-icon-recording" class="hidden text-base animate-pulse">🔴</span>
                     </button>
 
                     <!-- Send Button -->
-                    <button type="button" id="mealbot-send-btn" onclick="sendMealBotMessage()" 
+                    <button type="button" id="mealbot-send-btn" onclick="sendMealBotMessage()"
                             class="bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white p-3 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center flex-shrink-0"
                             title="Send Message">
                         <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                         </svg>
                     </button>
-                </div>
-                <div class="flex items-center justify-between px-2 text-[9px] text-slate-500 font-medium">
-                    <span>⚡ Voice Enabled • Gemini 3.5 AI</span>
-                    <span>Live Database Connected</span>
                 </div>
             </div>
         </div>
@@ -880,31 +866,44 @@
             if (!SpeechRecognition) return null;
 
             var recognition = new SpeechRecognition();
-            // Mobile needs continuous=false + interimResults=false for reliability
             recognition.continuous = false;
-            recognition.interimResults = !isMobile; // interim only on desktop
+            recognition.interimResults = true; // Real-time on ALL devices
             recognition.maxAlternatives = 1;
             recognition.lang = currentSpeechLang;
 
             recognition.onstart = function() {
                 isMealBotRecording = true;
                 updateRecordingUI(true);
-                var doneAlert = document.getElementById("mealbot-voice-done");
-                if (doneAlert) doneAlert.classList.add("hidden");
+                var input = document.getElementById("mealbot-input");
+                if (input) input.value = "";
+                // Reset voice bar label to listening state
+                var label = document.getElementById("mealbot-voice-label");
+                if (label) label.textContent = "🎙️ سن رہا ہوں... بولیں!";
             };
 
             recognition.onresult = function(event) {
-                var transcript = "";
-                for (var i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal || isMobile) {
-                        transcript += event.results[i][0].transcript;
+                // Build full transcript from all results so far
+                var interimText = "";
+                var finalText = "";
+                for (var i = 0; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalText += event.results[i][0].transcript;
                     } else {
-                        transcript += event.results[i][0].transcript;
+                        interimText += event.results[i][0].transcript;
                     }
                 }
+                var displayText = finalText || interimText;
+
+                // Show live in input box
                 var input = document.getElementById("mealbot-input");
-                if (input && transcript.trim()) {
-                    input.value = transcript.trim();
+                if (input && displayText.trim()) {
+                    input.value = displayText.trim();
+                }
+
+                // Also show live in voice bar label
+                var label = document.getElementById("mealbot-voice-label");
+                if (label && displayText.trim()) {
+                    label.textContent = "🎙️ " + displayText.trim();
                 }
             };
 
@@ -917,68 +916,55 @@
                 switch(event.error) {
                     case 'not-allowed':
                     case 'permission-denied':
-                        msg = "❌ Microphone permission deny ho gaya!\n\nMobile mein:\n• Browser ke URL bar pe click karein\n• 'Site Settings' ya lock icon tap karein\n• Microphone ko 'Allow' karein\n• Page refresh karein";
+                        msg = "❌ Microphone permission chahiye!\n\nSteps:\n1. Browser URL bar mein lock icon tap karein\n2. Microphone ko 'Allow' set karein\n3. Page refresh karein";
                         break;
                     case 'no-speech':
-                        msg = "🎙️ Koi awaaz nahi aayi. Mic ke paas bolein aur dobara try karein.";
-                        break;
+                        // Silently ignore - user just didn't speak
+                        return;
                     case 'network':
-                        msg = "📡 Network error. Internet connection check karein aur dobara try karein.";
+                        msg = "📡 Network error. Internet check karein.";
                         break;
                     case 'audio-capture':
-                        msg = "🎤 Microphone accessible nahi. Koi doosra app mic use kar raha ho sakta hai.";
-                        break;
-                    case 'service-not-allowed':
-                        msg = "⚠️ Voice service is page pe allowed nahi. Chrome ya Safari use karein.";
+                        msg = "🎤 Microphone busy hai. Doosra app band karein.";
                         break;
                     default:
-                        msg = "⚠️ Voice error (" + event.error + "). Dobara try karein.";
+                        return; // Ignore other errors silently
                 }
-                if (msg) {
-                    var input = document.getElementById("mealbot-input");
-                    // Show error as placeholder instead of alert (better UX on mobile)
-                    if (input) {
-                        var origPlaceholder = input.placeholder;
-                        input.placeholder = msg.split('\n')[0];
-                        setTimeout(function() { input.placeholder = origPlaceholder; }, 4000);
-                    }
-                    if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-                        alert(msg);
-                    }
-                }
+                if (msg) alert(msg);
             };
 
             recognition.onend = function() {
                 isMealBotRecording = false;
                 updateRecordingUI(false);
 
+                // AUTO-SEND: WhatsApp-style — send immediately after speaking
                 var input = document.getElementById("mealbot-input");
                 if (input && input.value.trim().length > 0) {
-                    if (isMobile) {
-                        // On mobile: focus input so keyboard shows
-                        setTimeout(function() { input.focus(); }, 100);
-                    } else {
-                        input.focus();
-                    }
-                    var doneAlert = document.getElementById("mealbot-voice-done");
-                    if (doneAlert) { doneAlert.classList.remove("hidden"); }
-                    var sendBtn = document.getElementById("mealbot-send-btn");
-                    if (sendBtn) {
-                        sendBtn.classList.add("ring-2", "ring-emerald-400", "scale-105");
-                        setTimeout(function() {
-                            sendBtn.classList.remove("ring-2", "ring-emerald-400", "scale-105");
-                        }, 2500);
-                    }
+                    // Small delay so user can see what was transcribed
+                    setTimeout(function() {
+                        sendMealBotMessage();
+                    }, 300);
                 }
             };
 
             return recognition;
         }
 
+        // Stop recording and immediately send — called by "✓ Send" button in voice bar
+        function stopAndSend() {
+            if (mealBotRecognition) {
+                try { mealBotRecognition.stop(); } catch(e) {}
+            }
+            isMealBotRecording = false;
+            updateRecordingUI(false);
+            // Send whatever is in the input
+            setTimeout(function() { sendMealBotMessage(); }, 200);
+        }
+
         function toggleSpeechRecording() {
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                alert("آواز کی سہولت کے لیے:\n• Android: Google Chrome use karein\n• iPhone/iPad: Safari use karein\n\nVoice feature ke liye Chrome ya Safari browser zaruri hai.");
+                alert("آواز کی سہولت کے لیے:\n• Android: Google Chrome use karein\n• iPhone/iPad: Safari use karein");
                 return;
             }
 
@@ -987,15 +973,14 @@
                 return;
             }
 
-            // On mobile, always pre-check mic permission before starting
             if (isMobile) {
                 checkMicPermission(function(granted, reason) {
                     if (granted) {
                         startSpeechRecording();
                     } else {
                         var msg = reason === 'denied'
-                            ? "❌ Microphone permission chahiye!\n\nSteps:\n1. Browser URL bar mein lock/settings icon tap karein\n2. Microphone ko 'Allow' set karein\n3. Page refresh karein\n4. Dobara mic button dabayein"
-                            : "❌ Microphone access nahi mila. Browser settings mein microphone allow karein.";
+                            ? "❌ Microphone permission chahiye!\n\nSteps:\n1. Browser URL bar mein lock/settings icon tap karein\n2. Microphone ko 'Allow' set karein\n3. Page refresh karein"
+                            : "❌ Microphone access nahi mila. Browser settings mein allow karein.";
                         alert(msg);
                     }
                 });
@@ -1010,7 +995,6 @@
                     try { mealBotRecognition.abort(); } catch(e) {}
                     mealBotRecognition = null;
                 }
-                // Small delay needed on mobile before re-starting
                 setTimeout(function() {
                     mealBotRecognition = initMealBotSpeech();
                     if (!mealBotRecognition) {
@@ -1018,8 +1002,6 @@
                         return;
                     }
                     mealBotRecognition.lang = currentSpeechLang;
-                    var input = document.getElementById("mealbot-input");
-                    if (input) input.value = "";
                     try {
                         mealBotRecognition.start();
                     } catch(startErr) {
