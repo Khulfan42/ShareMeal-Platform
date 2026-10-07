@@ -100,6 +100,17 @@ public class HomeController : Controller
             "ShareMeal_FYP_Presentation.pptx");
     }
 
+    // Direct PDF Documentation download
+    public IActionResult DownloadDocumentation()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ShareMeal_Project_Documentation.pdf");
+        if (!System.IO.File.Exists(filePath))
+            return NotFound("Documentation file not found. Please contact admin.");
+
+        var fileBytes = System.IO.File.ReadAllBytes(filePath);
+        return File(fileBytes, "application/pdf", "ShareMeal_Project_Documentation.pdf");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

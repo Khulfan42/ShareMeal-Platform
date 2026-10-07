@@ -22,6 +22,7 @@ public class CharityController : Controller
     public async Task<IActionResult> Dashboard()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
 
         if (org == null && User.IsInRole("Admin"))
@@ -84,6 +85,7 @@ public class CharityController : Controller
     public async Task<IActionResult> MyRequests()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Charity || o.Type == OrganizationType.NGO); }
         if (org == null) return RedirectToAction("Index", "Home");
@@ -100,6 +102,7 @@ public class CharityController : Controller
     public async Task<IActionResult> PickupDetails()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Charity || o.Type == OrganizationType.NGO); }
         if (org == null) return RedirectToAction("Index", "Home");

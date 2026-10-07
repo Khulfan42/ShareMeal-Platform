@@ -22,6 +22,7 @@ public class RestaurantController : Controller
     public async Task<IActionResult> Dashboard()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
 
         if (org == null && User.IsInRole("Admin"))
@@ -85,6 +86,7 @@ public class RestaurantController : Controller
     public async Task<IActionResult> MyDonations()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Restaurant); }
         if (org == null) return RedirectToAction("Index", "Home");
@@ -101,6 +103,7 @@ public class RestaurantController : Controller
     public async Task<IActionResult> DonationRequests()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Restaurant); }
         if (org == null) return RedirectToAction("Index", "Home");
@@ -117,6 +120,7 @@ public class RestaurantController : Controller
     public async Task<IActionResult> PickupSchedule()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Restaurant); }
         if (org == null) return RedirectToAction("Index", "Home");
@@ -133,6 +137,7 @@ public class RestaurantController : Controller
     public async Task<IActionResult> FoodTracking()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
         var org = await _context.Organizations.FirstOrDefaultAsync(o => o.OwnerId == user.Id);
         if (org == null && User.IsInRole("Admin")) { org = await _context.Organizations.FirstOrDefaultAsync(o => o.Type == OrganizationType.Restaurant); }
         if (org == null) return RedirectToAction("Index", "Home");

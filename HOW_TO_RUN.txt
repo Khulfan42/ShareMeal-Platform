@@ -1,0 +1,78 @@
+================================================================================
+   SHAREMEAL PLATFORM - FINAL YEAR PROJECT (FYP)
+   University of Southern Punjab (USP), Multan
+   Supervised by: Miss Kainat Sajid (M.Phil Computer Science, Lecturer)
+   Engineered by: Muhammad Khulfan (Lead Developer) & Abdullah Khalid
+================================================================================
+
+PROJECT OVERVIEW:
+ShareMeal is a nationwide smart food redistribution platform connecting restaurants, 
+hotels, and catering services with verified charities & relief foundations (Saylani, 
+Edhi, Al-Khidmat, etc.) across Pakistan. Features automated food matching, order tracking, 
+and MealBot AI.
+
+--------------------------------------------------------------------------------
+1. PREREQUISITES
+--------------------------------------------------------------------------------
+- .NET 8.0 SDK (or Visual Studio 2022 with ASP.NET & web development workload)
+  Download free from: https://dotnet.microsoft.com/download/dotnet/8.0
+
+- Database: 
+  NO SQL Server setup or manual configuration required!
+  The project includes a pre-configured, self-contained SQLite database 
+  ('ShareMeal.db') with 38+ verified Pakistani restaurants and charities.
+  (If SQL Server script is needed for evaluation, 'ShareMeal_Database.sql' is included).
+
+--------------------------------------------------------------------------------
+2. HOW TO RUN THE PROJECT
+--------------------------------------------------------------------------------
+
+OPTION A: Using Visual Studio 2022 (Recommended for Windows)
+  1. Extract this zip folder.
+  2. Double-click "ShareMeal Platform.sln" to open the project in Visual Studio.
+  3. Click the green "Play / Run" button (or press F5 / Ctrl+F5).
+  4. The browser will automatically open at:
+     http://localhost:5556 (or https://localhost:7177)
+
+OPTION B: Using Command Prompt / Terminal / VS Code (Windows, Mac, or Linux)
+  1. Open Command Prompt or Terminal inside the extracted "ShareMeal Platform" folder.
+  2. Run the following command:
+     
+     dotnet run --launch-profile http
+     
+  3. Open your web browser and go to:
+     http://localhost:5556
+
+--------------------------------------------------------------------------------
+3. DEMO LOGIN CREDENTIALS
+--------------------------------------------------------------------------------
+
+👑 ADMIN PORTAL:
+   URL: http://localhost:5556/Admin/Login
+   Email:    sharemeal@gmail.com
+   Password: admin
+   (Allows approving organizations, viewing analytics, monitoring donations & complaints)
+
+🍱 RESTAURANT PORTAL:
+   You can log in or register a new Restaurant account at:
+   http://localhost:5556/Account/Register  (Select "Restaurant")
+   Or use any existing verified restaurant credentials.
+
+🤝 CHARITY / NGO PORTAL:
+   You can register a new Charity account at:
+   http://localhost:5556/Account/Register  (Select "Charity")
+   Or use any existing verified charity credentials.
+
+🤖 MEALBOT AI ASSISTANT:
+   Available via the floating emerald button on the bottom-right of every page.
+   Answers questions about the project, supervisor, developers, cities, and food safety!
+
+--------------------------------------------------------------------------------
+4. DELIVERABLES INCLUDED
+--------------------------------------------------------------------------------
+- Complete ASP.NET Core 8.0 MVC Codebase
+- Pre-populated SQLite Database ('ShareMeal.db')
+- SQL Server SSMS Script ('ShareMeal_Database.sql')
+- Comprehensive Thesis Documentation ('wwwroot/ShareMeal_Project_Documentation.pdf')
+- Presentation Slides ('wwwroot/ShareMeal_Presentation.pptx')
+================================================================================

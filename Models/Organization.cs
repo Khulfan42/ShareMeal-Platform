@@ -18,9 +18,9 @@ public class Organization
     public string ContactEmail { get; set; } = string.Empty;
 
     [Phone]
-    public string Phone { get; set; } = string.Empty;
+    public string? Phone { get; set; }
 
-    public string Address { get; set; } = string.Empty;
+    public string? Address { get; set; }
 
     public string? Description { get; set; }
 
@@ -32,7 +32,7 @@ public class Organization
     public bool IsSuspended { get; set; } = false;
 
     // Link to IdentityUser
-    public string OwnerId { get; set; } = string.Empty;
+    public string? OwnerId { get; set; }
 
     // Navigation properties
     public ICollection<Donation> Donations { get; set; } = new List<Donation>();

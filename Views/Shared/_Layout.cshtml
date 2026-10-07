@@ -384,6 +384,30 @@
     </header>
 
     <main role="main">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="max-w-5xl mx-auto px-4 pt-6 relative z-50">
+                <div class="bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 px-6 py-4 rounded-2xl flex items-center justify-between shadow-2xl backdrop-blur-xl animate-fade-in">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">✅</span>
+                        <span class="font-bold text-sm tracking-wide">@TempData["SuccessMessage"]</span>
+                    </div>
+                    <button type="button" onclick="this.closest('.relative').remove()" class="text-emerald-400 hover:text-white font-bold text-xl leading-none px-2 py-1 rounded-lg hover:bg-emerald-800/40 transition-colors">&times;</button>
+                </div>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="max-w-5xl mx-auto px-4 pt-6 relative z-50">
+                <div class="bg-rose-950/80 border border-rose-500/50 text-rose-300 px-6 py-4 rounded-2xl flex items-center justify-between shadow-2xl backdrop-blur-xl animate-fade-in">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">⚠️</span>
+                        <span class="font-bold text-sm tracking-wide">@TempData["ErrorMessage"]</span>
+                    </div>
+                    <button type="button" onclick="this.closest('.relative').remove()" class="text-rose-400 hover:text-white font-bold text-xl leading-none px-2 py-1 rounded-lg hover:bg-rose-800/40 transition-colors">&times;</button>
+                </div>
+            </div>
+        }
         @RenderBody()
     </main>
 
@@ -600,14 +624,22 @@
             </div>
 
             <!-- Voice Recording Wave Bar (Visible while speaking) -->
-            <div id="mealbot-voice-bar" class="hidden px-4 py-2 bg-rose-950/90 border-t border-rose-500/50 flex items-center justify-between text-xs text-rose-200">
-                <div class="flex items-center gap-2 flex-1 min-w-0">
+            <div id="mealbot-voice-bar" class="hidden px-3.5 py-2 bg-gradient-to-r from-rose-950/95 via-slate-900 to-rose-950/95 border-t border-rose-500/50 flex items-center justify-between text-xs text-rose-200 shadow-md">
+                <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
                     <span class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping flex-shrink-0"></span>
-                    <span id="mealbot-voice-label" class="font-bold text-[11px] truncate">🎙️ سن رہا ہوں... بولیں!</span>
+                    <span id="mealbot-voice-label" class="font-bold text-[11px] truncate text-rose-100">🎙️ بولیں، سن رہا ہوں...</span>
                 </div>
-                <button type="button" onclick="stopAndSend()" class="text-[10px] bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1 rounded-lg font-bold flex-shrink-0 ml-2">
-                    ✓ Send
-                </button>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <button type="button" onclick="stopSpeechRecording()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded-lg font-medium border border-slate-600 transition-all active:scale-95" title="Mic band karein (Message send nahi hoga)">
+                        🛑 Stop Mic
+                    </button>
+                    <button type="button" onclick="finalSendVoice()" class="text-[10px] bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 shadow transition-all active:scale-95" title="Bhejein">
+                        <span>Send</span>
+                        <svg class="w-3 h-3 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
 
@@ -631,7 +663,7 @@
                         <input type="text" id="mealbot-input"
                                placeholder="Urdu ya English mein bolein ya type karein..."
                                class="w-full bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs rounded-2xl pl-4 pr-10 py-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-inner"
-                               onkeydown="if(event.key === 'Enter') sendMealBotMessage();" />
+                               onkeydown="if(event.key === 'Enter' && !isMealBotRecording) sendMealBotMessage();" />
                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">✨</span>
                     </div>
 
@@ -720,6 +752,10 @@
         }
 
         function sendMealBotMessage() {
+            // Agar kisi wajah se recording chal rahi thi to pehle band karo
+            if (isMealBotRecording) {
+                stopSpeechRecording();
+            }
             var input = document.getElementById("mealbot-input");
             var message = input.value.trim();
             if (!message) return;
@@ -809,186 +845,184 @@
             });
         }
 
-        // --- Voice Note (Speech-to-Text & Text-to-Speech) System ---
+        // --- Voice Note (Speech-to-Text) System ---
         var mealBotRecognition = null;
         var isMealBotRecording = false;
         var activeSpeechBtn = null;
         var currentSpeechLang = 'ur-PK';
+        var accumulatedVoiceText = "";
+        var interimVoiceText = "";
 
         function setSpeechLanguage(lang) {
             currentSpeechLang = lang;
-            var btnUr = document.getElementById('lang-btn-ur');
-            var btnEn = document.getElementById('lang-btn-en');
-            var input = document.getElementById('mealbot-input');
-            var label = document.getElementById('mealbot-voice-label');
-
+            var urBtn = document.getElementById("lang-btn-ur");
+            var enBtn = document.getElementById("lang-btn-en");
             if (lang === 'ur-PK') {
-                if (btnUr) { btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm"; }
-                if (btnEn) { btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all"; }
-                if (input && !input.value) { input.placeholder = "Urdu mein bolein ya type karein..."; }
-                if (label && isMealBotRecording) { label.textContent = "🎙️ بولیں، سن رہا ہوں..."; }
+                if (urBtn) urBtn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm";
+                if (enBtn) enBtn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all";
             } else {
-                if (btnEn) { btnEn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm"; }
-                if (btnUr) { btnUr.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all"; }
-                if (input && !input.value) { input.placeholder = "Speak or type in English..."; }
-                if (label && isMealBotRecording) { label.textContent = "🎙️ Listening... Speak now!"; }
-            }
-            if (mealBotRecognition) {
-                mealBotRecognition.lang = currentSpeechLang;
-                if (isMealBotRecording) {
-                    stopSpeechRecording();
-                }
+                if (enBtn) enBtn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg bg-emerald-600 text-white transition-all shadow-sm";
+                if (urBtn) urBtn.className = "px-2 py-0.5 text-[9.5px] font-black rounded-lg text-slate-400 hover:text-slate-200 transition-all";
             }
         }
 
-        function createFreshRecognition() {
-            if (mealBotRecognition) {
-                try { mealBotRecognition.abort(); } catch(e) {}
-                mealBotRecognition = null;
-            }
+        // ─────────────────────────────────────────────────────────────────
+        // VOICE RECORDING - CLEAN IMPLEMENTATION
+        // Key rule: NEVER auto-send. Only finalSendVoice() sends a message.
+        // Uses a sessionId to prevent cascade-restart bugs from abort() events.
+        // ─────────────────────────────────────────────────────────────────
+        var _voiceSessionId = 0; // increment every session to kill ghost callbacks
+
+        function _startSession(sessionId) {
+            // Guard: only run if this session is still the active one
+            if (sessionId !== _voiceSessionId || !isMealBotRecording) return;
 
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return null;
+            if (!SpeechRecognition) return;
 
-            var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             var rec = new SpeechRecognition();
-            rec.continuous = false;
-            // On iOS Safari, interimResults must be false to avoid WebKit engine crash/early cutoff
-            rec.interimResults = !isIOS;
+            rec.continuous      = false;   // simpler + more reliable across all browsers
+            rec.interimResults  = !isIOS;
             rec.maxAlternatives = 1;
-            rec.lang = currentSpeechLang;
+            rec.lang            = currentSpeechLang;
+
+            // Store on the module-level so stopSpeechRecording can abort it
+            mealBotRecognition = rec;
 
             rec.onstart = function() {
-                isMealBotRecording = true;
-                updateRecordingUI(true);
+                if (sessionId !== _voiceSessionId) return;
                 var label = document.getElementById("mealbot-voice-label");
-                if (label) {
-                    label.textContent = currentSpeechLang === 'ur-PK' ? "🎙️ بولیں، سن رہا ہوں..." : "🎙️ Listening... Speak now!";
-                }
+                if (label) label.textContent = currentSpeechLang === 'ur-PK'
+                    ? "🎙️ بولیں، سن رہا ہوں... (Send سے بھیجیں)"
+                    : "🎙️ Listening... (Tap Send when done)";
             };
 
             rec.onresult = function(event) {
-                var fullTranscript = "";
-                for (var i = 0; i < event.results.length; ++i) {
-                    fullTranscript += event.results[i][0].transcript;
+                if (sessionId !== _voiceSessionId) return;
+                interimVoiceText = "";
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    var chunk = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        var t = chunk.trim();
+                        if (t) accumulatedVoiceText = accumulatedVoiceText
+                            ? accumulatedVoiceText + " " + t : t;
+                    } else {
+                        interimVoiceText += chunk;
+                    }
                 }
-                fullTranscript = fullTranscript.trim();
-                if (fullTranscript) {
-                    var input = document.getElementById("mealbot-input");
-                    if (input) input.value = fullTranscript;
-                    var label = document.getElementById("mealbot-voice-label");
-                    if (label) label.textContent = "🎙️ " + fullTranscript;
+                var display = (accumulatedVoiceText + " " + interimVoiceText).trim();
+                if (display) {
+                    var inp = document.getElementById("mealbot-input");
+                    if (inp) inp.value = display;
+                    var lbl = document.getElementById("mealbot-voice-label");
+                    if (lbl) lbl.textContent = "🎙️ " + display;
                 }
             };
 
             rec.onerror = function(event) {
-                console.warn("Speech error:", event.error);
-                isMealBotRecording = false;
-                updateRecordingUI(false);
+                if (sessionId !== _voiceSessionId) return;
+                // 'no-speech' and 'aborted' are normal - ignore silently
+                if (event.error === 'no-speech' || event.error === 'aborted') return;
 
-                var label = document.getElementById("mealbot-voice-label");
-                var errorMsg = "";
-
+                var msg = "";
                 if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-                    errorMsg = "❌ Safari Mic Blocked!\n\n1. Safari URL bar mein 'AA' ya lock icon tap karein\n2. 'Website Settings' tap karein\n3. Microphone ko 'Allow' karein aur page refresh karein.";
+                    msg = "❌ Mic blocked!\nSafari/Chrome settings mein mic Allow karein.";
                 } else if (event.error === 'service-not-allowed') {
-                    errorMsg = "⚠️ iPhone Dictation Off!\n\niPhone Settings > General > Keyboard mein ja kar 'Enable Dictation' (ڈکٹیشن) ko ON karein.";
+                    msg = "⚠️ iPhone Dictation Off!\nSettings > General > Keyboard > Enable Dictation ON karein.";
                 } else if (event.error === 'language-not-supported') {
                     currentSpeechLang = 'en-US';
                     setSpeechLanguage('en-US');
-                    errorMsg = "⚠️ Aapke iPhone mein Urdu voice pack nahi hai. English mode switch ho gaya hai. Dobara mic dabayein.";
+                    msg = "⚠️ Urdu voice pack nahi hai. English mode on ho gaya. Dobara mic dabayein.";
                 } else if (event.error === 'network') {
-                    errorMsg = "📡 Network error! Internet connection check karein.";
+                    msg = "📡 Network error! Internet check karein.";
                 } else if (event.error === 'audio-capture') {
-                    errorMsg = "🎤 Mic busy hai. Kisi call ya app ne mic pakda hua hai.";
-                } else if (event.error === 'no-speech') {
-                    // Silent reset - user didn't speak
-                    return;
+                    msg = "🎤 Mic busy hai ya kisi doosri app ne block kiya.";
                 }
 
-                if (errorMsg) {
-                    alert(errorMsg);
-                }
+                isMealBotRecording = false;
+                _voiceSessionId++;
+                mealBotRecognition = null;
+                updateRecordingUI(false);
+                if (msg) alert(msg);
             };
 
             rec.onend = function() {
-                isMealBotRecording = false;
-                updateRecordingUI(false);
-
-                // Auto-send if text is captured
-                var input = document.getElementById("mealbot-input");
-                if (input && input.value.trim().length > 0) {
-                    setTimeout(function() {
-                        sendMealBotMessage();
-                    }, 350);
+                // CRITICAL: This fires when browser ends recognition (pause/breath/timeout).
+                // If THIS session is still active AND user is still recording → restart.
+                // NEVER auto-send here.
+                if (sessionId !== _voiceSessionId) return; // ghost event from old session
+                if (isMealBotRecording) {
+                    // Restart the same session after a small delay
+                    setTimeout(function() { _startSession(sessionId); }, 120);
+                } else {
+                    updateRecordingUI(false);
                 }
             };
 
-            mealBotRecognition = rec;
-            return mealBotRecognition;
+            try {
+                rec.start();
+            } catch(e) {
+                console.warn("rec.start() failed:", e);
+                if (sessionId === _voiceSessionId && isMealBotRecording) {
+                    isMealBotRecording = false;
+                    _voiceSessionId++;
+                    mealBotRecognition = null;
+                    updateRecordingUI(false);
+                }
+            }
         }
 
-        // Direct 100% synchronous trigger for click/touch
         function toggleSpeechRecording() {
             var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
             if (!SpeechRecognition) {
-                alert("⚠️ Safari / Chrome par Speech Recognition enable nahi hai.\n\nAgar iPhone hai to Settings > Safari > Microphone mein 'Allow' karein.");
+                alert("⚠️ Speech Recognition support nahi hai is browser mein.");
                 return;
             }
-
             if (isMealBotRecording) {
-                stopAndSend();
+                stopSpeechRecording();
                 return;
             }
-
-            // Close keyboard so voice bar is clear
+            // Close keyboard so voice bar is clearly visible
             if (document.activeElement && typeof document.activeElement.blur === 'function') {
                 document.activeElement.blur();
             }
-
             var input = document.getElementById("mealbot-input");
-            if (input) input.value = "";
-
-            try {
-                var rec = createFreshRecognition();
-                if (!rec) return;
-
-                // Immediate visual feedback
-                updateRecordingUI(true);
-                var label = document.getElementById("mealbot-voice-label");
-                if (label) {
-                    label.textContent = currentSpeechLang === 'ur-PK' ? "🎙️ بولیں، سن رہا ہوں..." : "🎙️ Listening... Speak now!";
-                }
-
-                rec.start();
-            } catch (err) {
-                console.warn("Speech start exception:", err);
-                isMealBotRecording = false;
-                updateRecordingUI(false);
-                if (err.name === 'NotAllowedError') {
-                    alert("❌ Safari Microphone Permission Blocked!\nSafari settings mein mic allow karein.");
-                }
-            }
+            accumulatedVoiceText = input ? input.value.trim() : "";
+            interimVoiceText = "";
+            isMealBotRecording = true;
+            _voiceSessionId++;   // new session ID - kills any old callbacks
+            updateRecordingUI(true);
+            _startSession(_voiceSessionId);
         }
 
-        function stopAndSend() {
-            if (mealBotRecognition) {
-                try { mealBotRecognition.stop(); } catch(e) {}
-            }
-            isMealBotRecording = false;
-            updateRecordingUI(false);
-            setTimeout(function() {
-                sendMealBotMessage();
-            }, 200);
-        }
-
+        // Stops recording WITHOUT sending. Input mein text rehta hai.
         function stopSpeechRecording() {
-            if (mealBotRecognition) {
-                try { mealBotRecognition.stop(); } catch(e) {}
-            }
             isMealBotRecording = false;
+            _voiceSessionId++;  // invalidate all pending onend/setTimeout callbacks
+            if (mealBotRecognition) {
+                var old = mealBotRecognition;
+                mealBotRecognition = null;
+                // Remove handlers BEFORE abort so no ghost events fire
+                try { old.onend = null; } catch(e) {}
+                try { old.onerror = null; } catch(e) {}
+                try { old.onresult = null; } catch(e) {}
+                try { old.abort(); } catch(e) {}
+            }
             updateRecordingUI(false);
+        }
+
+        // Voice bar "Send" button. Stops recording first, then sends after a small delay.
+        function finalSendVoice() {
+            var wasRecording = isMealBotRecording;
+            stopSpeechRecording();
+            setTimeout(function() {
+                var input = document.getElementById("mealbot-input");
+                if (input && input.value.trim()) {
+                    sendMealBotMessage();
+                }
+            }, wasRecording ? 200 : 0);
         }
 
         function updateRecordingUI(recording) {
@@ -1016,7 +1050,7 @@
             }
         }
 
-        function speakBotMessage(elementId, btn) {
+                function speakBotMessage(elementId, btn) {
             if (!('speechSynthesis' in window)) {
                 alert("Text-to-speech aapke browser mein available nahi hai.");
                 return;

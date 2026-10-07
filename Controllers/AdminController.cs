@@ -158,8 +158,21 @@ The ShareMeal Team";
         var org = await _context.Organizations.FindAsync(id);
         if (org != null)
         {
-            _context.Organizations.Remove(org);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var relatedDonations = await _context.Donations.Where(d => d.DonorId == org.Id || d.RecipientId == org.Id).ToListAsync();
+                if (relatedDonations.Any())
+                {
+                    _context.Donations.RemoveRange(relatedDonations);
+                }
+                _context.Organizations.Remove(org);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Organization '{org.Name}' removed successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Could not delete organization: " + ex.Message;
+            }
         }
         var referer = Request.Headers["Referer"].ToString();
         return Redirect(!string.IsNullOrEmpty(referer) ? referer : "/Admin/Dashboard");
@@ -258,9 +271,10 @@ The ShareMeal Team";
         var comp = await _context.ContactMessages.FindAsync(id);
         if (comp != null)
         {
-            _context.ContactMessages.Remove(comp);
+            comp.IsResolved = true;
+            _context.Update(comp);
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Complaint marked as Resolved and archived successfully!";
+            TempData["SuccessMessage"] = "Ticket marked as Resolved! ✓";
         }
         return RedirectToAction(nameof(Complaints));
     }
