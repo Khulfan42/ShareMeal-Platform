@@ -259,7 +259,7 @@ The ShareMeal Team";
     public async Task<IActionResult> Complaints()
     {
         var complaints = await _context.ContactMessages
-            .OrderByDescending(c => c.CreatedAt)
+            .OrderByDescending(c => c.SubmittedAt)
             .ToListAsync();
             
         return View(complaints);

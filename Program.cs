@@ -27,7 +27,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddHttpClient<IGeminiAiService, GeminiAiService>();
+builder.Services.AddHttpClient<IGeminiAiService, GeminiAiService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); // Needed for Identity UI overrides
 

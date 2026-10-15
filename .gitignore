@@ -28,3 +28,4 @@ obj/
 
 # Local secrets & environment overrides
 appsettings.Development.json
+*.zip
