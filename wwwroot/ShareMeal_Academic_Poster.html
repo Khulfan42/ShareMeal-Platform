@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareMeal - FYP Academic Poster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            size: A1 portrait;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            width: 1200px;
+            min-height: 1700px;
+            margin: 0 auto;
+            padding: 24px;
+            background: #ffffff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Outer Poster Border */
+        .poster-frame {
+            border: 8px solid #0f3562;
+            border-radius: 20px;
+            background: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+
+        /* Top Header Banner */
+        .header-banner {
+            background: linear-gradient(135deg, #0a2540 0%, #0f3562 60%, #1e4b85 100%);
+            color: #ffffff;
+            padding: 24px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 5px solid #f59e0b;
+        }
+
+        .header-logo {
+            width: 125px;
+            height: 125px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid #f59e0b;
+        }
+
+        .header-title-box {
+            text-align: center;
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .header-dept {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .header-faculty {
+            font-size: 19px;
+            font-weight: 600;
+            color: #93c5fd;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+        }
+
+        .header-uni {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: #fbbf24;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* Project Title Box */
+        .project-title-box {
+            text-align: center;
+            padding: 20px 30px;
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .project-main-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 31px;
+            font-weight: 900;
+            color: #0a2540;
+            line-height: 1.35;
+            letter-spacing: -0.5px;
+        }
+
+        .project-sub-tag {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 18px;
+            background: #ecfdf5;
+            border: 1.5px solid #10b981;
+            color: #047857;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main 2-Column Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 22px;
+            padding: 22px 26px;
+            flex: 1;
+            background: #ffffff;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #0f3562;
+            padding-bottom: 6px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 21px;
+            font-weight: 800;
+            color: #0f3562;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-desc-text {
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: #334155;
+            text-align: justify;
+        }
+
+        /* List Items */
+        .poster-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .poster-list li {
+            position: relative;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #1e293b;
+            margin-bottom: 7px;
+        }
+
+        .poster-list li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            top: -1px;
+            color: #0f3562;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .poster-list li strong {
+            color: #0f3562;
+            font-weight: 700;
+        }
+
+        /* Methodology RAD Workflow */
+        .methodology-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 6px;
+        }
+
+        .flow-step {
+            flex: 1;
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            border: 1.5px solid #38bdf8;
+            border-radius: 10px;
+            padding: 10px 6px;
+            text-align: center;
+        }
+
+        .flow-step-num {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            border-radius: 50%;
+            background: #0f3562;
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .flow-step-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0f3562;
+            line-height: 1.25;
+        }
+
+        .flow-arrow {
+            color: #0f3562;
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        /* Comparison Table */
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+            font-size: 11.5px;
+        }
+
+        .comp-table th {
+            background: #0f3562;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 7px 8px;
+            text-align: left;
+            border: 1px solid #0f3562;
+        }
+
+        .comp-table td {
+            padding: 6px 8px;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+        }
+
+        .comp-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .comp-table .feature-col {
+            font-weight: 600;
+            color: #0f3562;
+        }
+
+        .val-yes {
+            color: #059669;
+            font-weight: 800;
+        }
+
+        .val-no {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        /* Schema Box */
+        .schema-container {
+            text-align: center;
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px;
+            margin-top: 6px;
+        }
+
+        .schema-img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: white;
+        }
+
+        /* Tools Partition */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .tool-box {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .tool-box-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0f3562;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1.5px solid #cbd5e1;
+            padding-bottom: 4px;
+        }
+
+        .tool-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tool-list li {
+            font-size: 11.5px;
+            color: #334155;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .tool-list li::before {
+            content: "▪";
+            color: #0f3562;
+            margin-right: 6px;
+        }
+
+        /* Bottom Presentation Footer Banner */
+        .footer-banner {
+            background: linear-gradient(135deg, #0a2540 0%, #0f3562 60%, #1e4b85 100%);
+            color: #ffffff;
+            padding: 18px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 5px solid #f59e0b;
+        }
+
+        .footer-col {
+            flex: 1;
+        }
+
+        .footer-label {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.25;
+        }
+
+        .footer-sub {
+            font-size: 12px;
+            color: #cbd5e1;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .footer-center {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .footer-seal {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 4px;
+            border: 2px solid #fbbf24;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin: 0 auto 4px auto;
+        }
+
+        .footer-lab-name {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #e2e8f0;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster-frame">
+        <!-- TOP HEADER BANNER -->
+        <div class="header-banner">
+            <img src="usp_logo.png" alt="University of Southern Punjab Logo" class="header-logo">
+            
+            <div class="header-title-box">
+                <div class="header-dept">Department of Computer Science / Information Technology</div>
+                <div class="header-faculty">Faculty of Computing & Applied Sciences</div>
+                <div class="header-uni">University of Southern Punjab, Multan</div>
+            </div>
+
+            <img src="sharemeal_logo.png" alt="ShareMeal Platform Logo" class="header-logo" style="background:#0f172a;">
+        </div>
+
+        <!-- MAIN PROJECT TITLE -->
+        <div class="project-title-box">
+            <h1 class="project-main-title">
+                Web-Based Centralized Platform That Optimizes Food Waste Redistribution by Linking Restaurants with Registered Charitable Organizations
+            </h1>
+            <div class="project-sub-tag">
+                🌱 Final Year Project (FYP) • BSCS Session 2024–2026 • ShareMeal Ecosystem
+            </div>
+        </div>
+
+        <!-- 2-COLUMN MAIN CONTENT -->
+        <div class="content-grid">
+            
+            <!-- LEFT COLUMN -->
+            <div class="left-col">
+                
+                <!-- Description -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">📋</span>
+                        <h2 class="section-title">Description</h2>
+                    </div>
+                    <p class="section-desc-text">
+                        Food wastage is one of the most pressing socio-economic challenges in Pakistan, where millions endure severe nutritional deprivation while banquet halls, hotels, and restaurants discard metric tons of edible surplus food daily. The <strong>ShareMeal Platform</strong> is an enterprise web-based centralized solution engineered using <strong>ASP.NET Core 8.0, C# 12, Entity Framework Core, and Google Gemini AI</strong>. The system provides real-time digital linking between commercial surplus food donors and vetted charitable welfare NGOs. By digitizing food inventory listings, automating pickup dispatching, enforcing strict food safety time-windows, and providing AI-powered operational assistance, ShareMeal bridges the critical logistics gap to eradicate food waste and feed impoverished communities sustainably.
+                    </p>
+                </div>
+
+                <!-- Scope -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">🎯</span>
+                        <h2 class="section-title">Scope of the System</h2>
+                    </div>
+                    <ul class="poster-list">
+                        <li><strong>Nationwide Cloud Accessibility:</strong> Responsive web platform functioning seamlessly across desktop, tablet, and mobile devices without requiring app store installation.</li>
+                        <li><strong>Multi-Role Role-Based Architecture:</strong> Segregated, secure portals for Food Donors (Restaurants), Claiming Charities (NGOs), and System Administrators.</li>
+                        <li><strong>Real-Time Food Listing & Matching:</strong> Dynamic surplus inventory listing containing meal portions, preparation timestamp, preservation state, and expiry countdown.</li>
+                        <li><strong>Atomic Concurrency Claim Engine:</strong> Database-level transaction locking preventing duplicate claims or race conditions between competing charities.</li>
+                        <li><strong>Bilingual Multimodal Gemini AI (MealBot):</strong> 24/7 intelligent voice-enabled chatbot providing automated SOP instructions, platform navigation, and meal safety assistance.</li>
+                        <li><strong>Interactive Geolocation Mapping:</strong> Integration with Leaflet.js and GPS routing for pinpointing donor addresses, transit estimation, and distribution verification.</li>
+                    </ul>
+                </div>
+
+                <!-- Functional Requirements -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">⚙️</span>
+                        <h2 class="section-title">Functional Requirements</h2>
+                    </div>
+                    <ul class="poster-list">
+                        <li>User registration, login, and profile management with hashed credentials (ASP.NET Core Identity).</li>
+                        <li>Restaurant / Donor Module: Add, edit, manage, and monitor surplus food listings with expiry deadlines.</li>
+                        <li>Charity / NGO Module: Real-time marketplace feed, location filtering, instant donation claim reservation.</li>
+                        <li>Strict Verification Pipeline: Admin approval workflows verifying government NGO credentials and NTN.</li>
+                        <li>Status Lifecycle Engine: Automated transitions across <em>Available → Claimed → In-Transit → Delivered</em>.</li>
+                        <li>Food Safety & Hygiene SOPs: Mandatory pre-claim verification of preparation time and food temperature.</li>
+                        <li>MealBot AI Integration: Natural language processing in Roman Urdu, Urdu, and English with Web Speech API.</li>
+                        <li>System Analytics & Reporting: Comprehensive PDF and visual telemetry for meals saved and carbon offset.</li>
+                    </ul>
+                </div>
+
+                <!-- Methodology -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">🔄</span>
+                        <h2 class="section-title">Methodology (Agile RAD Model)</h2>
+                    </div>
+                    <p class="section-desc-text" style="margin-bottom:8px;">
+                        The project followed the <strong>Rapid Application Development (RAD)</strong> methodology under an Agile iterative framework, emphasizing rapid prototyping, user feedback loops, and automated cloud deployments:
+                    </p>
+                    <div class="methodology-flow">
+                        <div class="flow-step">
+                            <span class="flow-step-num">1</span>
+                            <div class="flow-step-text">Requirements & Feasibility</div>
+                        </div>
+                        <span class="flow-arrow">➔</span>
+                        <div class="flow-step">
+                            <span class="flow-step-num">2</span>
+                            <div class="flow-step-text">Architecture & Schema Design</div>
+                        </div>
+                        <span class="flow-arrow">➔</span>
+                        <div class="flow-step">
+                            <span class="flow-step-num">3</span>
+                            <div class="flow-step-text">Iterative Prototyping</div>
+                        </div>
+                        <span class="flow-arrow">➔</span>
+                        <div class="flow-step">
+                            <span class="flow-step-num">4</span>
+                            <div class="flow-step-text">Integration & AI Testing</div>
+                        </div>
+                        <span class="flow-arrow">➔</span>
+                        <div class="flow-step">
+                            <span class="flow-step-num">5</span>
+                            <div class="flow-step-text">Cloud Deployment</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="right-col">
+                
+                <!-- Comparison Table -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">📊</span>
+                        <h2 class="section-title">Comparative Analysis</h2>
+                    </div>
+                    <table class="comp-table">
+                        <thead>
+                            <tr>
+                                <th>Operational Feature</th>
+                                <th>Manual Calling</th>
+                                <th>WhatsApp Groups</th>
+                                <th>ShareMeal Platform</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="feature-col">Real-Time Matching</td>
+                                <td class="val-no">No</td>
+                                <td style="color:#d97706;font-weight:700;">Partial</td>
+                                <td class="val-yes">Yes (Instant)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Double-Claim Prevention</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No (High Chaos)</td>
+                                <td class="val-yes">Yes (Atomic Lock)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Verified NGO Authorization</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No</td>
+                                <td class="val-yes">Yes (Admin Vetted)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Food Safety & Expiry Tracking</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No</td>
+                                <td class="val-yes">Yes (Auto Countdown)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">24/7 AI-Powered Assistance</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No</td>
+                                <td class="val-yes">Yes (Gemini AI)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Voice Accessibility (Bilingual)</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No</td>
+                                <td class="val-yes">Yes (Web Speech)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Live GPS Route Mapping</td>
+                                <td class="val-no">No</td>
+                                <td style="color:#d97706;font-weight:700;">Manual Links</td>
+                                <td class="val-yes">Yes (Leaflet.js)</td>
+                            </tr>
+                            <tr>
+                                <td class="feature-col">Audit Trail & Impact Reports</td>
+                                <td class="val-no">No</td>
+                                <td class="val-no">No</td>
+                                <td class="val-yes">Yes (Automated)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Database Schema Diagram -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">🗄️</span>
+                        <h2 class="section-title">Relational Schema Diagram</h2>
+                    </div>
+                    <div class="schema-container">
+                        <img src="diagrams/Figure_6_ERD_Schema_Diagram.png" alt="Entity Relationship Schema" class="schema-img">
+                        <div style="font-size:11px;font-weight:700;color:#0f3562;margin-top:4px;">
+                            Figure: ShareMeal Normalized Relational Entity Relationship Diagram (ERD)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools & Technologies -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span style="font-size:22px;">🛠️</span>
+                        <h2 class="section-title">Tools & Technologies</h2>
+                    </div>
+                    <div class="tools-grid">
+                        <div class="tool-box">
+                            <div class="tool-box-title">
+                                <span>💻</span> Hardware Tools
+                            </div>
+                            <ul class="tool-list">
+                                <li><strong>Processor:</strong> Intel Core i7 / i5 Multi-Core</li>
+                                <li><strong>Memory:</strong> 16GB DDR4 High-Speed RAM</li>
+                                <li><strong>Storage:</strong> 512GB NVMe SSD</li>
+                                <li><strong>Display:</strong> 1080p / 4K UHD Workstation</li>
+                                <li><strong>Testbed:</strong> iOS Safari & Android Chrome</li>
+                            </ul>
+                        </div>
+                        <div class="tool-box">
+                            <div class="tool-box-title">
+                                <span>⚡</span> Software Tools
+                            </div>
+                            <ul class="tool-list">
+                                <li><strong>Backend:</strong> ASP.NET Core 8.0 & C# 12</li>
+                                <li><strong>ORM & DB:</strong> Entity Framework Core 8</li>
+                                <li><strong>Frontend:</strong> Modern HTML5, TailwindCSS</li>
+                                <li><strong>AI Engine:</strong> Google Gemini Flash API</li>
+                                <li><strong>Maps & Audio:</strong> Leaflet & Web Speech</li>
+                                <li><strong>Cloud / DevOps:</strong> Docker & Railway PaaS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BOTTOM PRESENTATION BANNER -->
+        <div class="footer-banner">
+            <!-- Left: Presented By -->
+            <div class="footer-col" style="text-align: left;">
+                <div class="footer-label">
+                    <span>👨‍💻</span> Presented By:
+                </div>
+                <div class="footer-name">Muhammad Khulfan</div>
+                <div class="footer-sub">Lead Software Architect & Backend Engineer • BSCS 2024–2026</div>
+                <div class="footer-name" style="margin-top:6px;">Abdullah Khalid</div>
+                <div class="footer-sub">Software Developer & QA Engineer • BSCS 2024–2026</div>
+            </div>
+
+            <!-- Center: Lab & Department Seal -->
+            <div class="footer-col footer-center">
+                <img src="usp_logo.png" alt="Seal" class="footer-seal">
+                <div class="footer-lab-name">DEPARTMENT OF COMPUTER SCIENCE</div>
+                <div style="font-size:10.5px;color:#cbd5e1;font-weight:600;">Faculty of Computing & IT • USP Multan</div>
+            </div>
+
+            <!-- Right: Supervisor -->
+            <div class="footer-col" style="text-align: right;">
+                <div class="footer-label" style="justify-content: flex-end;">
+                    <span>👩‍🏫</span> Academic Supervisor:
+                </div>
+                <div class="footer-name">Miss Kainat Sajid</div>
+                <div class="footer-sub">M.Phil in Computer Science</div>
+                <div class="footer-sub">Lecturer, Department of Computer Science</div>
+                <div class="footer-sub">University of Southern Punjab (USP), Multan</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
