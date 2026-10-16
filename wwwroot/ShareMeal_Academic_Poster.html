@@ -3,977 +3,1084 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShareMeal Platform - FYP Academic Presentation Poster</title>
+    <title>ShareMeal Platform - Official FYP Academic Presentation Poster | University of Southern Punjab</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        
+        :root {
+            --primary-navy: #09203f;
+            --secondary-navy: #0f3562;
+            --accent-gold: #d4af37;
+            --bright-gold: #fbbf24;
+            --emerald-green: #059669;
+            --light-emerald: #10b981;
+            --card-border: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --bg-canvas: #f8fafc;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        @page {
-            size: 1360px 1940px;
-            margin: 0;
-        }
-
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            background: #061121;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: #0f172a;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 60px 0 20px 0;
-        }
-
-        @media print {
-            body {
-                padding: 0 !important;
-                background: #ffffff !important;
-                width: 1360px !important;
-                height: 1940px !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .poster-wrapper {
-                transform: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-        }
-
-        /* Interactive Screen Toolbar */
-        .toolbar {
-            position: fixed;
-            top: 14px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 99999;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 7px 18px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.6);
-        }
-
-        .tb-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #f1f5f9;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tb-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-
-        .tb-btn-primary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border: none;
-            color: white;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
-        }
-
-        .tb-btn-primary:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
-        }
-
-        .tb-divider {
-            width: 1px;
-            height: 18px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Scalable Canvas Wrapper */
-        .poster-wrapper {
-            transition: transform 0.2s ease;
-            transform-origin: top center;
-        }
-
-        /* Outer Poster Canvas */
-        .poster-container {
-            width: 1360px;
-            height: 1940px;
+        /* ------------------ ACTUAL POSTER CANVAS (1250 x 1770 px) ------------------ */
+        .poster-canvas {
+            width: 1250px;
+            height: 1770px;
+            min-width: 1250px;
+            min-height: 1770px;
+            max-width: 1250px;
+            max-height: 1770px;
             background: #ffffff;
-            border: 8px solid #0f3562;
-            border-radius: 20px;
+            border: 6px solid var(--secondary-navy);
+            border-radius: 14px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         /* 1. TOP HEADER BANNER */
-        .header-banner {
-            height: 155px;
-            background: linear-gradient(135deg, #071e3d 0%, #0f3562 55%, #184e8e 100%);
+        .poster-header {
+            height: 145px;
+            background: linear-gradient(135deg, #061933 0%, #0b2952 50%, #134079 100%);
             color: #ffffff;
-            padding: 15px 35px;
+            padding: 12px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 5px solid #f59e0b;
+            border-bottom: 5px solid var(--bright-gold);
             flex-shrink: 0;
         }
 
-        .header-logo-container {
-            width: 118px;
-            height: 118px;
+        .header-logo-box {
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             background: #ffffff;
             padding: 3px;
-            border: 3px solid #fbbf24;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+            border: 3px solid var(--bright-gold);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
-        .header-logo-img {
+        .header-logo-box img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
 
-        .header-center-text {
+        .header-center-info {
             text-align: center;
             flex: 1;
-            padding: 0 25px;
+            padding: 0 20px;
         }
 
-        .header-dept {
+        .dept-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: 0.8px;
             text-transform: uppercase;
             color: #ffffff;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .header-faculty {
-            font-size: 16px;
+        .faculty-title {
+            font-size: 15px;
             font-weight: 600;
             color: #93c5fd;
             letter-spacing: 0.6px;
             margin-bottom: 3px;
         }
 
-        .header-uni {
+        .uni-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 32px;
+            font-size: 31px;
             font-weight: 900;
-            color: #fbbf24;
+            color: var(--bright-gold);
             letter-spacing: 1px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
         /* 2. PROJECT TITLE BAR */
-        .title-banner {
-            padding: 13px 40px;
-            background: #f8fafc;
+        .poster-title-bar {
+            padding: 10px 35px;
+            background: #f1f5f9;
             border-bottom: 2px solid #e2e8f0;
             text-align: center;
             flex-shrink: 0;
         }
 
-        .project-title {
+        .project-main-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 26px;
+            font-size: 23px;
             font-weight: 900;
-            color: #0a2540;
-            line-height: 1.3;
-            letter-spacing: -0.3px;
+            color: #071e3d;
+            line-height: 1.25;
+            letter-spacing: -0.2px;
         }
 
-        .project-badge-pill {
+        .project-meta-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 5px;
+            margin-top: 4px;
             padding: 3px 18px;
             background: linear-gradient(135deg, #ecfdf5 0%, #e0f2fe 100%);
-            border: 1.5px solid #10b981;
+            border: 1.5px solid var(--emerald-green);
             color: #065f46;
             border-radius: 30px;
-            font-size: 12.5px;
+            font-size: 11.6px;
             font-weight: 800;
+            letter-spacing: 0.6px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
         }
 
-        /* 3. MAIN CONTENT 2-COLUMN GRID */
-        .main-content {
+        /* 3. MAIN CONTENT (2-COLUMN GRID) */
+        .poster-body {
             flex: 1;
             display: grid;
-            grid-template-columns: 1.12fr 0.88fr;
-            gap: 18px;
-            padding: 15px 24px;
+            grid-template-columns: 1.14fr 0.86fr;
+            gap: 14px;
+            padding: 12px 20px;
             background: #ffffff;
             overflow: hidden;
         }
 
-        .content-col {
+        .body-col {
             display: flex;
             flex-direction: column;
-            gap: 13px;
+            gap: 11px;
             height: 100%;
+            justify-content: space-between;
         }
 
-        /* PREMIUM SECTION CARD */
-        .poster-card {
+        /* SECTION CARD STYLING */
+        .sec-card {
             background: #ffffff;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03);
+            border: 1.5px solid var(--card-border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
             display: flex;
             flex-direction: column;
         }
 
-        .card-header {
+        .sec-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 8px;
-            border-bottom: 2px solid #0f3562;
+            margin-bottom: 7px;
+            border-bottom: 2px solid var(--secondary-navy);
             padding-bottom: 4px;
         }
 
-        .card-icon {
+        .sec-icon {
             font-size: 18px;
             line-height: 1;
         }
 
-        .card-title {
+        .sec-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 800;
-            color: #0f3562;
+            color: var(--secondary-navy);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .card-text {
-            font-size: 12.8px;
-            line-height: 1.53;
+        .sec-desc {
+            font-size: 12.2px;
+            line-height: 1.52;
             color: #334155;
             text-align: justify;
         }
 
-        /* LIST STYLES */
-        .bullet-list {
+        /* BULLET LIST */
+        .sec-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .bullet-list li {
+        .sec-list li {
             position: relative;
-            padding-left: 16px;
-            font-size: 12.4px;
-            line-height: 1.47;
+            padding-left: 15px;
+            font-size: 11.8px;
+            line-height: 1.45;
             color: #1e293b;
-            margin-bottom: 4.5px;
+            margin-bottom: 3.8px;
         }
 
-        .bullet-list li::before {
+        .sec-list li::before {
             content: "•";
             position: absolute;
             left: 2px;
             top: -1px;
-            color: #0f3562;
-            font-size: 17px;
+            color: var(--secondary-navy);
+            font-size: 16px;
             font-weight: 900;
         }
 
-        .bullet-list li strong {
-            color: #0f3562;
+        .sec-list li strong {
+            color: var(--secondary-navy);
             font-weight: 700;
         }
 
-        /* RAD METHODOLOGY STEP CARDS */
-        .rad-container {
+        /* METHODOLOGY (AGILE RAD MODEL) */
+        .rad-flow {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 5px;
-            margin-top: 7px;
+            gap: 4px;
+            margin-top: 6px;
         }
 
-        .rad-box {
+        .rad-step {
             flex: 1;
             background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
             border: 1.5px solid #38bdf8;
-            border-radius: 8px;
-            padding: 7px 3px;
+            border-radius: 7px;
+            padding: 6px 3px;
             text-align: center;
         }
 
-        .rad-number {
+        .rad-num {
             display: inline-block;
-            width: 19px;
-            height: 19px;
-            line-height: 19px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
             border-radius: 50%;
-            background: #0f3562;
+            background: var(--secondary-navy);
             color: #ffffff;
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 800;
             margin-bottom: 2px;
         }
 
-        .rad-label {
-            font-size: 10px;
+        .rad-text {
+            font-size: 9.8px;
             font-weight: 700;
-            color: #0f3562;
-            line-height: 1.22;
+            color: var(--secondary-navy);
+            line-height: 1.2;
         }
 
-        .rad-arrow {
-            color: #0f3562;
+        .rad-sep {
+            color: var(--secondary-navy);
             font-size: 13px;
             font-weight: 900;
         }
 
-        /* COMPARISON TABLE */
-        .comparison-table {
+        /* COMPARATIVE ANALYSIS TABLE */
+        .comp-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            margin-top: 3px;
+            font-size: 10.6px;
+            margin-top: 2px;
         }
 
-        .comparison-table th {
-            background: #0f3562;
+        .comp-table th {
+            background: var(--secondary-navy);
             color: #ffffff;
             font-weight: 700;
-            padding: 5.5px 7px;
+            padding: 5px 6px;
             text-align: left;
-            border: 1px solid #0f3562;
+            border: 1px solid var(--secondary-navy);
         }
 
-        .comparison-table td {
-            padding: 4.8px 7px;
-            border: 1px solid #cbd5e1;
+        .comp-table td {
+            padding: 4.2px 6px;
+            border: 1px solid var(--card-border);
             color: #1e293b;
         }
 
-        .comparison-table tr:nth-child(even) {
+        .comp-table tr:nth-child(even) {
             background: #f8fafc;
         }
 
-        .feature-title {
+        .c-param {
             font-weight: 700;
-            color: #0f3562;
+            color: var(--secondary-navy);
         }
 
-        .tag-yes {
-            color: #059669;
+        .c-yes {
+            color: var(--emerald-green);
             font-weight: 800;
         }
 
-        .tag-no {
+        .c-no {
             color: #dc2626;
             font-weight: 700;
         }
 
-        /* VECTOR SCHEMA DIAGRAM */
-        .schema-diagram-box {
+        /* RELATIONAL SCHEMA VECTOR BOX */
+        .schema-box {
             background: #f8fafc;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 9px;
-            padding: 8px 10px;
-            margin-top: 3px;
+            border: 1.5px solid var(--card-border);
+            border-radius: 8px;
+            padding: 7px 8px;
+            margin-top: 2px;
         }
 
-        .db-tables-grid {
+        .schema-tables-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 7px;
+            gap: 6px;
         }
 
-        .db-table-card {
+        .db-card {
             background: #ffffff;
-            border: 1.5px solid #0f3562;
-            border-radius: 6px;
+            border: 1.5px solid var(--secondary-navy);
+            border-radius: 5px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
         }
 
-        .db-table-header {
-            background: #0f3562;
+        .db-header {
+            background: var(--secondary-navy);
             color: #ffffff;
-            font-size: 10.2px;
+            font-size: 9.8px;
             font-weight: 800;
-            padding: 3px 6px;
+            padding: 2.5px 5px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-family: 'Outfit', sans-serif;
-            letter-spacing: 0.3px;
         }
 
-        .db-table-rows {
-            padding: 3px 6px;
-            font-family: monospace;
-            font-size: 9.5px;
-            line-height: 1.42;
+        .db-fields {
+            padding: 3px 5px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 9.2px;
+            line-height: 1.4;
             color: #334155;
         }
 
-        .pk {
+        .pk-badge {
             color: #d97706;
             font-weight: bold;
         }
 
-        .fk {
+        .fk-badge {
             color: #2563eb;
             font-weight: bold;
         }
 
         /* TOOLS SECTION */
-        .tools-row {
+        .tools-split {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 9px;
-            margin-top: 3px;
+            gap: 8px;
+            margin-top: 2px;
         }
 
-        .tools-box {
+        .tools-card {
             background: #f8fafc;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 7px 9px;
+            border: 1.5px solid var(--card-border);
+            border-radius: 7px;
+            padding: 6px 8px;
         }
 
-        .tools-box-title {
-            font-size: 11.8px;
+        .tools-card-title {
+            font-size: 11.2px;
             font-weight: 800;
-            color: #0f3562;
-            border-bottom: 1.5px solid #cbd5e1;
-            padding-bottom: 3px;
+            color: var(--secondary-navy);
+            border-bottom: 1.5px solid var(--card-border);
+            padding-bottom: 2px;
             margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
-        .tools-list {
+        .tools-ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .tools-list li {
-            font-size: 10.8px;
+        .tools-ul li {
+            font-size: 10.4px;
             color: #334155;
-            line-height: 1.36;
-            margin-bottom: 2.5px;
+            line-height: 1.35;
+            margin-bottom: 2px;
         }
 
-        .tools-list li::before {
+        .tools-ul li::before {
             content: "▪";
-            color: #0f3562;
-            margin-right: 5px;
+            color: var(--secondary-navy);
+            margin-right: 4px;
             font-weight: bold;
         }
 
         /* 4. BOTTOM PRESENTATION FOOTER BANNER */
-        .footer-banner {
-            height: 145px;
-            background: linear-gradient(135deg, #071e3d 0%, #0f3562 55%, #184e8e 100%);
+        .poster-footer {
+            height: 140px;
+            background: linear-gradient(135deg, #061933 0%, #0b2952 50%, #134079 100%);
             color: #ffffff;
-            padding: 13px 35px;
+            padding: 12px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-top: 5px solid #f59e0b;
+            border-top: 5px solid var(--bright-gold);
             flex-shrink: 0;
         }
 
-        .footer-col {
-            flex: 1;
+        .footer-left {
+            flex: 1.1;
+            text-align: left;
         }
 
-        .footer-label {
-            font-size: 13px;
+        .footer-mid {
+            flex: 0.8;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .footer-right {
+            flex: 1.1;
+            text-align: right;
+        }
+
+        .footer-tag {
+            font-size: 12px;
             font-weight: 800;
-            color: #fbbf24;
+            color: var(--bright-gold);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
-        .footer-name {
+        .footer-person-name {
             font-family: 'Outfit', sans-serif;
-            font-size: 18.5px;
+            font-size: 17px;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.25;
         }
 
-        .footer-sub {
-            font-size: 11.2px;
+        .footer-person-role {
+            font-size: 11px;
             color: #cbd5e1;
             font-weight: 500;
-            margin-top: 1px;
         }
 
-        .footer-center {
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .footer-seal-img {
-            width: 68px;
-            height: 68px;
+        .footer-seal-wrap {
+            width: 62px;
+            height: 62px;
             border-radius: 50%;
             background: #ffffff;
             padding: 2px;
-            border: 2px solid #fbbf24;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 2px solid var(--bright-gold);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             margin: 0 auto 3px auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-seal-wrap img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
-        .footer-lab-name {
-            font-size: 10.8px;
+        .footer-dept-label {
+            font-size: 10.5px;
             font-weight: 700;
             color: #f8fafc;
             letter-spacing: 0.5px;
+        }
+
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #081325;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .viewer-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(9, 32, 63, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1.5px solid rgba(251, 191, 36, 0.3);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .viewer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .viewer-brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .viewer-brand-sub {
+            font-size: 11px;
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        .viewer-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .v-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fafc;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .v-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .v-btn-gold {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: none;
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .v-btn-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .v-btn-blue {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .poster-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            background: radial-gradient(circle at 50% 30%, #0e2243 0%, #060e1a 100%);
+            overflow: auto;
+        }
+
+        .poster-scale-wrapper {
+            transition: transform 0.15s ease-out;
+            transform-origin: top center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .poster-canvas {
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.65);
+        }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .viewer-header {
+                display: none !important;
+            }
+            .poster-stage {
+                padding: 0 !important;
+                background: transparent !important;
+            }
+            .poster-scale-wrapper {
+                transform: none !important;
+                width: 1250px !important;
+                height: 1770px !important;
+            }
+            .poster-canvas {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- INTERACTIVE SCREEN TOOLBAR (HIDDEN DURING PDF EXPORT / PRINT) -->
-    <div class="toolbar no-print">
-        <button onclick="fitToScreen()" class="tb-btn tb-btn-primary"><span>🔍</span> Fit to Screen</button>
-        <button onclick="resetZoom()" class="tb-btn">100% Size</button>
-        <button onclick="adjustZoom(0.1)" class="tb-btn">➕</button>
-        <button onclick="adjustZoom(-0.1)" class="tb-btn">➖</button>
-        <div class="tb-divider"></div>
-        <a href="/ShareMeal_FYP_Academic_Poster.pdf" download="ShareMeal_FYP_Academic_Poster.pdf" class="tb-btn" style="background:#0284c7;color:white;border:none;">📄 Download PDF</a>
-        <a href="/ShareMeal_FYP_Academic_Poster.png" download="ShareMeal_FYP_Academic_Poster.png" class="tb-btn" style="background:#7c3aed;color:white;border:none;">🖼️ Download PNG</a>
-        <button onclick="window.print()" class="tb-btn">🖨️ Print</button>
-    </div>
+    <header class="viewer-header" id="viewerToolbar">
+        <div class="viewer-brand">
+            <span style="font-size:22px;">🎓</span>
+            <div>
+                <div class="viewer-brand-title">ShareMeal Platform — FYP Academic Presentation Poster</div>
+                <div class="viewer-brand-sub">Department of Computer Science & IT • University of Southern Punjab, Multan</div>
+            </div>
+        </div>
 
-    <!-- POSTER CANVAS WRAPPER -->
-    <div class="poster-wrapper" id="posterWrapper">
-        <div class="poster-container">
+        <div class="viewer-controls">
+            <button class="v-btn v-btn-gold" onclick="setZoomMode('fit')"><span>🎯</span> Fit to Screen</button>
+            <button class="v-btn" onclick="setZoomMode('actual')"><span>🔍</span> 100% Size</button>
+            <button class="v-btn" onclick="adjustScale(0.1)"><span>➕</span></button>
+            <button class="v-btn" onclick="adjustScale(-0.1)"><span>➖</span></button>
+            <a href="/ShareMeal_FYP_Academic_Poster.pdf" download="ShareMeal_FYP_Academic_Poster.pdf" class="v-btn v-btn-blue"><span>📄</span> Download PDF</a>
+            <a href="/ShareMeal_FYP_Academic_Poster.png" download="ShareMeal_FYP_Academic_Poster.png" class="v-btn v-btn-emerald"><span>🖼️</span> Download PNG</a>
+            <button class="v-btn" onclick="window.print()"><span>🖨️</span> Print</button>
+            <a href="/Home/Developer" class="v-btn" style="background:rgba(255,255,255,0.15);"><span>←</span> Dev Profile</a>
+        </div>
+    </header>
+
+    <main class="poster-stage" id="posterStage">
+        <div class="poster-scale-wrapper" id="posterWrapper">
             
-            <!-- 1. HEADER BANNER -->
-            <header class="header-banner">
-                <div class="header-logo-container">
-                    <img src="usp_logo.png" alt="University of Southern Punjab Logo" class="header-logo-img">
-                </div>
+    <article class="poster-canvas" id="posterCanvas">
+        
+        <!-- 1. TOP HEADER BANNER -->
+        <header class="poster-header">
+            <div class="header-logo-box">
+                <img src="usp_logo.png" alt="University of Southern Punjab Seal">
+            </div>
+            
+            <div class="header-center-info">
+                <div class="dept-title">Department of Computer Science & Information Technology</div>
+                <div class="faculty-title">Faculty of Computing & Applied Sciences</div>
+                <div class="uni-title">University of Southern Punjab, Multan</div>
+            </div>
+
+            <div class="header-logo-box" style="background:#091b33;border-color:#10b981;">
+                <img src="sharemeal_logo.png" alt="ShareMeal Platform Emblem">
+            </div>
+        </header>
+
+        <!-- 2. PROJECT TITLE BAR -->
+        <section class="poster-title-bar">
+            <h1 class="project-main-title">
+                Web-Based Centralized Platform That Optimizes Food Waste Redistribution by Linking Restaurants with Registered Charitable Organizations
+            </h1>
+            <div class="project-meta-badge">
+                <span>🌱</span> FINAL YEAR PROJECT (FYP) • BSCS SESSION 2024–2026 • SHAREMEAL ECOSYSTEM
+            </div>
+        </section>
+
+        <!-- 3. POSTER MAIN BODY (2-COLUMN GRID) -->
+        <div class="poster-body">
+            
+            <!-- LEFT COLUMN -->
+            <div class="body-col">
                 
-                <div class="header-center-text">
-                    <div class="header-dept">Department of Computer Science / Information Technology</div>
-                    <div class="header-faculty">Faculty of Computing & Applied Sciences</div>
-                    <div class="header-uni">University of Southern Punjab, Multan</div>
-                </div>
+                <!-- Description -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">📋</span>
+                        <h2 class="sec-title">Description</h2>
+                    </div>
+                    <p class="sec-desc">
+                        Food wastage is one of the most critical socio-economic and environmental paradoxes in Pakistan. While millions suffer severe nutritional deprivation, banquet halls, hotels, and restaurants discard tons of wholesome surplus food daily due to the lack of an organized redistribution network. The <strong>ShareMeal Platform</strong> is an enterprise-grade web-based centralized system built on <strong>ASP.NET Core 8.0, C# 12, Entity Framework Core, and Google Gemini AI</strong>. The system establishes an instant digital bridge linking surplus food donors directly with certified charitable NGOs. By digitizing inventory, automating dispatch logistics, enforcing strict hygiene and expiry SOPs, and providing voice-enabled AI assistance, ShareMeal permanently eliminates food waste and feeds impoverished communities sustainably.
+                    </p>
+                </section>
 
-                <div class="header-logo-container" style="background:#0f172a;border-color:#10b981;">
-                    <img src="sharemeal_logo.png" alt="ShareMeal Platform Logo" class="header-logo-img">
-                </div>
-            </header>
+                <!-- Scope of the System -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">🎯</span>
+                        <h2 class="sec-title">Scope of the System</h2>
+                    </div>
+                    <ul class="sec-list">
+                        <li><strong>Nationwide Web Accessibility:</strong> Responsive cloud architecture operating seamlessly across desktop, tablet, and mobile browsers without requiring native app installs.</li>
+                        <li><strong>Multi-Tier Role Management:</strong> Role-segregated secure portals for Food Donors (Restaurants), Claiming Charities (NGOs), and System Administrators.</li>
+                        <li><strong>Real-Time Surplus Food Matching:</strong> Dynamic listings specifying portions (servings/kg), cooking timestamp, thermal state, and expiry countdown.</li>
+                        <li><strong>Atomic Concurrency Claim Engine:</strong> Database-level transaction locking preventing duplicate claims or race conditions between competing charities.</li>
+                        <li><strong>Bilingual Multimodal Gemini AI (MealBot):</strong> 24/7 intelligent voice-enabled assistant offering automated food safety SOPs, navigation, and community guidance.</li>
+                        <li><strong>Interactive Geolocation Mapping:</strong> Integration with Leaflet.js and GPS routing for pinpointing donor addresses, route estimation, and distribution verification.</li>
+                    </ul>
+                </section>
 
-            <!-- 2. PROJECT TITLE BAR -->
-            <section class="title-banner">
-                <h1 class="project-title">
-                    Web-Based Centralized Platform That Optimizes Food Waste Redistribution by Linking Restaurants with Registered Charitable Organizations
-                </h1>
-                <div class="project-badge-pill">
-                    <span>🌱</span> Final Year Project (FYP) • BSCS Session 2024–2026 • ShareMeal Platform
-                </div>
-            </section>
+                <!-- Functional Requirements -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">⚙️</span>
+                        <h2 class="sec-title">Functional Requirements</h2>
+                    </div>
+                    <ul class="sec-list">
+                        <li><strong>User Identity & Access:</strong> Secure user registration, authentication, and role assignment (ASP.NET Core Identity).</li>
+                        <li><strong>Restaurant / Donor Module:</strong> Create, manage, edit, and track surplus food listings with expiry countdown.</li>
+                        <li><strong>Charity / NGO Module:</strong> Live marketplace feed, geolocation filtering, and one-click instant reservation.</li>
+                        <li><strong>Strict Verification Pipeline:</strong> Admin verification workflows verifying government NGO credentials and NTN.</li>
+                        <li><strong>Status Lifecycle Engine:</strong> Automated transitions across <em>Available &rarr; Claimed &rarr; In-Transit &rarr; Delivered</em>.</li>
+                        <li><strong>Food Safety & Hygiene SOPs:</strong> Pre-claim verification of food cooking time and storage temperature.</li>
+                        <li><strong>MealBot AI Integration:</strong> Natural language processing in Roman Urdu, Urdu, and English with Web Speech API.</li>
+                        <li><strong>System Analytics & Reporting:</strong> Comprehensive PDF and visual telemetry for meals saved and carbon offset.</li>
+                    </ul>
+                </section>
 
-            <!-- 3. MAIN CONTENT (2-COLUMN GRID) -->
-            <main class="main-content">
+                <!-- Methodology -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">🔄</span>
+                        <h2 class="sec-title">Methodology (Agile RAD Model)</h2>
+                    </div>
+                    <p style="font-size:11.5px;line-height:1.45;color:#334155;margin-bottom:8px;">
+                        The project adopted the <strong>Rapid Application Development (RAD)</strong> methodology under an Agile iterative lifecycle, emphasizing fast modular development, immediate stakeholder testing, and continuous deployment:
+                    </p>
+                    <div class="rad-flow">
+                        <div class="rad-step">
+                            <span class="rad-num">1</span>
+                            <div class="rad-text">Requirements & Analysis</div>
+                        </div>
+                        <span class="rad-sep">&rarr;</span>
+                        <div class="rad-step">
+                            <span class="rad-num">2</span>
+                            <div class="rad-text">Architecture & Schema Design</div>
+                        </div>
+                        <span class="rad-sep">&rarr;</span>
+                        <div class="rad-step">
+                            <span class="rad-num">3</span>
+                            <div class="rad-text">Iterative Prototyping</div>
+                        </div>
+                        <span class="rad-sep">&rarr;</span>
+                        <div class="rad-step">
+                            <span class="rad-num">4</span>
+                            <div class="rad-text">QA & AI Integration</div>
+                        </div>
+                        <span class="rad-sep">&rarr;</span>
+                        <div class="rad-step">
+                            <span class="rad-num">5</span>
+                            <div class="rad-text">Cloud Deployment</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="body-col">
                 
-                <!-- LEFT COLUMN -->
-                <div class="content-col">
-                    
-                    <!-- Description -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">📋</span>
-                            <h2 class="card-title">Description</h2>
-                        </div>
-                        <p class="card-text">
-                            Food wastage is one of the most critical socio-economic and environmental paradoxes in Pakistan. While millions suffer severe nutritional deprivation, banquet halls, restaurants, and catering services discard tons of wholesome surplus food daily due to the lack of an organized redistribution network. The <strong>ShareMeal Platform</strong> is an enterprise-grade web-based centralized system built on <strong>ASP.NET Core 8.0, C# 12, Entity Framework Core, and Google Gemini AI</strong>. The system establishes an instant digital bridge linking surplus food donors directly with certified charitable NGOs. By digitizing inventory, automating dispatch logistics, enforcing strict hygiene and expiry SOPs, and providing voice-enabled AI assistance, ShareMeal permanently eliminates food waste and feeds impoverished communities sustainably.
-                        </p>
+                <!-- Comparative Analysis Table -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">📊</span>
+                        <h2 class="sec-title">Comparative Analysis</h2>
                     </div>
+                    <table class="comp-table">
+                        <thead>
+                            <tr>
+                                <th>Operational Feature</th>
+                                <th>Manual Calling</th>
+                                <th>WhatsApp Groups</th>
+                                <th>ShareMeal Platform</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="c-param">Real-Time Matching</td>
+                                <td class="c-no">No</td>
+                                <td style="color:#d97706;font-weight:700;">Partial</td>
+                                <td class="c-yes">✔ Yes (Instant)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Double-Claim Prevention</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No (High Chaos)</td>
+                                <td class="c-yes">✔ Yes (Atomic Locking)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Verified NGO Authentication</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No</td>
+                                <td class="c-yes">✔ Yes (Admin Vetted)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Food Safety & Expiry Tracking</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No</td>
+                                <td class="c-yes">✔ Yes (Auto Countdown)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">24/7 AI-Powered Assistance</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No</td>
+                                <td class="c-yes">✔ Yes (Gemini AI MealBot)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Voice Accessibility (Bilingual)</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No</td>
+                                <td class="c-yes">✔ Yes (Web Speech API)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Live GPS Route Mapping</td>
+                                <td class="c-no">No</td>
+                                <td style="color:#d97706;font-weight:700;">Manual Links</td>
+                                <td class="c-yes">✔ Yes (Leaflet.js)</td>
+                            </tr>
+                            <tr>
+                                <td class="c-param">Audit Trail & Impact Reports</td>
+                                <td class="c-no">No</td>
+                                <td class="c-no">No</td>
+                                <td class="c-yes">✔ Yes (Automated PDF/Log)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
 
-                    <!-- Scope of the System -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">🎯</span>
-                            <h2 class="card-title">Scope of the System</h2>
-                        </div>
-                        <ul class="bullet-list">
-                            <li><strong>Nationwide Web Accessibility:</strong> Responsive architecture operating seamlessly across desktop, tablet, and mobile browsers without requiring native app installs.</li>
-                            <li><strong>Multi-Tier Role Management:</strong> Role-segregated secure portals for Food Donors (Restaurants), Claiming Charities (NGOs), and System Administrators.</li>
-                            <li><strong>Real-Time Food Inventory Matching:</strong> Dynamic listings specifying portions (servings/kg), cooking timestamp, thermal state, and expiry countdown.</li>
-                            <li><strong>Atomic Concurrency Claim Engine:</strong> Database-level transaction locking preventing duplicate claims or race conditions between competing charities.</li>
-                            <li><strong>Bilingual Multimodal Gemini AI (MealBot):</strong> 24/7 intelligent voice-enabled assistant offering automated food safety SOPs, navigation, and community guidance.</li>
-                            <li><strong>Interactive Geolocation Mapping:</strong> Integration with Leaflet.js and GPS routing for pinpointing donor addresses, route estimation, and distribution verification.</li>
-                        </ul>
+                <!-- Relational Schema Diagram -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">🗄️</span>
+                        <h2 class="sec-title">Relational Schema Diagram</h2>
                     </div>
-
-                    <!-- Functional Requirements -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">⚙️</span>
-                            <h2 class="card-title">Functional Requirements</h2>
-                        </div>
-                        <ul class="bullet-list">
-                            <li>Secure user registration, authentication, and role assignment (ASP.NET Core Identity).</li>
-                            <li>Restaurant / Donor Module: Create, manage, edit, and track surplus food listings with countdowns.</li>
-                            <li>Charity / NGO Module: Live marketplace feed, geolocation filtering, and one-click instant reservation.</li>
-                            <li>Strict Verification Pipeline: Admin verification workflows verifying government NGO credentials and NTN.</li>
-                            <li>Status Lifecycle Engine: Automated transitions across <em>Available → Claimed → In-Transit → Delivered</em>.</li>
-                            <li>Food Safety & Hygiene SOPs: Pre-claim verification of food cooking time and storage temperature.</li>
-                            <li>MealBot AI Integration: Natural language processing in Roman Urdu, Urdu, and English with Web Speech API.</li>
-                            <li>System Analytics & Reporting: Comprehensive PDF and visual telemetry for meals saved and carbon offset.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Methodology (Agile RAD Model) -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">🔄</span>
-                            <h2 class="card-title">Methodology (Agile RAD Model)</h2>
-                        </div>
-                        <p class="card-text" style="font-size:12.2px;margin-bottom:5px;">
-                            The project adopted the <strong>Rapid Application Development (RAD)</strong> methodology under an Agile iterative lifecycle, emphasizing fast modular development, immediate stakeholder testing, and continuous deployment:
-                        </p>
-                        <div class="rad-container">
-                            <div class="rad-box">
-                                <span class="rad-number">1</span>
-                                <div class="rad-label">Requirements & Analysis</div>
-                            </div>
-                            <span class="rad-arrow">➔</span>
-                            <div class="rad-box">
-                                <span class="rad-number">2</span>
-                                <div class="rad-label">Architecture & Schema Design</div>
-                            </div>
-                            <span class="rad-arrow">➔</span>
-                            <div class="rad-box">
-                                <span class="rad-number">3</span>
-                                <div class="rad-label">Iterative Prototyping</div>
-                            </div>
-                            <span class="rad-arrow">➔</span>
-                            <div class="rad-box">
-                                <span class="rad-number">4</span>
-                                <div class="rad-label">QA & AI Integration</div>
-                            </div>
-                            <span class="rad-arrow">➔</span>
-                            <div class="rad-box">
-                                <span class="rad-number">5</span>
-                                <div class="rad-label">Cloud Deployment</div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- RIGHT COLUMN -->
-                <div class="content-col">
-                    
-                    <!-- Comparative Analysis Table -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">📊</span>
-                            <h2 class="card-title">Comparative Analysis</h2>
-                        </div>
-                        <table class="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>Operational Feature</th>
-                                    <th>Manual Calling</th>
-                                    <th>WhatsApp Groups</th>
-                                    <th>ShareMeal Platform</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="feature-title">Real-Time Matching</td>
-                                    <td class="tag-no">No</td>
-                                    <td style="color:#d97706;font-weight:700;">Partial</td>
-                                    <td class="tag-yes">Yes (Instant)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Double-Claim Prevention</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No (High Chaos)</td>
-                                    <td class="tag-yes">Yes (Atomic Locking)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Verified NGO Authentication</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-yes">Yes (Admin Vetted)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Food Safety & Expiry Tracking</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-yes">Yes (Auto Countdown)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">24/7 AI-Powered Assistance</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-yes">Yes (Gemini AI MealBot)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Voice Accessibility (Bilingual)</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-yes">Yes (Web Speech API)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Live GPS Route Mapping</td>
-                                    <td class="tag-no">No</td>
-                                    <td style="color:#d97706;font-weight:700;">Manual Links</td>
-                                    <td class="tag-yes">Yes (Leaflet.js)</td>
-                                </tr>
-                                <tr>
-                                    <td class="feature-title">Audit Trail & Impact Reports</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-no">No</td>
-                                    <td class="tag-yes">Yes (Automated PDF/Log)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Database Schema Diagram (Razor-Sharp Vector Entity Representation) -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">🗄️</span>
-                            <h2 class="card-title">Relational Schema Diagram</h2>
-                        </div>
-                        <div class="schema-diagram-box">
-                            <div class="db-tables-grid">
-                                
-                                <!-- Table: Organizations -->
-                                <div class="db-table-card">
-                                    <div class="db-table-header">
-                                        <span>Organizations</span>
-                                        <span>[Table]</span>
-                                    </div>
-                                    <div class="db-table-rows">
-                                        <div><span class="pk">🔑 Id</span> : int [PK]</div>
-                                        <div>Name : nvarchar(150)</div>
-                                        <div>Type : int (Donor/NGO)</div>
-                                        <div>Status : int (Pending/OK)</div>
-                                        <div>Address : nvarchar(250)</div>
-                                        <div>City : nvarchar(80)</div>
-                                        <div>Lat / Lng : float</div>
-                                        <div>Phone / Email : nvarchar</div>
-                                    </div>
+                    <div class="schema-box">
+                        <div class="schema-tables-grid">
+                            
+                            <!-- Table: Organizations -->
+                            <div class="db-card">
+                                <div class="db-header">
+                                    <span>Organizations</span>
+                                    <span style="opacity:0.8;">[Table]</span>
                                 </div>
-
-                                <!-- Table: Donations -->
-                                <div class="db-table-card">
-                                    <div class="db-table-header">
-                                        <span>Donations</span>
-                                        <span>[Table]</span>
-                                    </div>
-                                    <div class="db-table-rows">
-                                        <div><span class="pk">🔑 Id</span> : int [PK]</div>
-                                        <div>FoodItem : nvarchar(120)</div>
-                                        <div>Quantity : int (portions)</div>
-                                        <div>Status : int (0-4)</div>
-                                        <div>ExpiryDate : datetime</div>
-                                        <div>PreparationDate : datetime</div>
-                                        <div><span class="fk">⚓ DonorId</span> : int [FK]</div>
-                                        <div><span class="fk">⚓ RecipientId</span> : int [FK]</div>
-                                    </div>
+                                <div class="db-fields">
+                                    <div><span class="pk-badge">🔑 Id</span> : int [PK]</div>
+                                    <div>Name : nvarchar(150)</div>
+                                    <div>Type : int (Donor/NGO)</div>
+                                    <div>Status : int (Pending/OK)</div>
+                                    <div>Address : nvarchar(250)</div>
+                                    <div>City : nvarchar(80)</div>
+                                    <div>Lat / Lng : float</div>
+                                    <div>Phone / Email : nvarchar</div>
                                 </div>
-
-                                <!-- Table: AspNetUsers -->
-                                <div class="db-table-card">
-                                    <div class="db-table-header">
-                                        <span>AspNetUsers</span>
-                                        <span>[Table]</span>
-                                    </div>
-                                    <div class="db-table-rows">
-                                        <div><span class="pk">🔑 Id</span> : nvarchar(450) [PK]</div>
-                                        <div>UserName : nvarchar(256)</div>
-                                        <div>Email : nvarchar(256)</div>
-                                        <div>PasswordHash : nvarchar(MAX)</div>
-                                        <div><span class="fk">⚓ OrgId</span> : int [FK]</div>
-                                        <div>Role : nvarchar(50)</div>
-                                    </div>
-                                </div>
-
-                                <!-- Table: ContactMessages -->
-                                <div class="db-table-card">
-                                    <div class="db-table-header">
-                                        <span>ContactMessages</span>
-                                        <span>[Table]</span>
-                                    </div>
-                                    <div class="db-table-rows">
-                                        <div><span class="pk">🔑 Id</span> : int [PK]</div>
-                                        <div>Name : nvarchar(100)</div>
-                                        <div>Email : nvarchar(100)</div>
-                                        <div>Subject : nvarchar(150)</div>
-                                        <div>Message : nvarchar(MAX)</div>
-                                        <div>CreatedAt : datetime</div>
-                                    </div>
-                                </div>
-
                             </div>
-                            <div style="font-size:9.8px;font-weight:700;color:#0f3562;text-align:center;margin-top:4px;">
-                                Figure: Normalized Relational Entity Relationship Diagram (1:M Referential Integrity)
+
+                            <!-- Table: Donations -->
+                            <div class="db-card">
+                                <div class="db-header">
+                                    <span>Donations</span>
+                                    <span style="opacity:0.8;">[Table]</span>
+                                </div>
+                                <div class="db-fields">
+                                    <div><span class="pk-badge">🔑 Id</span> : int [PK]</div>
+                                    <div>FoodItem : nvarchar(120)</div>
+                                    <div>Quantity : int (portions)</div>
+                                    <div>Status : int (0-4)</div>
+                                    <div>ExpiryDate : datetime</div>
+                                    <div>PreparationDate : datetime</div>
+                                    <div><span class="fk-badge">⚓ DonorId</span> : int [FK]</div>
+                                    <div><span class="fk-badge">⚓ RecipientId</span> : int [FK]</div>
+                                </div>
                             </div>
+
+                            <!-- Table: AspNetUsers -->
+                            <div class="db-card">
+                                <div class="db-header">
+                                    <span>AspNetUsers</span>
+                                    <span style="opacity:0.8;">[Table]</span>
+                                </div>
+                                <div class="db-fields">
+                                    <div><span class="pk-badge">🔑 Id</span> : nvarchar(450) [PK]</div>
+                                    <div>UserName : nvarchar(256)</div>
+                                    <div>Email : nvarchar(256)</div>
+                                    <div>PasswordHash : nvarchar(MAX)</div>
+                                    <div><span class="fk-badge">⚓ OrgId</span> : int [FK]</div>
+                                    <div>Role : nvarchar(50)</div>
+                                </div>
+                            </div>
+
+                            <!-- Table: ContactMessages -->
+                            <div class="db-card">
+                                <div class="db-header">
+                                    <span>ContactMessages</span>
+                                    <span style="opacity:0.8;">[Table]</span>
+                                </div>
+                                <div class="db-fields">
+                                    <div><span class="pk-badge">🔑 Id</span> : int [PK]</div>
+                                    <div>Name : nvarchar(100)</div>
+                                    <div>Email : nvarchar(100)</div>
+                                    <div>Subject : nvarchar(150)</div>
+                                    <div>Message : nvarchar(MAX)</div>
+                                    <div>CreatedAt : datetime</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div style="font-size:9.8px;font-weight:700;color:var(--secondary-navy);text-align:center;margin-top:5px;">
+                            Figure: Normalized Relational Entity Relationship Diagram (1:M Referential Integrity)
                         </div>
                     </div>
+                </section>
 
-                    <!-- Tools & Technologies Partition -->
-                    <div class="poster-card">
-                        <div class="card-header">
-                            <span class="card-icon">🛠️</span>
-                            <h2 class="card-title">Tools & Technologies</h2>
-                        </div>
-                        <div class="tools-row">
-                            <div class="tools-box">
-                                <div class="tools-box-title">
-                                    <span>💻</span> Hardware Tools
-                                </div>
-                                <ul class="tools-list">
-                                    <li><strong>Processor:</strong> Intel Core i7 / i5 Multi-Core</li>
-                                    <li><strong>Memory:</strong> 16GB DDR4 High-Speed RAM</li>
-                                    <li><strong>Storage:</strong> 512GB NVMe SSD</li>
-                                    <li><strong>Display:</strong> 1080p FHD / 4K Workstation</li>
-                                    <li><strong>Testbed:</strong> iOS Safari & Android Chrome</li>
-                                </ul>
+                <!-- Tools & Technologies -->
+                <section class="sec-card">
+                    <div class="sec-header">
+                        <span class="sec-icon">🛠️</span>
+                        <h2 class="sec-title">Tools & Technologies</h2>
+                    </div>
+                    <div class="tools-split">
+                        <div class="tools-card">
+                            <div class="tools-card-title">
+                                <span>💻</span> Hardware Tools
                             </div>
-                            <div class="tools-box">
-                                <div class="tools-box-title">
-                                    <span>⚡</span> Software Tools
-                                </div>
-                                <ul class="tools-list">
-                                    <li><strong>Backend:</strong> ASP.NET Core 8.0 & C# 12</li>
-                                    <li><strong>ORM & DB:</strong> Entity Framework Core 8</li>
-                                    <li><strong>Frontend:</strong> Modern HTML5, TailwindCSS</li>
-                                    <li><strong>AI Engine:</strong> Google Gemini Flash API</li>
-                                    <li><strong>Maps & Audio:</strong> Leaflet & Web Speech</li>
-                                    <li><strong>Cloud / DevOps:</strong> Docker & Railway PaaS</li>
-                                </ul>
+                            <ul class="tools-ul">
+                                <li><strong>Processor:</strong> Intel Core i7 / i5 Multi-Core</li>
+                                <li><strong>Memory:</strong> 16GB DDR4 High-Speed RAM</li>
+                                <li><strong>Storage:</strong> 512GB NVMe SSD</li>
+                                <li><strong>Display:</strong> 1080p FHD / 4K Workstation</li>
+                                <li><strong>Testbed:</strong> iOS Safari & Android Chrome</li>
+                            </ul>
+                        </div>
+                        <div class="tools-card">
+                            <div class="tools-card-title">
+                                <span>⚡</span> Software Tools
                             </div>
+                            <ul class="tools-ul">
+                                <li><strong>Backend:</strong> ASP.NET Core 8.0 & C# 12</li>
+                                <li><strong>ORM & DB:</strong> Entity Framework Core 8</li>
+                                <li><strong>Frontend:</strong> Modern HTML5, TailwindCSS</li>
+                                <li><strong>AI Engine:</strong> Google Gemini Flash API</li>
+                                <li><strong>Maps & Audio:</strong> Leaflet & Web Speech</li>
+                                <li><strong>Cloud / DevOps:</strong> Docker & Railway PaaS</li>
+                            </ul>
                         </div>
                     </div>
+                </section>
 
-                </div>
-
-            </main>
-
-            <!-- 4. BOTTOM PRESENTATION FOOTER BANNER -->
-            <footer class="footer-banner">
-                <!-- Left: Presented By -->
-                <div class="footer-col" style="text-align: left;">
-                    <div class="footer-label">
-                        <span>👨‍💻</span> Presented By:
-                    </div>
-                    <div class="footer-name">Muhammad Khulfan</div>
-                    <div class="footer-sub">Lead Software Architect & Backend Engineer • BSCS 2024–2026</div>
-                    <div class="footer-name" style="margin-top:4px;">Abdullah Khalid</div>
-                    <div class="footer-sub">Software Developer & QA Engineer • BSCS 2024–2026</div>
-                </div>
-
-                <!-- Center: Department & Lab Emblem -->
-                <div class="footer-col footer-center">
-                    <img src="usp_logo.png" alt="University Seal" class="footer-seal-img">
-                    <div class="footer-lab-name">DEPARTMENT OF COMPUTER SCIENCE</div>
-                    <div style="font-size:10px;color:#cbd5e1;font-weight:600;">Faculty of Computing & IT • USP Multan</div>
-                </div>
-
-                <!-- Right: Supervisor -->
-                <div class="footer-col" style="text-align: right;">
-                    <div class="footer-label" style="justify-content: flex-end;">
-                        <span>👩‍🏫</span> Academic Supervisor:
-                    </div>
-                    <div class="footer-name">Miss Kainat Sajid</div>
-                    <div class="footer-sub">M.Phil in Computer Science</div>
-                    <div class="footer-sub">Lecturer, Department of Computer Science</div>
-                    <div class="footer-sub">University of Southern Punjab (USP), Multan</div>
-                </div>
-            </footer>
+            </div>
 
         </div>
-    </div>
 
-    <!-- AUTO-FIT TO SCREEN SCRIPT -->
+        <!-- 4. BOTTOM PRESENTATION FOOTER BANNER -->
+        <footer class="poster-footer">
+            <!-- Left: Presented By -->
+            <div class="footer-left">
+                <div class="footer-tag">
+                    <span>👨‍💻</span> Presented By:
+                </div>
+                <div class="footer-person-name">Muhammad Khulfan</div>
+                <div class="footer-person-role">Lead Software Architect & Backend Engineer • BSCS 2024–2026</div>
+                <div class="footer-person-name" style="margin-top:5px;">Abdullah Khalid</div>
+                <div class="footer-person-role">Software Developer & QA Engineer • BSCS 2024–2026</div>
+            </div>
+
+            <!-- Center: University Seal & Department -->
+            <div class="footer-mid">
+                <div class="footer-seal-wrap">
+                    <img src="usp_logo.png" alt="University Seal">
+                </div>
+                <div class="footer-dept-label">DEPARTMENT OF COMPUTER SCIENCE</div>
+                <div style="font-size:10px;color:#cbd5e1;font-weight:600;">Faculty of Computing & IT • USP Multan</div>
+            </div>
+
+            <!-- Right: Supervisor -->
+            <div class="footer-right">
+                <div class="footer-tag" style="justify-content: flex-end;">
+                    <span>👩‍🏫</span> Academic Supervisor:
+                </div>
+                <div class="footer-person-name">Miss Kainat Sajid</div>
+                <div class="footer-person-role">M.Phil in Computer Science</div>
+                <div class="footer-person-role">Lecturer, Department of Computer Science</div>
+                <div class="footer-person-role">University of Southern Punjab (USP), Multan</div>
+            </div>
+        </footer>
+
+    </article>
+    
+        </div>
+    </main>
+
     <script>
         let currentScale = 1.0;
+        let mode = 'fit';
 
-        function fitToScreen() {
+        function autoFit() {
+            const stage = document.getElementById('posterStage');
             const wrapper = document.getElementById('posterWrapper');
-            const availableHeight = window.innerHeight - 80;
-            const availableWidth = window.innerWidth - 40;
-            const scaleY = availableHeight / 1940;
-            const scaleX = availableWidth / 1360;
-            currentScale = Math.min(scaleX, scaleY);
-            if (currentScale > 1.0) currentScale = 1.0;
-            wrapper.style.transform = `scale(${currentScale})`;
-            wrapper.style.marginBottom = `${-(1940 * (1 - currentScale))}px`;
+            const canvas = document.getElementById('posterCanvas');
+            if (!stage || !wrapper || !canvas) return;
+
+            if (mode === 'fit') {
+                const availableW = stage.clientWidth - 40;
+                const availableH = stage.clientHeight - 40;
+                const posterW = 1250;
+                const posterH = 1770;
+
+                const scaleW = availableW / posterW;
+                const scaleH = availableH / posterH;
+                currentScale = Math.min(scaleW, scaleH);
+                if (currentScale > 1.0) currentScale = 1.0;
+            }
+
+            applyScale();
         }
 
-        function resetZoom() {
+        function applyScale() {
             const wrapper = document.getElementById('posterWrapper');
-            currentScale = 1.0;
-            wrapper.style.transform = 'scale(1.0)';
-            wrapper.style.marginBottom = '0px';
+            const canvas = document.getElementById('posterCanvas');
+            if (!wrapper || !canvas) return;
+
+            canvas.style.transform = `scale(${currentScale})`;
+            canvas.style.transformOrigin = 'top center';
+            wrapper.style.width = `${1250 * currentScale}px`;
+            wrapper.style.height = `${1770 * currentScale}px`;
         }
 
-        function adjustZoom(delta) {
-            const wrapper = document.getElementById('posterWrapper');
-            currentScale = Math.max(0.3, Math.min(2.0, currentScale + delta));
-            wrapper.style.transform = `scale(${currentScale})`;
-            wrapper.style.marginBottom = `${-(1940 * (1 - currentScale))}px`;
+        function setZoomMode(newMode) {
+            mode = newMode;
+            if (newMode === 'actual') {
+                currentScale = 1.0;
+                applyScale();
+            } else if (newMode === 'fit') {
+                autoFit();
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', fitToScreen);
-        window.addEventListener('resize', fitToScreen);
+        function adjustScale(delta) {
+            mode = 'manual';
+            currentScale = Math.max(0.2, Math.min(2.0, currentScale + delta));
+            applyScale();
+        }
+
+        window.addEventListener('DOMContentLoaded', autoFit);
+        window.addEventListener('resize', () => {
+            if (mode === 'fit') autoFit();
+        });
     </script>
-
 </body>
 </html>
