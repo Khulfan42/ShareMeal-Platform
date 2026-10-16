@@ -495,7 +495,7 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 class="font-black text-sm tracking-tight text-white leading-none">MealBot AI</h3>
-                            <span class="text-[9px] uppercase tracking-wider font-extrabold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/30">Gemini 3.5 Flash</span>
+                            <span class="text-[9px] uppercase tracking-wider font-extrabold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/30">Gemini AI</span>
                         </div>
                         <p class="text-[10px] text-emerald-400/90 font-semibold mt-1 flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live Food Relief Assistant
@@ -507,6 +507,9 @@
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
+                    </button>
+                    <button type="button" onclick="openApiKeyModal()" title="Configure Gemini API Key" class="text-slate-400 hover:text-yellow-300 p-2 rounded-xl hover:bg-slate-800/80 transition-all" style="font-size:15px;">
+                        🔑
                     </button>
                     <button type="button" onclick="toggleMealBot()" title="Close" class="text-slate-400 hover:text-rose-400 p-2 rounded-xl hover:bg-slate-800/80 transition-all">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1201,5 +1204,168 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- MealBot API Key Modal (Zero Password Manager Interference) -->
+    <div id="apiKeyModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); align-items:center; justify-content:center;" class="flex">
+        <div style="background:#0f172a; border:1px solid rgba(16,185,129,0.4); border-radius:24px; padding:28px; width:100%; max-width:440px; box-shadow:0 25px 60px rgba(0,0,0,0.8); position:relative;" onclick="event.stopPropagation()">
+            <button onclick="closeApiKeyModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;">&#x2715;</button>
+            
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                <div style="width:40px;height:40px;border-radius:12px;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(16,185,129,0.3);">🔑</div>
+                <div>
+                    <h3 style="color:white;font-weight:800;font-size:16px;margin:0;">Google Gemini API Key</h3>
+                    <p style="color:#6ee7b7;font-size:11px;margin:2px 0 0;">MealBot AI Live Configuration</p>
+                </div>
+            </div>
+
+            <!-- Current Status Box -->
+            <div id="mealbot-current-status" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:#cbd5e1;display:flex;align-items:center;justify-content:space-between;">
+                <span>Status: <b id="mealbot-status-text" style="color:#34d399;">Checking...</b></span>
+                <span id="mealbot-current-key-badge" style="font-family:monospace;font-size:11px;color:#94a3b8;"></span>
+            </div>
+
+            <p style="color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.4;">
+                Apni Gemini API Key yahan paste karein. Is se MealBot ChatGPT ki tarah har sawal ka mukammal jawab dega.
+            </p>
+
+            <div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <label style="color:#cbd5e1;font-size:12px;font-weight:600;">Gemini API Key</label>
+                    <button type="button" onclick="pasteKeyFromClipboard()" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.4);color:#6ee7b7;border-radius:8px;padding:2px 10px;font-size:11px;cursor:pointer;font-weight:600;">
+                        📋 Paste Key
+                    </button>
+                </div>
+                <!-- type="text" with autocomplete off ensures NO password manager popup triggers -->
+                <input type="text" 
+                       id="mealbot-api-key-input" 
+                       name="gemini_key_token" 
+                       autocomplete="off" 
+                       autocorrect="off" 
+                       autocapitalize="off" 
+                       spellcheck="false" 
+                       data-lpignore="true" 
+                       data-form-type="other"
+                       placeholder="AIzaSy... ya AQ.Ab8..." 
+                       style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:white;border-radius:12px;padding:10px 14px;font-family:monospace;font-size:13px;outline:none;box-sizing:border-box;" />
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label style="color:#cbd5e1;font-size:12px;font-weight:600;display:block;margin-bottom:6px;">Select AI Model</label>
+                <select id="mealbot-model-select" style="width:100%;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:white;border-radius:12px;padding:10px 14px;font-size:13px;outline:none;box-sizing:border-box;">
+                    <option value="gemini-3.5-flash-lite" selected>gemini-3.5-flash-lite (Fast & Verified ✨)</option>
+                    <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite</option>
+                    <option value="gemini-3.8-flash">gemini-3.8-flash</option>
+                    <option value="gemini-3.6-flash">gemini-3.6-flash</option>
+                </select>
+            </div>
+
+            <div id="mealbot-key-alert" style="display:none;padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:14px;"></div>
+
+            <div style="display:flex;gap:10px;">
+                <button type="button" onclick="closeApiKeyModal()" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;border-radius:12px;padding:10px;cursor:pointer;font-weight:600;">Close</button>
+                <button type="button" onclick="saveMealBotApiKey()" style="flex:2;background:linear-gradient(135deg,#10b981,#059669);border:none;color:white;border-radius:12px;padding:10px;cursor:pointer;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(16,185,129,0.35);">✅ Save & Activate</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function openApiKeyModal() {
+            var modal = document.getElementById('apiKeyModal');
+            modal.style.display = 'flex';
+            document.getElementById('mealbot-key-alert').style.display = 'none';
+            try {
+                var resp = await fetch('/AiAssistant/GetApiKeyStatus');
+                var data = await resp.json();
+                var statusText = document.getElementById('mealbot-status-text');
+                var badge = document.getElementById('mealbot-current-key-badge');
+                if (data.configured) {
+                    statusText.innerText = 'Connected ✅';
+                    statusText.style.color = '#34d399';
+                    badge.innerText = data.maskedKey;
+                    if (data.model) {
+                        document.getElementById('mealbot-model-select').value = data.model;
+                    }
+                } else {
+                    statusText.innerText = 'No Key Configured ⚠️';
+                    statusText.style.color = '#fbbf24';
+                    badge.innerText = '';
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyModal').style.display = 'none';
+        }
+
+        async function pasteKeyFromClipboard() {
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    var text = await navigator.clipboard.readText();
+                    if (text) {
+                        document.getElementById('mealbot-api-key-input').value = text.trim();
+                        var alertBox = document.getElementById('mealbot-key-alert');
+                        alertBox.style.display = 'block';
+                        alertBox.style.background = 'rgba(52,211,153,0.15)';
+                        alertBox.style.border = '1px solid rgba(52,211,153,0.3)';
+                        alertBox.style.color = '#6ee7b7';
+                        alertBox.innerText = '📋 Clipboard se key paste ho gayi!';
+                        setTimeout(function(){ alertBox.style.display = 'none'; }, 2000);
+                        return;
+                    }
+                }
+            } catch(e) {
+                console.warn('Clipboard read failed, please press Ctrl+V / Cmd+V', e);
+            }
+            document.getElementById('mealbot-api-key-input').focus();
+            document.getElementById('mealbot-api-key-input').select();
+        }
+
+        async function saveMealBotApiKey() {
+            var key = document.getElementById('mealbot-api-key-input').value.trim();
+            var model = document.getElementById('mealbot-model-select').value;
+            var alertBox = document.getElementById('mealbot-key-alert');
+            if (!key) {
+                alertBox.style.display = 'block';
+                alertBox.style.background = 'rgba(251,191,36,0.15)';
+                alertBox.style.border = '1px solid rgba(251,191,36,0.4)';
+                alertBox.style.color = '#fbbf24';
+                alertBox.innerText = '⚠️ Please enter a valid API key.';
+                return;
+            }
+            try {
+                var resp = await fetch('/AiAssistant/SaveApiKey', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apiKey: key, model: model })
+                });
+                var data = await resp.json();
+                if (data.success) {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = 'rgba(16,185,129,0.15)';
+                    alertBox.style.border = '1px solid rgba(16,185,129,0.4)';
+                    alertBox.style.color = '#6ee7b7';
+                    alertBox.innerText = '✅ ' + data.message;
+                    setTimeout(function(){
+                        closeApiKeyModal();
+                    }, 1200);
+                } else {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = 'rgba(239,68,68,0.15)';
+                    alertBox.style.border = '1px solid rgba(239,68,68,0.4)';
+                    alertBox.style.color = '#fca5a5';
+                    alertBox.innerText = '❌ ' + data.message;
+                }
+            } catch(e) {
+                alertBox.style.display = 'block';
+                alertBox.style.background = 'rgba(239,68,68,0.15)';
+                alertBox.style.border = '1px solid rgba(239,68,68,0.4)';
+                alertBox.style.color = '#fca5a5';
+                alertBox.innerText = 'Error: ' + e.message;
+            }
+        }
+    </script>
+
 </body>
 </html>

@@ -57,8 +57,8 @@ namespace ShareMeal.Web.Services
                     .Select(o => $"{o.Name} [{o.Address ?? "Pakistan"}]")
                     .ToListAsync();
 
-                var apiKey = _config["Gemini:ApiKey"];
-                var model = _config["Gemini:Model"] ?? "gemini-3.5-flash";
+                var apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? _config["Gemini:ApiKey"];
+                var preferredModel = Environment.GetEnvironmentVariable("GEMINI_MODEL") ?? _config["Gemini:Model"] ?? "gemini-3.5-flash-lite";
 
                 bool hasValidApiKey = !string.IsNullOrWhiteSpace(apiKey) && 
                                       !apiKey.Contains("YOUR_GEMINI_API_KEY") && 
@@ -68,70 +68,74 @@ namespace ShareMeal.Web.Services
                 // If real key exists, try calling Google Gemini API first
                 if (hasValidApiKey)
                 {
-                    try
+                    var donationsContext = availableDonations.Any() ? string.Join("\n", availableDonations) : "No active donations currently listed.";
+                    var restaurantsContext = verifiedRestaurants.Any() ? string.Join(", ", verifiedRestaurants) : "Various verified restaurants across Pakistan.";
+                    var charitiesContext = verifiedCharities.Any() ? string.Join(", ", verifiedCharities) : "Edhi, Saylani, Al-Khidmat, Chhipa, JDC.";
+
+                    var systemInstruction = @"You are MealBot, an intelligent and versatile AI assistant for ShareMeal Pakistan and all general topics.
+You behave just like ChatGPT: answer ANY question thoroughly, accurately, and politely (programming, coding, computer science, general knowledge, daily life, advice, recipes, science, or ShareMeal food rescue platform features).
+
+LIVE SHAREMEAL CONTEXT (use this ONLY when the user asks about food donations, restaurants, or charities):
+Active Donations: " + donationsContext + @"
+Restaurants: " + restaurantsContext + @"
+Charities: " + charitiesContext + @"
+
+CRITICAL RULES:
+1. Directly answer the user's specific question with rich, clear, and structured detail.
+2. STRICT RULE ON CREATORS: DO NOT mention Muhammad Khulfan, Abdullah Khalid, or Miss Kainat Sajid unless the user EXPLICITLY asks who made/developed/engineered the project (e.g. 'developer kaun hai', 'who made this', 'kisne banaya'). In all other responses (programming, registration, food, etc.), NEVER mention them at all.
+3. Language: Reply in the same language the user used (Roman Urdu, Urdu script, or English).";
+
+                    var candidateModels = new List<string> {
+                        "gemini-3.5-flash-lite",
+                        "gemini-robotics-er-2-preview",
+                        "gemini-3.1-flash-lite",
+                        preferredModel,
+                        "gemini-3.8-flash",
+                        "gemini-3.6-flash"
+                    }.Where(m => !string.IsNullOrWhiteSpace(m)).Distinct().ToList();
+
+                    foreach (var m in candidateModels)
                     {
-                        var donationsContext = availableDonations.Any() ? string.Join("\n", availableDonations) : "No active donations currently listed.";
-                        var restaurantsContext = verifiedRestaurants.Any() ? string.Join(", ", verifiedRestaurants) : "Various verified restaurants across Pakistan.";
-                        var charitiesContext = verifiedCharities.Any() ? string.Join(", ", verifiedCharities) : "Edhi, Saylani, Al-Khidmat, Chhipa, JDC.";
-
-                        var systemInstruction = @"You are an intelligent, highly professional AI assistant for the ShareMeal Pakistan platform (Zero Hunger food-rescue project).
-ShareMeal connects surplus food donors (restaurants/hotels) with registered relief charities (Saylani, Edhi, Al-Khidmat, etc.) and communities in need.
-
-LIVE DATABASE CONTEXT:
-Active Food Donations currently available:
-" + donationsContext + @"
-
-Verified Restaurants / Donors:
-" + restaurantsContext + @"
-
-Verified Partner Charities / NGOs:
-" + charitiesContext + @"
-
-IMPORTANT GUIDELINES:
-1. Specific City Food: When the user asks about food in any city (e.g. Karachi, Multan, Lahore, Islamabad, etc.), examine the Active Food Donations list above and tell them the exact items, quantities, and restaurant addresses in that city! If no food is currently listed in that city, politely say none is currently listed for that city but charities operate there.
-2. Relevance: Directly answer the user's question without unprompted robotic introductions ('Main AI bot hoon') or generic marketing greetings.
-3. Developers/Supervisor: If and ONLY if the user specifically asks who made/developed/supervised the platform, mention Muhammad Khulfan (Lead Engineer, BSCS USP Multan), Abdullah Khalid, and supervisor Miss Kainat Sajid (M.Phil CS, Lecturer USP Multan). Otherwise, do not mention them.
-4. Tone & Language: Answer concisely, politely, and respectfully in the SAME language the user used (Roman Urdu, Urdu script, or English).";
-
-                        var requestBody = new
+                        try
                         {
-                            contents = new[] { new { role = "user", parts = new[] { new { text = userMessage } } } },
-                            systemInstruction = new { parts = new[] { new { text = systemInstruction } } },
-                            generationConfig = new
+                            var requestBody = new
                             {
-                                temperature = 0.3,
-                                maxOutputTokens = 800,
-                                thinkingConfig = new { thinkingBudget = 0 }
-                            }
-                        };
-
-                        var jsonPayload = JsonSerializer.Serialize(requestBody);
-                        var endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
-                        using var req = new HttpRequestMessage(HttpMethod.Post, endpoint);
-                        req.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                        var resp = await _httpClient.SendAsync(req);
-                        // 429 = rate limited → immediately use local engine (no waiting)
-                        if ((int)resp.StatusCode == 429 || (int)resp.StatusCode >= 500)
-                            throw new Exception($"Gemini API unavailable: {(int)resp.StatusCode}");
-                        if (resp.IsSuccessStatusCode)
-                        {
-                            var contentStr = await resp.Content.ReadAsStringAsync();
-                            using var doc = JsonDocument.Parse(contentStr);
-                            if (doc.RootElement.TryGetProperty("candidates", out var cands) && cands.GetArrayLength() > 0)
-                            {
-                                var first = cands[0];
-                                if (first.TryGetProperty("content", out var c) && c.TryGetProperty("parts", out var p) && p.GetArrayLength() > 0)
+                                contents = new[] { new { role = "user", parts = new[] { new { text = userMessage } } } },
+                                systemInstruction = new { parts = new[] { new { text = systemInstruction } } },
+                                generationConfig = new
                                 {
-                                    var text = p[0].GetProperty("text").GetString();
-                                    if (!string.IsNullOrWhiteSpace(text)) return text.Trim();
+                                    temperature = 0.3,
+                                    maxOutputTokens = 1000
+                                }
+                            };
+
+                            var jsonPayload = JsonSerializer.Serialize(requestBody);
+                            var endpoint = $"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={apiKey}";
+                            using var req = new HttpRequestMessage(HttpMethod.Post, endpoint);
+                            req.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+                            var resp = await _httpClient.SendAsync(req, cts.Token);
+                            if (resp.IsSuccessStatusCode)
+                            {
+                                var contentStr = await resp.Content.ReadAsStringAsync();
+                                using var doc = JsonDocument.Parse(contentStr);
+                                if (doc.RootElement.TryGetProperty("candidates", out var cands) && cands.GetArrayLength() > 0)
+                                {
+                                    var first = cands[0];
+                                    if (first.TryGetProperty("content", out var candContent) && candContent.TryGetProperty("parts", out var p) && p.GetArrayLength() > 0)
+                                    {
+                                        var text = p[0].GetProperty("text").GetString();
+                                        if (!string.IsNullOrWhiteSpace(text)) return text.Trim();
+                                    }
                                 }
                             }
+                            // If 429 or 503, try next candidate model
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "Gemini API call failed, falling back to smart local engine.");
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning("Gemini API call with model {Model} failed: {Msg}", m, ex.Message);
+                        }
                     }
                 }
 
@@ -174,8 +178,18 @@ IMPORTANT GUIDELINES:
                 return "🎓 **Academic Supervisor:**\nShareMeal is supervised by **Miss Kainat Sajid** (M.Phil in Computer Science, Lecturer of Computer Science at University of Southern Punjab - USP, Multan). She provided academic direction and evaluation for this Final Year Project.";
             }
 
-            // 2. Developers / Creators (Muhammad Khulfan & Abdullah Khalid)
-            if (q.Contains("developer") || q.Contains("created") || q.Contains("who made") || q.Contains("khulfan") || q.Contains("abdullah") || q.Contains("creator") || q.Contains("team") || q.Contains("banaya"))
+            // Registration / Sign Up query
+            if (q.Contains("register") || q.Contains("sign up") || q.Contains("signup") || q.Contains("account") || q.Contains("join") || q.Contains("login") || q.Contains("shamil"))
+            {
+                if (isUrdu)
+                {
+                    return "📝 **شیئر میل پر رجسٹریشن کا طریقہ:**\n1. اوپر نیویگیشن بار میں **Join Now** یا **Register** پر کلک کریں۔\n2. اپنا رول منتخب کریں:\n   • **Restaurant / Donor:** کھانا عطیہ کرنے کے لیے۔\n   • **Charity / NGO:** کھانا کلیم اور تقسیم کرنے کے لیے۔\n3. اپنا نام، ادارہ، ای میل اور پاس ورڈ درج کر کے سبمٹ کریں۔\n4. تصدیق کے بعد آپ کا اکاؤنٹ فعال ہو جائے گا!";
+                }
+                return "📝 **ShareMeal Par Register Karne Ka Asaan Tarika:**\n1. Website ke top menu mein **Join Now** ya **Register** par click karein.\n2. Apna Role select karein:\n   • **Restaurant / Hotel:** Agar aap surplus food donate karna chahte hain.\n   • **Charity / NGO:** Agar aap khana claim kar ke zaroorat-mandon mein taqseem karna chahte hain.\n3. Apna Naam, Organization Name, Email, Address aur Password enter kar ke **Register** button dabayein.\n4. Register hone ke baad foran login karein aur khana donate ya claim karna shuru karein!";
+            }
+
+            // 2. Developers / Creators (Muhammad Khulfan & Abdullah Khalid) - ONLY when asked!
+            if (q.Contains("developer") || q.Contains("created") || q.Contains("who made") || q.Contains("khulfan") || q.Contains("abdullah") || q.Contains("creator") || (q.Contains("kisne") && q.Contains("banaya")))
             {
                 if (isUrdu)
                 {
@@ -271,16 +285,16 @@ IMPORTANT GUIDELINES:
                 return "🛡️ **Food Safety & Hygiene SOPs:**\n• Prepared meals must be consumed or refrigerated within 4 hours.\n• Hot food must be stored above 60°C and cold items below 5°C.\n• Packaging must be sealed in food-grade foil/containers.\n• Only verified charities are authorized to collect donations.";
             }
 
-            // 7. Default greeting & summary
+            // 7. Fallback when AI models are unavailable
             if (isUrdu)
             {
-                return "آپ کیا جاننا چاہتے ہیں؟ کھانا عطیہ کرنے، وصول کرنے، یا کسی بھی موضوع پر پوچھ سکتے ہیں۔";
+                return "براہِ کرم MealBot کے اوپر 🔑 (Key Icon) پر کلک کر کے اپنی نئی Google AI Studio API Key درج کریں تاکہ لائیو AI جوابات حاصل کر سکیں۔";
             }
             if (isRomanUrdu)
             {
-                return "Apna sawaal poochhein — khana donate ya claim karne ke liye Marketplace dekhein, ya kisi bhi cheez ke baare mein poochhein.";
+                return "⚠️ Google Gemini API key ka daily free quota poora ho chuka hai. Barah-e-karam MealBot ke header mein 🔑 (Key Icon) par click kar ke apni nayi Google AI Studio API Key paste karein taake live AI jawab deta rahe!";
             }
-            return "How can I help you? Ask about food donations, claiming food, restaurants, or charities on ShareMeal.";
+            return "⚠️ Gemini AI key quota has been exhausted. Please click the 🔑 (Key Icon) in the header to enter a fresh Google AI Studio API key!";
         }
     }
 }
